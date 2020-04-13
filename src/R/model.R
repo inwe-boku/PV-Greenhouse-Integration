@@ -6,47 +6,73 @@ install_github('lolow/gdxtools')
 
 library(gdxtools)
 
-#dirname(Sys.which('gams'))
-igdx("C:/GAMS/win64/30.2")
+
+#### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
+#### E.G: igdx("C:/GAMS/win64/30.2")
+igdx(dirname(Sys.which('gams')))
 
 setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
              "/../../")
 )
 
-############# Creating input data
+############# CREATING INPUT DATA
 
 input_dir <- "data/input/"
 output_dir <- "data/output/"
 
-timesteps<-3
+source("src/R/functions.R")
 
-time_<-paste0("t", 1:timesteps)
 
-demand<-tibble(t=time_,
-               value=rep(1000, timesteps))
+timesteps <- 48
 
-pv_production<-tibble(c=time_,
-                      value=c(60, 40, 20))
+############# average demand for random generation in kw. random generation should be replaced by real load data
+avg_demand <- 500
+demand <- runif(timesteps) * avg_demand
 
-cost_parameters<-c("investment_costs_PV",
-                   "investment_costs_Storage",
-                   "grid_buy_costs",
-                   "grid_sell_price")
+controllable_demand <- runif(timesteps / 24) * avg_demand * 24
 
-costs<-tibble(index=cost_parameters,
-              value=c(12, 4, 0.6, 0.1))
 
-time.df <- data.frame(t = time_)
-costs_parameters.df <- data.frame(c = cost_parameters)
+############# average pv generation for random generation in kw. random generation should be replaced by real production data.
+avg_pv <- 0.1
+pv <- runif(timesteps) * avg_pv
 
-write2.gdx(paste0(input_dir,
-            "input.gdx"),
-            list(demand = demand,
-                 pv_production = pv_production,
-                 costs = costs),
-           list(t = time.df,
-                c = costs_parameters.df))
+interest_rate <- 0.1
+run_time <- 20
 
+pv_invest <- 400 # in €/kw
+pv_invest_annualized <- annualize(pv_invest,
+                                  interest_rate,
+                                  run_time,
+                                  timesteps)
+
+run_time <- 10
+
+storage_invest <- 200 # in €/kWh
+storage_invest_annualized <- annualize(storage_invest,
+                                       interest_rate,
+                                       run_time,
+                                       timesteps)
+
+gridcosts <- 0.18 # power from grid in €/kWh
+
+feed_in_tariff <- 0.05 # subsidy received for feeding power to grid
+
+efficiency_storage <- 0.9
+maximum_power_controllable_demand <- 1000 # how much power the controllable demand can use at most in one instant of time. In kW
+
+#### this function writes the gdx file to disk for GAMS to use
+#### the function is contained in the script "model.R"
+create_input_data(timesteps = timesteps,
+                  demand_in = demand,
+                  pv_gen = pv,
+                  controllable_demand_in = controllable_demand,
+                  pv_invest_annualized = pv_invest_annualized,
+                  storage_invest_annualized = storage_invest_annualized,
+                  gridcosts = gridcosts,
+                  feed_in_tariff = feed_in_tariff,
+                  efficiency_storage = efficiency_storage,
+                  maximum_power_controllable_demand = maximum_power_controllable_demand
+                  )
 
 ############# Running gams
 gams("src/GAMS/pvsimple.gms")
@@ -54,6 +80,14 @@ gams("src/GAMS/pvsimple.gms")
 ############# Reading results
 
 mygdx <- gdx('data/output/output.gdx')
+
+###### THESE 2 VALUES HAVE TO BE 1, otherwise there was a problem when solving!
+if(mygdx["modelstat"] != 1){
+  print("Caution: model was not solved properly, results should not be trusted.")
+}
+if(mygdx["solvestat"] != 1){
+  print("Caution: model was not solved properly, results should not be trusted.")
+}
 
 ############# show all available items in results
 all_items(mygdx)
@@ -68,45 +102,7 @@ installed_pv_capacity
 installed_storage_capacity
 sum_electricity_from_grid
 
-storage_soc <- mygdx["x_soc"] %>%
-  mutate(Var = "SOC")
-
-storage_in <- mygdx["x_in"] %>%
-  mutate(Var = "x_in")
-
-storage_out <- mygdx["x_out"] %>%
-  mutate(Var = "x_out")
-
-operation_pv_use <- mygdx["x_direct_use"] %>%
-  mutate(Var = "direct_use")
-
-operation_grid_power <- mygdx["x_buy_from_grid"] %>%
-  mutate(Var = "grid_power")
-
-operation_feed_to_grid_power <- mygdx["x_sell_to_grid"] %>%
-  mutate(Var = "power_fed_in")
-
-operation_curtailment <- mygdx["x_curtailment"] %>%
-  mutate(Var = "curtailment")
-
-pv_output <- mygdx["x_pv"][1, 1] * as.numeric(mygdx["pv_production"][,2])
-
-operation_pv <- mygdx["demand"]  %>%
-  mutate(Var = "pv") %>%
-  mutate(value = pv_output) %>%
-  mutate(V1 = t) %>%
-  dplyr::select(V1, value, Var)
-
-
-timeseries <- bind_rows(storage_soc,
-                        storage_in,
-                        storage_out,
-                        operation_pv_use,
-                        operation_grid_power,
-                        operation_curtailment,
-                        operation_feed_to_grid_power,
-                        operation_pv) %>%
-  mutate(time = as.numeric(str_replace(V1, "t", "")))
+timeseries <- read_timeseries_from_results()
 
 ###### figure for storage operation
 timeseries %>%
@@ -117,15 +113,36 @@ timeseries %>%
   geom_line(aes(col=Var))
 
 ###### figure for operation
-timeseries %>%
+demand_original <- timeseries %>%
+  filter(Var %in% c("demand"
+    ))
+
+controllable_original_demand <- timeseries %>%
+  filter(Var %in% c("demand",
+                    "control_demand"
+  )) %>%
+  dplyr::select(time, Var, value) %>%
+  spread(Var, value) %>%
+  mutate(total_demand = control_demand + demand) %>%
+  gather(Var, value, -time) %>%
+  filter(Var %in% c("total_demand", "demand"))
+
+
+gens_positive <- timeseries %>%
   filter(Var %in% c("direct_use",
                     "grid_power",
-                    "curtailment",
-                    "x_out",
-                    "power_fed_in",
-                    "pv")) %>%
-  ggplot(aes(x=time, y=value)) +
-  geom_line(aes(col=Var))
+                    "x_out"
+              ))
 
+gens_negative <- timeseries %>%
+  filter(Var %in% c("curtailment",
+                    "power_fed_in"))
 
+all <- bind_rows(
+                 gens_positive,
+                 gens_negative)
+
+all %>% ggplot(aes(x = time, y = value)) +
+  geom_area(aes(fill = Var)) +
+  geom_line(data = controllable_original_demand, aes(col = Var), fill = NA, size = 2)
 
