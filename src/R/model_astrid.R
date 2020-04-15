@@ -20,7 +20,7 @@ setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
 input_dir <- "data/input/"
 output_dir <- "data/output/"
 
-source("src/R/functions.R")
+source("src/R/functions_astrid.R")
 
 
 timesteps <- 24*2
@@ -40,7 +40,7 @@ pv_data <- as.vector(pvgis_data$X0[1: timesteps])       #4609:4681 -> 11.-13.Jul
 interest_rate <- 0.1
 run_time <- 20
 
-pv_invest <- 1200 # in €/kw
+pv_invest <- 1200 # in Euro/kw
 pv_invest_annualized <- annualize(pv_invest,
                                   interest_rate,
                                   run_time,
@@ -48,7 +48,7 @@ pv_invest_annualized <- annualize(pv_invest,
 
 run_time <- 10
 
-storage_invest <- 800 # in €/kWh
+storage_invest <- 800 # in Euro/kWh
 storage_invest_annualized <- annualize(storage_invest,
                                        interest_rate,
                                        run_time,
@@ -63,7 +63,7 @@ controllable_demand <- runif(timesteps / 24) * avg_demand * 24
 
 
 
-gridcosts <- 0.18 # power from grid in €/kWh
+gridcosts <- 0.18 # power from grid in Euro/kWh
 
 feed_in_tariff <- 0.06 # subsidy received for feeding power to grid
 
