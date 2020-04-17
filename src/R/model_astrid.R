@@ -46,7 +46,9 @@ pv <- as.vector(pvgis_data$X0[1: timesteps])/1000       #4609:4681 -> 11.-13.Jul
 interest_rate <- 0.1
 run_time <- 20
 
-pv_invest <- 400 # in €/kw
+#Landcost
+land_cost <- 15
+pv_invest <- 400+land_cost # in €/kw
 pv_invest_annualized <- annualize(pv_invest,
                                   interest_rate,
                                   run_time,
@@ -152,4 +154,6 @@ all <- bind_rows(
 all %>% ggplot(aes(x = time, y = value)) +
   geom_area(aes(fill = Var)) +
   geom_line(data = controllable_original_demand, aes(col = Var), fill = NA, size = 2)
+
+#save.image(file = "Image.RData")
 
