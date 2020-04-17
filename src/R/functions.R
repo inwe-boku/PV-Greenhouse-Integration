@@ -97,7 +97,7 @@ create_input_data<-function(timesteps,
 
 }
 
-read_timeseries_from_results<-function(){
+read_timeseries_from_results<-function(mygdx){
 
   storage_soc <- mygdx["x_soc"] %>%
     mutate(Var = "SOC")
@@ -134,7 +134,7 @@ read_timeseries_from_results<-function(){
 
   pv_output <- mygdx["x_pv"][1, 1] * as.numeric(mygdx["pv_production"][,2])
 
-  operation_pv <- mygdx["demand"]  %>%
+  operation_pv <- mygdx["pv_production"]  %>%
     mutate(Var = "pv") %>%
     mutate(value = pv_output) %>%
     mutate(V1 = t) %>%
@@ -151,7 +151,12 @@ read_timeseries_from_results<-function(){
                           operation_pv,
                           operation_x_control_demand,
                           operation_demand) %>%
-    mutate(time = as.numeric(str_replace(V1, "t", "")))
+    mutate(time = as.numeric(str_replace(V1, "t", "")))  %>%
+    dplyr::select(time, Var, value) %>%
+    spread(Var, value) %>%
+    gather(Var, Value, -time) %>%
+    mutate(Value = ifelse(is.na(Value), 0, Value))
+
 
   return(timeseries)
 

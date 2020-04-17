@@ -1,16 +1,16 @@
 # library(tidyverse)
-# 
+#
 # ##### These 2 lines have to be run only once!
 # library(devtools)
 # #install_github('lolow/gdxtools')
-# 
+#
 # library(gdxtools)
-# 
-# 
+#
+#
 # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
 # #### E.G: igdx("C:/GAMS/win64/30.2")
 # igdx(dirname(Sys.which('gams')))
-# 
+#
 # setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
 #              "/../../")
 # )
@@ -20,7 +20,7 @@
 input_dir <- "data/input/"
 output_dir <- "data/output/"
 
-source("src/R/functions_astrid.R")
+source("src/R/functions.R")
 
 
 timesteps <- 24*2
@@ -35,7 +35,7 @@ controllable_demand <- runif(timesteps / 24) * avg_demand * 24
 
 ############# average pv generation for random generation in kw. random generation should be replaced by real production data.
 pvgis_data <- read.csv("data/input/PV_2016_hr.csv")        #PVGis hourly data for 2016
-# 
+#
 pv <- as.vector(pvgis_data$X0[1: timesteps])/1000       #4609:4681 -> 11.-13.Juli
 #pv <- as.vector(pvgis_data$X0)
 
@@ -111,14 +111,14 @@ installed_pv_capacity
 installed_storage_capacity
 sum_electricity_from_grid
 
-timeseries <- read_timeseries_from_results()
+timeseries <- read_timeseries_from_results(mygdx)
 
 ###### figure for storage operation
 timeseries %>%
   filter(Var %in% c("SOC",
                     "x_in",
                     "x_out")) %>%
-  ggplot(aes(x=time, y=value)) +
+  ggplot(aes(x=time, y=Value)) +
   geom_line(aes(col=Var))
 
 ###### figure for operation
@@ -130,10 +130,10 @@ controllable_original_demand <- timeseries %>%
   filter(Var %in% c("demand",
                     "control_demand"
   )) %>%
-  dplyr::select(time, Var, value) %>%
-  spread(Var, value) %>%
+  dplyr::select(time, Var, Value) %>%
+  spread(Var, Value) %>%
   mutate(total_demand = control_demand + demand) %>%
-  gather(Var, value, -time) %>%
+  gather(Var, Value, -time) %>%
   filter(Var %in% c("total_demand", "demand"))
 
 
@@ -151,7 +151,7 @@ all <- bind_rows(
   gens_positive,
   gens_negative)
 
-all %>% ggplot(aes(x = time, y = value)) +
+all %>% ggplot(aes(x = time, y = Value)) +
   geom_area(aes(fill = Var)) +
   geom_line(data = controllable_original_demand, aes(col = Var), fill = NA, size = 2)
 
