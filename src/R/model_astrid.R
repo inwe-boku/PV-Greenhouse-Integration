@@ -24,6 +24,7 @@ source("src/R/functions_astrid.R")
 
 
 timesteps <- 24*2
+#
 
 ############# average demand for random generation in kw. random generation should be replaced by real load data
 avg_demand <- 500
@@ -35,11 +36,11 @@ controllable_demand <- runif(timesteps / 24) * avg_demand * 24
 ############# average pv generation for random generation in kw. random generation should be replaced by real production data.
 pvgis_data <- read.csv("data/input/PV_2016_hr.csv")        #PVGis hourly data for 2016
 # 
-# pv <- as.vector(pvgis_data$X0[1: timesteps])       #4609:4681 -> 11.-13.Juli
-# #pv <- as.vector(pvgis_data$X0)
+pv <- as.vector(pvgis_data$X0[1: timesteps])/1000       #4609:4681 -> 11.-13.Juli
+#pv <- as.vector(pvgis_data$X0)
 
-avg_pv <- 0.1
-pv <- runif(timesteps) * avg_pv
+# avg_pv <- 0.1
+# pv <- runif(timesteps) * avg_pv
 
 
 interest_rate <- 0.1
