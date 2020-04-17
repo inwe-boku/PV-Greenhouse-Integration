@@ -44,7 +44,6 @@ docs/
 *.txt
 *.gdx
 src/test.x.r
-src/R/model_astrid.R
 src/GAMS/pvsimple.lxi
 src/GAMS/pvsimple.log
 pvsimple.log
