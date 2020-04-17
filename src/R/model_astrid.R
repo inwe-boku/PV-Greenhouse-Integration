@@ -1,19 +1,19 @@
-# library(tidyverse)
-#
-# ##### These 2 lines have to be run only once!
-# library(devtools)
-# #install_github('lolow/gdxtools')
-#
-# library(gdxtools)
-#
-#
-# #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
-# #### E.G: igdx("C:/GAMS/win64/30.2")
-# igdx(dirname(Sys.which('gams')))
-#
-# setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
-#              "/../../")
-# )
+library(tidyverse)
+
+##### These 2 lines have to be run only once!
+library(devtools)
+#install_github('lolow/gdxtools')
+
+library(gdxtools)
+
+
+#### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
+#### E.G: igdx("C:/GAMS/win64/30.2")
+igdx(dirname(Sys.which('gams')))
+
+setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+             "/../../")
+)
 
 ############# CREATING INPUT DATA
 
