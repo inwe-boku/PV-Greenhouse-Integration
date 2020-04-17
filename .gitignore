@@ -43,4 +43,13 @@ docs/
 
 *.txt
 *.gdx
-gams_project.gpr
+
+src/test.x.r
+src/GAMS/pvsimple.lxi
+src/GAMS/pvsimple.log
+pvsimple.log
+project1.gpr
+project1.dat
+pvsimple.lst
+pvsimple.lxi
+src/GAMS/pvsimple.lst
