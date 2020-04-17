@@ -1,4 +1,4 @@
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/15/20 08:46:55 Page 1
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/17/20 13:22:58 Page 1
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -56,7 +56,7 @@ GDXIN   C:\Users\MagerlU\Documents\GitHub\PV-Greenhouse-Integration\data/input/i
   43  pv_balance,
   44  stor_max,
   45  stor_balance,
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/15/20 08:46:55 Page 2
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/17/20 13:22:58 Page 2
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -106,7 +106,7 @@ C o m p i l a t i o n
   88   
   89   
   90   
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/15/20 08:46:55 Page 3
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/17/20 13:22:58 Page 3
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Include File Summary
 
@@ -118,14 +118,14 @@ Include File Summary
 
 
 COMPILATION TIME     =        0.000 SECONDS      3 MB  30.3.0 rc5da09e WEX-WEI
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/15/20 08:46:55 Page 4
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/17/20 13:22:58 Page 4
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Equation Listing    SOLVE pv Using LP From line 73
 
 
 ---- obj  =E=  
 
-obj..  - 0.257445752926128*x_pv - 0.178351117679465*x_storage - 0.18*x_buy_from_grid(t1) - 0.18*x_buy_from_grid(t10) - 0.18*x_buy_from_grid(t11) - 0.18*x_buy_from_grid(t12) - 0.18*x_buy_from_grid(t13) - 0.18*x_buy_from_grid(t14)
+obj..  - 0.256742349229608*x_pv - 0.177863819543728*x_storage - 0.18*x_buy_from_grid(t1) - 0.18*x_buy_from_grid(t10) - 0.18*x_buy_from_grid(t11) - 0.18*x_buy_from_grid(t12) - 0.18*x_buy_from_grid(t13) - 0.18*x_buy_from_grid(t14)
      
       - 0.18*x_buy_from_grid(t15) - 0.18*x_buy_from_grid(t16) - 0.18*x_buy_from_grid(t17) - 0.18*x_buy_from_grid(t18) - 0.18*x_buy_from_grid(t19) - 0.18*x_buy_from_grid(t2) - 0.18*x_buy_from_grid(t20) - 0.18*x_buy_from_grid(t21)
      
@@ -152,26 +152,26 @@ obj..  - 0.257445752926128*x_pv - 0.178351117679465*x_storage - 0.18*x_buy_from_
 
 ---- demand_balance  =E=  
 
-demand_balance(t1)..  x_out(t1) + x_direct_use(t1) + x_buy_from_grid(t1) - x_control_demand(t1) =E= 200.363019946963 ; (LHS = 0, INFES = 200.363019946963 ****)
+demand_balance(t1)..  x_out(t1) + x_direct_use(t1) + x_buy_from_grid(t1) - x_control_demand(t1) =E= 316.753779770806 ; (LHS = 0, INFES = 316.753779770806 ****)
      
-demand_balance(t10)..  x_out(t10) + x_direct_use(t10) + x_buy_from_grid(t10) - x_control_demand(t10) =E= 465.944060473703 ; (LHS = 0, INFES = 465.944060473703 ****)
+demand_balance(t10)..  x_out(t10) + x_direct_use(t10) + x_buy_from_grid(t10) - x_control_demand(t10) =E= 2.37208104226738 ; (LHS = 0, INFES = 2.37208104226738 ****)
      
-demand_balance(t11)..  x_out(t11) + x_direct_use(t11) + x_buy_from_grid(t11) - x_control_demand(t11) =E= 474.264294956811 ; (LHS = 0, INFES = 474.264294956811 ****)
+demand_balance(t11)..  x_out(t11) + x_direct_use(t11) + x_buy_from_grid(t11) - x_control_demand(t11) =E= 294.245389988646 ; (LHS = 0, INFES = 294.245389988646 ****)
      
 REMAINING 45 ENTRIES SKIPPED
 
 
 ---- pv_balance  =E=  
 
-pv_balance(t1)..  0.0442728984402493*x_pv - x_in(t1) - x_direct_use(t1) - x_curtailment(t1) - x_sell_to_grid(t1) =E= 0 ; (LHS = 0)
+pv_balance(t1)..  - x_in(t1) - x_direct_use(t1) - x_curtailment(t1) - x_sell_to_grid(t1) =E= 0 ; (LHS = 0)
      
-pv_balance(t10)..  0.0612698799232021*x_pv - x_in(t10) - x_direct_use(t10) - x_curtailment(t10) - x_sell_to_grid(t10) =E= 0 ; (LHS = 0)
+pv_balance(t10)..  0.12732*x_pv - x_in(t10) - x_direct_use(t10) - x_curtailment(t10) - x_sell_to_grid(t10) =E= 0 ; (LHS = 0)
      
-pv_balance(t11)..  0.0239731488516554*x_pv - x_in(t11) - x_direct_use(t11) - x_curtailment(t11) - x_sell_to_grid(t11) =E= 0 ; (LHS = 0)
+pv_balance(t11)..  0.2199*x_pv - x_in(t11) - x_direct_use(t11) - x_curtailment(t11) - x_sell_to_grid(t11) =E= 0 ; (LHS = 0)
      
 REMAINING 45 ENTRIES SKIPPED
 
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/15/20 08:46:55 Page 5
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/17/20 13:22:58 Page 5
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Equation Listing    SOLVE pv Using LP From line 73
 
@@ -204,13 +204,13 @@ control_dem(d1)..  - x_control_demand(t1) - x_control_demand(t10) - x_control_de
      
       - x_control_demand(t18) - x_control_demand(t19) - x_control_demand(t2) - x_control_demand(t20) - x_control_demand(t21) - x_control_demand(t22) - x_control_demand(t23) - x_control_demand(t24) - x_control_demand(t3) - x_control_demand(t4)
      
-      - x_control_demand(t5) - x_control_demand(t6) - x_control_demand(t7) - x_control_demand(t8) - x_control_demand(t9) =E= -7037.38603927195 ; (LHS = 0, INFES = 7037.38603927195 ****)
+      - x_control_demand(t5) - x_control_demand(t6) - x_control_demand(t7) - x_control_demand(t8) - x_control_demand(t9) =E= -10846.6290906072 ; (LHS = 0, INFES = 10846.6290906072 ****)
      
 control_dem(d2)..  - x_control_demand(t25) - x_control_demand(t26) - x_control_demand(t27) - x_control_demand(t28) - x_control_demand(t29) - x_control_demand(t30) - x_control_demand(t31) - x_control_demand(t32) - x_control_demand(t33)
      
       - x_control_demand(t34) - x_control_demand(t35) - x_control_demand(t36) - x_control_demand(t37) - x_control_demand(t38) - x_control_demand(t39) - x_control_demand(t40) - x_control_demand(t41) - x_control_demand(t42) - x_control_demand(t43)
      
-      - x_control_demand(t44) - x_control_demand(t45) - x_control_demand(t46) - x_control_demand(t47) - x_control_demand(t48) =E= -11954.6452620998 ; (LHS = 0, INFES = 11954.6452620998 ****)
+      - x_control_demand(t44) - x_control_demand(t45) - x_control_demand(t46) - x_control_demand(t47) - x_control_demand(t48) =E= -3949.48715809733 ; (LHS = 0, INFES = 3949.48715809733 ****)
      
 
 ---- control_dem_max  =L=  
@@ -223,7 +223,7 @@ control_dem_max(t11)..  x_control_demand(t11) =L= 1000 ; (LHS = 0)
      
 REMAINING 45 ENTRIES SKIPPED
 
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/15/20 08:46:55 Page 6
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/17/20 13:22:58 Page 6
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Column Listing      SOLVE pv Using LP From line 73
 
@@ -232,69 +232,21 @@ Column Listing      SOLVE pv Using LP From line 73
 
 x_pv
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
-       -0.2574  obj
-        0.0443  pv_balance(t1)
-        0.0613  pv_balance(t10)
-        0.024   pv_balance(t11)
-        0.0027  pv_balance(t12)
-        0.0632  pv_balance(t13)
-        0.0097  pv_balance(t14)
-        0.0605  pv_balance(t15)
-        0.0102  pv_balance(t16)
-        0.0294  pv_balance(t17)
-        0.0925  pv_balance(t18)
-        0.0428  pv_balance(t19)
-        0.0994  pv_balance(t2)
-        0.0769  pv_balance(t20)
-        0.0784  pv_balance(t21)
-        0.0037  pv_balance(t22)
-        0.0348  pv_balance(t23)
-        0.055   pv_balance(t24)
-        0.0314  pv_balance(t25)
-        0.0401  pv_balance(t26)
-        0.0405  pv_balance(t27)
-        0.0179  pv_balance(t28)
-        0.0229  pv_balance(t29)
-        0.0158  pv_balance(t3)
-        0.0992  pv_balance(t30)
-        0.0295  pv_balance(t31)
-        0.0719  pv_balance(t32)
-        0.0351  pv_balance(t33)
-        0.0876  pv_balance(t34)
-        0.0012  pv_balance(t35)
-        0.0365  pv_balance(t36)
-        0.0028  pv_balance(t37)
-        0.0814  pv_balance(t38)
-        0.0113  pv_balance(t39)
-        0.0983  pv_balance(t4)
-        0.0876  pv_balance(t40)
-        0.0883  pv_balance(t41)
-        0.0565  pv_balance(t42)
-        0.0578  pv_balance(t43)
-        0.0507  pv_balance(t44)
-        0.0898  pv_balance(t45)
-        0.0245  pv_balance(t46)
-        0.0761  pv_balance(t47)
-        0.0225  pv_balance(t48)
-        0.0843  pv_balance(t5)
-        0.0987  pv_balance(t6)
-        0.0365  pv_balance(t7)
-        0.06    pv_balance(t8)
-        0.0705  pv_balance(t9)
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/15/20 08:46:55 Page 7
-G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Column Listing      SOLVE pv Using LP From line 73
-
-
-     x_pv  
-
+       -0.2567  obj
+        0.1273  pv_balance(t10)
+        0.2199  pv_balance(t11)
+        0.006   pv_balance(t14)
+        0.1672  pv_balance(t33)
+        0.0026  pv_balance(t38)
+        0.1856  pv_balance(t8)
+        0.0942  pv_balance(t9)
 
 
 ---- x_storage  
 
 x_storage
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
-       -0.1784  obj
+       -0.1779  obj
        -1       stor_max(t1)
        -1       stor_max(t10)
        -1       stor_max(t11)
@@ -329,6 +281,13 @@ x_storage
        -1       stor_max(t38)
        -1       stor_max(t39)
        -1       stor_max(t4)
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/17/20 13:22:58 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE pv Using LP From line 73
+
+
+     x_storage  
+
        -1       stor_max(t40)
        -1       stor_max(t41)
        -1       stor_max(t42)
@@ -339,13 +298,6 @@ x_storage
        -1       stor_max(t47)
        -1       stor_max(t48)
        -1       stor_max(t5)
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/15/20 08:46:55 Page 8
-G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Column Listing      SOLVE pv Using LP From line 73
-
-
-     x_storage  
-
        -1       stor_max(t6)
        -1       stor_max(t7)
        -1       stor_max(t8)
@@ -387,6 +339,13 @@ x_out(t11)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
         1       demand_balance(t11)
         1       stor_balance(t11)
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/17/20 13:22:58 Page 8
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE pv Using LP From line 73
+
+
+     x_out  
+
 
 REMAINING 45 ENTRIES SKIPPED
 
@@ -397,13 +356,6 @@ x_soc(t1)
         1       stor_max(t1)
         1       stor_balance(t1)
        -1       stor_balance(t10)
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/15/20 08:46:55 Page 9
-G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Column Listing      SOLVE pv Using LP From line 73
-
-
-     x_soc  
-
 
 x_soc(t10)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
@@ -445,6 +397,13 @@ x_curtailment(t1)
        -1       pv_balance(t1)
 
 x_curtailment(t10)
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               04/17/20 13:22:58 Page 9
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE pv Using LP From line 73
+
+
+     x_curtailment  
+
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
        -1       pv_balance(t10)
 
@@ -453,10 +412,6 @@ x_curtailment(t11)
        -1       pv_balance(t11)
 
 REMAINING 45 ENTRIES SKIPPED
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 10
-G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Column Listing      SOLVE pv Using LP From line 73
-
 
 ---- x_buy_from_grid  
 
@@ -495,6 +450,10 @@ x_sell_to_grid(t11)
        -1       pv_balance(t11)
 
 REMAINING 45 ENTRIES SKIPPED
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 10
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE pv Using LP From line 73
+
 
 ---- x_control_demand  
 
@@ -511,13 +470,6 @@ x_control_demand(t10)
         1       control_dem_max(t10)
 
 x_control_demand(t11)
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 11
-G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Column Listing      SOLVE pv Using LP From line 73
-
-
-     x_control_demand  
-
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
        -1       demand_balance(t11)
        -1       control_dem(d1)
@@ -531,7 +483,7 @@ x_cost
                 (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
         1       obj
 
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 12
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 11
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Model Statistics    SOLVE pv Using LP From line 73
 
@@ -540,14 +492,14 @@ MODEL STATISTICS
 
 BLOCKS OF EQUATIONS           7     SINGLE EQUATIONS          243
 BLOCKS OF VARIABLES          11     SINGLE VARIABLES          387
-NON ZERO ELEMENTS           914
+NON ZERO ELEMENTS           873
 
 
-GENERATION TIME      =        0.094 SECONDS      4 MB  30.3.0 rc5da09e WEX-WEI
+GENERATION TIME      =        0.078 SECONDS      4 MB  30.3.0 rc5da09e WEX-WEI
 
 
-EXECUTION TIME       =        0.094 SECONDS      4 MB  30.3.0 rc5da09e WEX-WEI
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 13
+EXECUTION TIME       =        0.078 SECONDS      4 MB  30.3.0 rc5da09e WEX-WEI
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 12
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE pv Using LP From line 73
 
@@ -560,10 +512,10 @@ Solution Report     SOLVE pv Using LP From line 73
 
 **** SOLVER STATUS     1 Normal Completion         
 **** MODEL STATUS      1 Optimal                   
-**** OBJECTIVE VALUE             3739.1698
+**** OBJECTIVE VALUE             4832.2118
 
  RESOURCE USAGE, LIMIT          0.016      1000.000
- ITERATION COUNT, LIMIT       113    2000000000
+ ITERATION COUNT, LIMIT        82    2000000000
 
 IBM ILOG CPLEX   30.3.0 rc5da09e Released Mar 06, 2020 WEI x86 64bit/MS Window
 --- GAMS/Cplex licensed for continuous and discrete problems.
@@ -572,9 +524,9 @@ Cplex 12.10.0.0
 Space for names approximately 0.01 Mb
 Use option 'names no' to turn use of names off
 LP status(1): optimal
-Cplex Time: 0.00sec (det. 1.94 ticks)
+Cplex Time: 0.00sec (det. 0.94 ticks)
 Optimal solution found.
-Objective :        3739.169802
+Objective :        4832.211822
 
 
                            LOWER          LEVEL          UPPER         MARGINAL
@@ -585,27 +537,27 @@ Objective :        3739.169802
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t1        200.3630       200.3630       200.3630         0.0500      
-t10       465.9441       465.9441       465.9441         0.0500      
-t11       474.2643       474.2643       474.2643         0.0556      
-t12       480.8857       480.8857       480.8857         0.0556      
-t13       279.3092       279.3092       279.3092         0.0500      
-t14       117.2343       117.2343       117.2343         0.0500      
-t15       102.2942       102.2942       102.2942         0.0500      
-t16        18.2734        18.2734        18.2734         0.0500      
-t17        37.3505        37.3505        37.3505         0.0500      
-t18       340.2137       340.2137       340.2137         0.0500      
-t19       135.0066       135.0066       135.0066         0.0500      
-t2        375.9350       375.9350       375.9350         0.0500      
-t20        59.3585        59.3585        59.3585         0.0500      
-t21       162.6698       162.6698       162.6698         0.0500      
-t22       461.0566       461.0566       461.0566         0.0556      
-t23       452.6769       452.6769       452.6769         0.0500      
-t24       285.2704       285.2704       285.2704         0.0500      
-t25       383.7237       383.7237       383.7237         0.1729      
-t26       405.2578       405.2578       405.2578         0.1729      
-t27       414.0007       414.0007       414.0007         0.1729      
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 14
+t1        316.7538       316.7538       316.7538         0.1800      
+t10         2.3721         2.3721         2.3721         0.1800      
+t11       294.2454       294.2454       294.2454         0.1800      
+t12       382.8934       382.8934       382.8934         0.1800      
+t13       129.1464       129.1464       129.1464         0.1800      
+t14       100.4797       100.4797       100.4797         0.1800      
+t15       382.5469       382.5469       382.5469         0.1800      
+t16       263.6148       263.6148       263.6148         0.1800      
+t17       129.3032       129.3032       129.3032         0.1800      
+t18       124.7905       124.7905       124.7905         0.1800      
+t19        52.5371        52.5371        52.5371         0.1800      
+t2        278.9299       278.9299       278.9299         0.1800      
+t20       189.4968       189.4968       189.4968         0.1800      
+t21       466.9266       466.9266       466.9266         0.1800      
+t22       250.5097       250.5097       250.5097         0.1800      
+t23       393.3291       393.3291       393.3291         0.1800      
+t24       320.2202       320.2202       320.2202         0.1800      
+t25       207.0391       207.0391       207.0391         0.1800      
+t26       394.2570       394.2570       394.2570         0.1800      
+t27        93.6776        93.6776        93.6776         0.1800      
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 13
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE pv Using LP From line 73
 
@@ -614,56 +566,56 @@ Solution Report     SOLVE pv Using LP From line 73
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t28        33.6243        33.6243        33.6243         0.1729      
-t29       154.2414       154.2414       154.2414         0.1729      
-t3        457.0553       457.0553       457.0553         0.1729      
-t30       278.6269       278.6269       278.6269         0.1556      
-t31       257.6597       257.6597       257.6597         0.1729      
-t32        23.3639        23.3639        23.3639         0.1729      
-t33       452.9977       452.9977       452.9977         0.1729      
-t34       351.7104       351.7104       351.7104         0.1729      
-t35       251.9945       251.9945       251.9945         0.1729      
-t36       147.3461       147.3461       147.3461         0.1729      
-t37       312.1643       312.1643       312.1643         0.1729      
-t38       414.7720       414.7720       414.7720         0.1729      
-t39       306.1843       306.1843       306.1843         0.1729      
-t4        211.1948       211.1948       211.1948         0.1007      
-t40       244.8822       244.8822       244.8822         0.1119      
-t41        33.6654        33.6654        33.6654         0.1007      
-t42       141.2688       141.2688       141.2688         0.1729      
-t43       232.3409       232.3409       232.3409         0.1729      
-t44       308.8354       308.8354       308.8354         0.1729      
-t45       340.1755       340.1755       340.1755         0.1729      
-t46       458.6730       458.6730       458.6730         0.1729      
-t47        93.6924        93.6924        93.6924         0.1729      
-t48       130.6103       130.6103       130.6103         0.1729      
-t5        492.0685       492.0685       492.0685         0.0500      
-t6        425.4736       425.4736       425.4736         0.0500      
-t7        188.2526       188.2526       188.2526         0.0500      
-t8        387.5264       387.5264       387.5264         0.0500      
-t9        403.2484       403.2484       403.2484         0.0500      
+t28       223.2557       223.2557       223.2557         0.1800      
+t29        31.2163        31.2163        31.2163         0.1800      
+t3        294.8537       294.8537       294.8537         0.1800      
+t30       118.5603       118.5603       118.5603         0.1800      
+t31       188.6884       188.6884       188.6884         0.1800      
+t32        29.3114        29.3114        29.3114         0.1800      
+t33       239.5268       239.5268       239.5268         0.1800      
+t34       132.8027       132.8027       132.8027         0.1800      
+t35       323.3415       323.3415       323.3415         0.1800      
+t36       183.2410       183.2410       183.2410         0.1800      
+t37       289.5275       289.5275       289.5275         0.1800      
+t38       374.6896       374.6896       374.6896         0.1800      
+t39        70.8365        70.8365        70.8365         0.1800      
+t4        286.7635       286.7635       286.7635         0.1800      
+t40       286.1451       286.1451       286.1451         0.1800      
+t41       382.7454       382.7454       382.7454         0.1800      
+t42       380.0977       380.0977       380.0977         0.1800      
+t43       489.0782       489.0782       489.0782         0.1800      
+t44       434.0873       434.0873       434.0873         0.1800      
+t45       174.6006       174.6006       174.6006         0.1800      
+t46       326.4706       326.4706       326.4706         0.1800      
+t47        23.9801        23.9801        23.9801         0.1800      
+t48       378.7219       378.7219       378.7219         0.1800      
+t5        438.7551       438.7551       438.7551         0.1800      
+t6        386.3475       386.3475       386.3475         0.1800      
+t7        201.4423       201.4423       201.4423         0.1800      
+t8        348.9285       348.9285       348.9285         0.1800      
+t9        238.4204       238.4204       238.4204         0.1800      
 
 ---- EQU pv_balance  
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t1           .              .              .             0.0500      
-t10          .              .              .             0.0500      
-t11          .              .              .             0.0556      
-t12          .              .              .             0.0556      
-t13          .              .              .             0.0500      
-t14          .              .              .             0.0500      
-t15          .              .              .             0.0500      
-t16          .              .              .             0.0500      
-t17          .              .              .             0.0500      
-t18          .              .              .             0.0500      
-t19          .              .              .             0.0500      
-t2           .              .              .             0.0500      
-t20          .              .              .             0.0500      
-t21          .              .              .             0.0500      
-t22          .              .              .             0.0556      
-t23          .              .              .             0.0500      
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 15
+t1           .              .              .             0.1800      
+t10          .              .              .             0.1800      
+t11          .              .              .             0.6905      
+t12          .              .              .             0.1800      
+t13          .              .              .             0.1800      
+t14          .              .              .             0.1800      
+t15          .              .              .             0.1800      
+t16          .              .              .             0.1800      
+t17          .              .              .             0.1800      
+t18          .              .              .             0.1800      
+t19          .              .              .             0.1800      
+t2           .              .              .             0.1800      
+t20          .              .              .             0.1800      
+t21          .              .              .             0.1800      
+t22          .              .              .             0.1800      
+t23          .              .              .             0.1800      
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 14
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE pv Using LP From line 73
 
@@ -672,56 +624,56 @@ Solution Report     SOLVE pv Using LP From line 73
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t24          .              .              .             0.0500      
-t25          .              .              .             0.1729      
-t26          .              .              .             0.1729      
-t27          .              .              .             0.1729      
-t28          .              .              .             0.1729      
-t29          .              .              .             0.1729      
-t3           .              .              .             0.1729      
-t30          .              .              .             0.1556      
-t31          .              .              .             0.1729      
-t32          .              .              .             0.1729      
-t33          .              .              .             0.1729      
-t34          .              .              .             0.1729      
-t35          .              .              .             0.1729      
-t36          .              .              .             0.1729      
-t37          .              .              .             0.1729      
-t38          .              .              .             0.1729      
-t39          .              .              .             0.1729      
-t4           .              .              .             0.1007      
-t40          .              .              .             0.1119      
-t41          .              .              .             0.1007      
-t42          .              .              .             0.1729      
-t43          .              .              .             0.1729      
-t44          .              .              .             0.1729      
-t45          .              .              .             0.1729      
-t46          .              .              .             0.1729      
-t47          .              .              .             0.1729      
-t48          .              .              .             0.1729      
-t5           .              .              .             0.0500      
-t6           .              .              .             0.0500      
-t7           .              .              .             0.0500      
-t8           .              .              .             0.0500      
-t9           .              .              .             0.0500      
+t24          .              .              .             0.1800      
+t25          .              .              .             0.1800      
+t26          .              .              .             0.1800      
+t27          .              .              .             0.1800      
+t28          .              .              .             0.1800      
+t29          .              .              .             0.1800      
+t3           .              .              .             0.1800      
+t30          .              .              .             0.1800      
+t31          .              .              .             0.1800      
+t32          .              .              .             0.1800      
+t33          .              .              .             0.1800      
+t34          .              .              .             0.1800      
+t35          .              .              .             0.1800      
+t36          .              .              .             0.1800      
+t37          .              .              .             0.1800      
+t38          .              .              .             0.1800      
+t39          .              .              .             0.1800      
+t4           .              .              .             0.1800      
+t40          .              .              .             0.1800      
+t41          .              .              .             0.1800      
+t42          .              .              .             0.1800      
+t43          .              .              .             0.1800      
+t44          .              .              .             0.1800      
+t45          .              .              .             0.1800      
+t46          .              .              .             0.1800      
+t47          .              .              .             0.1800      
+t48          .              .              .             0.1800      
+t5           .              .              .             0.1800      
+t6           .              .              .             0.1800      
+t7           .              .              .             0.1800      
+t8           .              .              .             0.1800      
+t9           .              .              .             0.1800      
 
 ---- EQU stor_max  
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t1         -INF         -948.3479          .              .          
-t10        -INF         -601.2246          .              .          
-t11        -INF         -742.2678          .              .          
-t12        -INF        -1186.2961          .              .          
-t13        -INF         -715.5302          .              .          
-t14        -INF         -715.5302          .              .          
-t15        -INF          -50.4087          .              .          
-t16        -INF          -50.4087          .              .          
-t17        -INF          -50.4087          .              .          
-t18        -INF          -50.4087          .              .          
-t19        -INF          -50.4087          .              .          
-t2         -INF          -50.4087          .              .          
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 16
+t1         -INF             .              .              .          
+t10        -INF             .              .              .          
+t11        -INF             .              .             EPS         
+t12        -INF             .              .              .          
+t13        -INF             .              .              .          
+t14        -INF             .              .             EPS         
+t15        -INF             .              .              .          
+t16        -INF             .              .              .          
+t17        -INF             .              .              .          
+t18        -INF             .              .              .          
+t19        -INF             .              .              .          
+t2         -INF             .              .              .          
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 15
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE pv Using LP From line 73
 
@@ -730,56 +682,56 @@ Solution Report     SOLVE pv Using LP From line 73
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t20        -INF          -50.4087          .              .          
-t21        -INF          -50.4087          .              .          
-t22        -INF         -459.4289          .              .          
-t23        -INF         -430.9667          .              .          
-t24        -INF             .              .            -0.1174      
-t25        -INF         -222.8434          .              .          
-t26        -INF         -222.8434          .              .          
-t27        -INF         -222.8434          .              .          
-t28        -INF         -222.8434          .              .          
-t29        -INF         -222.8434          .              .          
-t3         -INF         -460.3472          .              .          
-t30        -INF         -370.0728          .              .          
-t31        -INF         -370.0728          .              .          
-t32        -INF         -393.6245          .              .          
-t33        -INF         -393.6245          .              .          
-t34        -INF         -528.3337          .              .          
-t35        -INF         -763.9916          .              .          
-t36        -INF         -763.9916          .              .          
-t37        -INF        -1037.2493          .              .          
-t38        -INF        -1037.2493          .              .          
-t39        -INF        -1186.2961          .              .          
-t4         -INF         -146.2682          .              .          
-t40        -INF         -174.0024          .              .          
-t41        -INF             .              .            -0.0610      
-t42        -INF         -356.2652          .              .          
-t43        -INF         -356.2652          .              .          
-t44        -INF         -356.2652          .              .          
-t45        -INF         -448.5991          .              .          
-t46        -INF        -1150.8727          .              .          
-t47        -INF        -1186.2961          .              .          
-t48        -INF        -1186.2961          .              .          
-t5         -INF        -1186.2961          .              .          
-t6         -INF        -1186.2961          .              .          
-t7         -INF        -1186.2961          .              .          
-t8         -INF        -1186.2961          .              .          
-t9         -INF        -1186.2961          .              .          
+t20        -INF             .              .              .          
+t21        -INF             .              .              .          
+t22        -INF             .              .              .          
+t23        -INF             .              .              .          
+t24        -INF             .              .              .          
+t25        -INF             .              .              .          
+t26        -INF             .              .              .          
+t27        -INF             .              .             EPS         
+t28        -INF             .              .              .          
+t29        -INF             .              .              .          
+t3         -INF             .              .              .          
+t30        -INF             .              .              .          
+t31        -INF             .              .              .          
+t32        -INF             .              .              .          
+t33        -INF             .              .              .          
+t34        -INF             .              .              .          
+t35        -INF             .              .              .          
+t36        -INF             .              .              .          
+t37        -INF             .              .              .          
+t38        -INF             .              .              .          
+t39        -INF             .              .              .          
+t4         -INF             .              .              .          
+t40        -INF             .              .              .          
+t41        -INF             .              .              .          
+t42        -INF             .              .              .          
+t43        -INF             .              .             EPS         
+t44        -INF             .              .             EPS         
+t45        -INF             .              .             EPS         
+t46        -INF             .              .              .          
+t47        -INF             .              .              .          
+t48        -INF             .              .              .          
+t5         -INF             .              .              .          
+t6         -INF             .              .             EPS         
+t7         -INF             .              .              .          
+t8         -INF             .              .              .          
+t9         -INF             .              .              .          
 
 ---- EQU stor_balance  
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t1           .              .              .            -0.0556      
-t10          .              .              .            -0.0556      
-t11          .              .              .            -0.0556      
-t12          .              .              .            -0.0556      
-t13          .              .              .            -0.0556      
-t14          .              .              .            -0.0556      
-t15          .              .              .            -0.0556      
-t16          .              .              .            -0.0556      
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 17
+t1           .              .              .            -0.2000      
+t10          .              .              .            -0.2000      
+t11          .              .              .            -0.1800      
+t12          .              .              .            -0.1800      
+t13          .              .              .            -0.1800      
+t14          .              .              .            -0.1800      
+t15          .              .              .            -0.1800      
+t16          .              .              .            -0.1800      
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 16
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE pv Using LP From line 73
 
@@ -788,54 +740,54 @@ Solution Report     SOLVE pv Using LP From line 73
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t17          .              .              .            -0.0556      
-t18          .              .              .            -0.0556      
-t19          .              .              .            -0.0556      
-t2           .              .              .            -0.0556      
-t20          .              .              .            -0.0556      
-t21          .              .              .            -0.0556      
-t22          .              .              .            -0.0556      
-t23          .              .              .            -0.0556      
-t24          .              .              .            -0.0556      
-t25          .              .              .            -0.1729      
-t26          .              .              .            -0.1729      
-t27          .              .              .            -0.1729      
-t28          .              .              .            -0.1729      
-t29          .              .              .            -0.1729      
-t3           .              .              .            -0.1729      
-t30          .              .              .            -0.1729      
-t31          .              .              .            -0.1729      
-t32          .              .              .            -0.1729      
-t33          .              .              .            -0.1729      
-t34          .              .              .            -0.1729      
-t35          .              .              .            -0.1729      
-t36          .              .              .            -0.1729      
-t37          .              .              .            -0.1729      
-t38          .              .              .            -0.1729      
-t39          .              .              .            -0.1729      
-t4           .              .              .            -0.1119      
-t40          .              .              .            -0.1119      
-t41          .              .              .            -0.1119      
-t42          .              .              .            -0.1729      
-t43          .              .              .            -0.1729      
-t44          .              .              .            -0.1729      
-t45          .              .              .            -0.1729      
-t46          .              .              .            -0.1729      
-t47          .              .              .            -0.1729      
-t48          .              .              .            -0.1729      
-t5           .              .              .            -0.0556      
-t6           .              .              .            -0.0556      
-t7           .              .              .            -0.0556      
-t8           .              .              .            -0.0556      
-t9           .              .              .            -0.0500      
+t17          .              .              .            -0.1800      
+t18          .              .              .            -0.1800      
+t19          .              .              .            -0.1800      
+t2           .              .              .            -0.1800      
+t20          .              .              .            -0.1800      
+t21          .              .              .            -0.1800      
+t22          .              .              .            -0.1800      
+t23          .              .              .            -0.1800      
+t24          .              .              .            -0.1800      
+t25          .              .              .            -0.1800      
+t26          .              .              .            -0.1800      
+t27          .              .              .            -0.1800      
+t28          .              .              .            -0.1800      
+t29          .              .              .            -0.1800      
+t3           .              .              .            -0.1800      
+t30          .              .              .            -0.1800      
+t31          .              .              .            -0.1800      
+t32          .              .              .            -0.1800      
+t33          .              .              .            -0.1800      
+t34          .              .              .            -0.1800      
+t35          .              .              .            -0.1800      
+t36          .              .              .            -0.1800      
+t37          .              .              .            -0.1800      
+t38          .              .              .            -0.1800      
+t39          .              .              .            -0.1800      
+t4           .              .              .            -0.1800      
+t40          .              .              .            -0.1800      
+t41          .              .              .            -0.1800      
+t42          .              .              .            -0.1800      
+t43          .              .              .            -0.1800      
+t44          .              .              .            -0.1800      
+t45          .              .              .            -0.1800      
+t46          .              .              .            -0.1800      
+t47          .              .              .            -0.1800      
+t48          .              .              .            -0.1800      
+t5           .              .              .            -0.1800      
+t6           .              .              .            -0.1800      
+t7           .              .              .            -0.1800      
+t8           .              .              .            -0.1800      
+t9           .              .              .            -0.1800      
 
 ---- EQU control_dem  
 
           LOWER          LEVEL          UPPER         MARGINAL
 
-d1     -7037.3860     -7037.3860     -7037.3860        -0.0500      
-d2    -11954.6453    -11954.6453    -11954.6453        -0.1729      
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 18
+d1    -10846.6291    -10846.6291    -10846.6291        -0.1800      
+d2     -3949.4872     -3949.4872     -3949.4872        -0.1800      
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 17
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE pv Using LP From line 73
 
@@ -845,112 +797,112 @@ Solution Report     SOLVE pv Using LP From line 73
            LOWER          LEVEL          UPPER         MARGINAL
 
 t1         -INF             .          1000.0000          .          
-t10        -INF             .          1000.0000          .          
-t11        -INF             .          1000.0000          .          
-t12        -INF             .          1000.0000          .          
-t13        -INF             .          1000.0000          .          
-t14        -INF             .          1000.0000          .          
-t15        -INF             .          1000.0000          .          
-t16        -INF             .          1000.0000          .          
+t10        -INF         1000.0000      1000.0000         EPS         
+t11        -INF         1000.0000      1000.0000         EPS         
+t12        -INF         1000.0000      1000.0000         EPS         
+t13        -INF         1000.0000      1000.0000         EPS         
+t14        -INF         1000.0000      1000.0000         EPS         
+t15        -INF         1000.0000      1000.0000         EPS         
+t16        -INF          846.6291      1000.0000          .          
 t17        -INF             .          1000.0000          .          
-t18        -INF          683.3219      1000.0000          .          
-t19        -INF          459.7005      1000.0000          .          
-t2         -INF         1000.0000      1000.0000         EPS         
-t20        -INF         1000.0000      1000.0000         EPS         
-t21        -INF          927.4633      1000.0000          .          
+t18        -INF             .          1000.0000          .          
+t19        -INF             .          1000.0000          .          
+t2         -INF             .          1000.0000          .          
+t20        -INF             .          1000.0000          .          
+t21        -INF             .          1000.0000          .          
 t22        -INF             .          1000.0000          .          
 t23        -INF             .          1000.0000          .          
 t24        -INF             .          1000.0000          .          
-t25        -INF          275.8665      1000.0000          .          
-t26        -INF          152.2246      1000.0000          .          
-t27        -INF          148.9627      1000.0000          .          
-t28        -INF          214.5187      1000.0000          .          
-t29        -INF          163.8290      1000.0000          .          
+t25        -INF         1000.0000      1000.0000         EPS         
+t26        -INF         1000.0000      1000.0000         EPS         
+t27        -INF          949.4872      1000.0000          .          
+t28        -INF             .          1000.0000          .          
+t29        -INF             .          1000.0000          .          
 t3         -INF             .          1000.0000          .          
-t30        -INF         1000.0000      1000.0000        -0.0173      
-t31        -INF          153.0717      1000.0000          .          
-t32        -INF         1000.0000      1000.0000         EPS         
-t33        -INF           35.5611      1000.0000          .          
-t34        -INF         1000.0000      1000.0000         EPS         
+t30        -INF             .          1000.0000          .          
+t31        -INF             .          1000.0000          .          
+t32        -INF             .          1000.0000          .          
+t33        -INF             .          1000.0000          .          
+t34        -INF             .          1000.0000          .          
 t35        -INF             .          1000.0000          .          
-t36        -INF          359.3185      1000.0000          .          
+t36        -INF             .          1000.0000          .          
 t37        -INF             .          1000.0000          .          
-t38        -INF          716.9878      1000.0000          .          
+t38        -INF         1000.0000      1000.0000         EPS         
 t39        -INF             .          1000.0000          .          
 t4         -INF             .          1000.0000          .          
-t40        -INF         1000.0000      1000.0000        -0.0610      
-t41        -INF         1000.0000      1000.0000        -0.0722      
-t42        -INF         1000.0000      1000.0000         EPS         
-t43        -INF          571.7338      1000.0000          .          
-t44        -INF          396.3023      1000.0000          .          
-t45        -INF         1000.0000      1000.0000         EPS         
-t46        -INF          584.7312      1000.0000          .          
-t47        -INF         1000.0000      1000.0000         EPS         
-t48        -INF          181.5374      1000.0000          .          
-t5         -INF          679.4544      1000.0000          .          
-t6         -INF          945.8968      1000.0000          .          
-t7         -INF          318.7288      1000.0000          .          
-t8         -INF          445.9978      1000.0000          .          
-t9         -INF          576.8225      1000.0000          .          
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 19
+t40        -INF             .          1000.0000          .          
+t41        -INF             .          1000.0000          .          
+t42        -INF             .          1000.0000          .          
+t43        -INF             .          1000.0000          .          
+t44        -INF             .          1000.0000          .          
+t45        -INF             .          1000.0000          .          
+t46        -INF             .          1000.0000          .          
+t47        -INF             .          1000.0000          .          
+t48        -INF             .          1000.0000          .          
+t5         -INF             .          1000.0000          .          
+t6         -INF         1000.0000      1000.0000         EPS         
+t7         -INF         1000.0000      1000.0000         EPS         
+t8         -INF         1000.0000      1000.0000         EPS         
+t9         -INF         1000.0000      1000.0000         EPS         
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 18
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE pv Using LP From line 73
 
 
                            LOWER          LEVEL          UPPER         MARGINAL
 
----- VAR x_pv                .         13899.7606        +INF             .          
----- VAR x_storage           .          1186.2961        +INF             .          
+---- VAR x_pv                .              .            +INF             .          
+---- VAR x_storage           .              .            +INF            0.1779      
 
 ---- VAR x_in  
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t1           .           264.3869        +INF             .          
-t10          .           385.6926        +INF             .          
-t11          .              .            +INF            0.0056      
-t12          .              .            +INF            0.0056      
-t13          .           523.0733        +INF             .          
-t14          .              .            +INF            EPS         
-t15          .           739.0238        +INF             .          
-t16          .              .            +INF            EPS         
-t17          .              .            +INF            EPS         
-t18          .              .            +INF            EPS         
-t19          .              .            +INF            EPS         
-t2           .              .            +INF            EPS         
-t20          .              .            +INF            EPS         
-t21          .              .            +INF            EPS         
-t22          .              .            +INF            0.0056      
-t23          .            31.6246        +INF             .          
-t24          .           478.8519        +INF             .          
-t25          .              .            +INF            0.0173      
-t26          .              .            +INF            0.0173      
-t27          .              .            +INF            0.0173      
-t28          .              .            +INF            0.0173      
-t29          .              .            +INF            0.0173      
-t3           .              .            +INF            0.0173      
-t30          .           100.3049        +INF             .          
-t31          .              .            +INF            0.0173      
-t32          .              .            +INF            0.0173      
-t33          .              .            +INF            0.0173      
-t34          .              .            +INF            0.0173      
-t35          .              .            +INF            0.0173      
-t36          .              .            +INF            0.0173      
-t37          .              .            +INF            0.0173      
-t38          .              .            +INF            0.0173      
-t39          .              .            +INF            0.0173      
-t4           .          1155.5866        +INF             .          
-t40          .              .            +INF            0.0112      
-t41          .           193.3360        +INF             .          
-t42          .              .            +INF            0.0173      
-t43          .              .            +INF            0.0173      
-t44          .              .            +INF            0.0173      
-t45          .              .            +INF            0.0173      
-t46          .              .            +INF            0.0173      
-t47          .              .            +INF            0.0173      
-t48          .              .            +INF            0.0173      
-t5           .              .            +INF             .          
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 20
+t1           .              .            +INF             .          
+t10          .              .            +INF             .          
+t11          .              .            +INF            0.5285      
+t12          .              .            +INF            0.0180      
+t13          .              .            +INF            0.0180      
+t14          .              .            +INF            0.0180      
+t15          .              .            +INF            0.0180      
+t16          .              .            +INF            0.0180      
+t17          .              .            +INF            0.0180      
+t18          .              .            +INF            0.0180      
+t19          .              .            +INF            0.0180      
+t2           .              .            +INF            0.0180      
+t20          .              .            +INF            0.0180      
+t21          .              .            +INF            0.0180      
+t22          .              .            +INF            0.0180      
+t23          .              .            +INF            0.0180      
+t24          .              .            +INF            0.0180      
+t25          .              .            +INF            0.0180      
+t26          .              .            +INF            0.0180      
+t27          .              .            +INF            0.0180      
+t28          .              .            +INF            0.0180      
+t29          .              .            +INF            0.0180      
+t3           .              .            +INF            0.0180      
+t30          .              .            +INF            0.0180      
+t31          .              .            +INF            0.0180      
+t32          .              .            +INF            0.0180      
+t33          .              .            +INF            0.0180      
+t34          .              .            +INF            0.0180      
+t35          .              .            +INF            0.0180      
+t36          .              .            +INF            0.0180      
+t37          .              .            +INF            0.0180      
+t38          .              .            +INF            0.0180      
+t39          .              .            +INF            0.0180      
+t4           .              .            +INF            0.0180      
+t40          .              .            +INF            0.0180      
+t41          .              .            +INF            0.0180      
+t42          .              .            +INF            0.0180      
+t43          .              .            +INF            0.0180      
+t44          .              .            +INF            0.0180      
+t45          .              .            +INF            0.0180      
+t46          .              .            +INF            0.0180      
+t47          .              .            +INF            0.0180      
+t48          .              .            +INF            0.0180      
+t5           .              .            +INF            0.0180      
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 19
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE pv Using LP From line 73
 
@@ -959,56 +911,56 @@ Solution Report     SOLVE pv Using LP From line 73
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t6           .              .            +INF             .          
-t7           .              .            +INF             .          
-t8           .              .            +INF             .          
-t9           .              .            +INF            0.0050      
+t6           .              .            +INF            0.0180      
+t7           .              .            +INF            0.0180      
+t8           .              .            +INF            0.0180      
+t9           .              .            +INF            0.0180      
 
 ---- VAR x_out  
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t1           .              .            +INF            0.0056      
-t10          .              .            +INF            0.0056      
-t11          .           141.0433        +INF             .          
-t12          .           444.0283        +INF             .          
-t13          .              .            +INF            0.0056      
-t14          .              .            +INF            0.0056      
-t15          .              .            +INF            0.0056      
-t16          .              .            +INF            0.0056      
-t17          .              .            +INF            0.0056      
-t18          .              .            +INF            0.0056      
-t19          .              .            +INF            0.0056      
-t2           .              .            +INF            0.0056      
-t20          .              .            +INF            0.0056      
-t21          .              .            +INF            0.0056      
-t22          .           409.0202        +INF             .          
-t23          .              .            +INF            0.0056      
-t24          .              .            +INF            0.0056      
-t25          .           222.8434        +INF             .          
+t1           .              .            +INF            0.0200      
+t10          .              .            +INF            0.0200      
+t11          .              .            +INF             .          
+t12          .              .            +INF            EPS         
+t13          .              .            +INF            EPS         
+t14          .              .            +INF             .          
+t15          .              .            +INF            EPS         
+t16          .              .            +INF            EPS         
+t17          .              .            +INF            EPS         
+t18          .              .            +INF            EPS         
+t19          .              .            +INF             .          
+t2           .              .            +INF            EPS         
+t20          .              .            +INF            EPS         
+t21          .              .            +INF            EPS         
+t22          .              .            +INF            EPS         
+t23          .              .            +INF            EPS         
+t24          .              .            +INF            EPS         
+t25          .              .            +INF            EPS         
 t26          .              .            +INF            EPS         
-t27          .              .            +INF            EPS         
+t27          .              .            +INF             .          
 t28          .              .            +INF            EPS         
-t29          .              .            +INF            EPS         
-t3           .           237.5038        +INF             .          
-t30          .              .            +INF            0.0173      
+t29          .              .            +INF             .          
+t3           .              .            +INF            EPS         
+t30          .              .            +INF            EPS         
 t31          .              .            +INF            EPS         
-t32          .            23.5517        +INF             .          
+t32          .              .            +INF            EPS         
 t33          .              .            +INF            EPS         
-t34          .           134.7092        +INF             .          
-t35          .           235.6579        +INF             .          
+t34          .              .            +INF             .          
+t35          .              .            +INF            EPS         
 t36          .              .            +INF            EPS         
-t37          .           273.2577        +INF             .          
+t37          .              .            +INF            EPS         
 t38          .              .            +INF            EPS         
-t39          .           149.0469        +INF             .          
-t4           .              .            +INF            0.0112      
-t40          .            27.7342        +INF             .          
-t41          .              .            +INF            0.0112      
-t42          .           356.2652        +INF             .          
-t43          .              .            +INF            EPS         
-t44          .              .            +INF            EPS         
-t45          .            92.3340        +INF             .          
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 21
+t39          .              .            +INF            EPS         
+t4           .              .            +INF            EPS         
+t40          .              .            +INF            EPS         
+t41          .              .            +INF            EPS         
+t42          .              .            +INF            EPS         
+t43          .              .            +INF             .          
+t44          .              .            +INF             .          
+t45          .              .            +INF             .          
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 20
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE pv Using LP From line 73
 
@@ -1017,56 +969,56 @@ Solution Report     SOLVE pv Using LP From line 73
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t46          .           702.2736        +INF             .          
-t47          .            35.4234        +INF             .          
+t46          .              .            +INF            EPS         
+t47          .              .            +INF             .          
 t48          .              .            +INF            EPS         
-t5           .              .            +INF            0.0056      
-t6           .              .            +INF            0.0056      
-t7           .              .            +INF            0.0056      
-t8           .              .            +INF            0.0056      
+t5           .              .            +INF            EPS         
+t6           .              .            +INF             .          
+t7           .              .            +INF             .          
+t8           .              .            +INF             .          
 t9           .              .            +INF             .          
 
 ---- VAR x_soc  
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t1           .           237.9482        +INF             .          
-t10          .           585.0716        +INF             .          
-t11          .           444.0283        +INF             .          
-t12          .              .            +INF            EPS         
-t13          .           470.7660        +INF             .          
-t14          .           470.7660        +INF             .          
-t15          .          1135.8874        +INF             .          
-t16          .          1135.8874        +INF             .          
-t17          .          1135.8874        +INF             .          
-t18          .          1135.8874        +INF             .          
-t19          .          1135.8874        +INF             .          
-t2           .          1135.8874        +INF             .          
-t20          .          1135.8874        +INF             .          
-t21          .          1135.8874        +INF             .          
-t22          .           726.8672        +INF             .          
-t23          .           755.3294        +INF             .          
-t24          .          1186.2961        +INF             .          
-t25          .           963.4528        +INF             .          
-t26          .           963.4528        +INF             .          
-t27          .           963.4528        +INF             .          
-t28          .           963.4528        +INF             .          
-t29          .           963.4528        +INF             .          
-t3           .           725.9490        +INF             .          
-t30          .           816.2233        +INF             .          
-t31          .           816.2233        +INF             .          
-t32          .           792.6717        +INF             .          
-t33          .           792.6717        +INF             .          
-t34          .           657.9625        +INF             .          
-t35          .           422.3046        +INF             .          
-t36          .           422.3046        +INF             .          
-t37          .           149.0469        +INF             .          
-t38          .           149.0469        +INF             .          
-t39          .              .            +INF            0.0610      
-t4           .          1040.0279        +INF             .          
-t40          .          1012.2937        +INF             .          
-t41          .          1186.2961        +INF             .          
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 22
+t1           .              .            +INF             .          
+t10          .              .            +INF            0.0200      
+t11          .              .            +INF             .          
+t12          .              .            +INF             .          
+t13          .              .            +INF             .          
+t14          .              .            +INF             .          
+t15          .              .            +INF             .          
+t16          .              .            +INF             .          
+t17          .              .            +INF             .          
+t18          .              .            +INF             .          
+t19          .              .            +INF             .          
+t2           .              .            +INF             .          
+t20          .              .            +INF             .          
+t21          .              .            +INF             .          
+t22          .              .            +INF             .          
+t23          .              .            +INF             .          
+t24          .              .            +INF             .          
+t25          .              .            +INF            EPS         
+t26          .              .            +INF             .          
+t27          .              .            +INF             .          
+t28          .              .            +INF             .          
+t29          .              .            +INF             .          
+t3           .              .            +INF             .          
+t30          .              .            +INF             .          
+t31          .              .            +INF             .          
+t32          .              .            +INF            EPS         
+t33          .              .            +INF             .          
+t34          .              .            +INF             .          
+t35          .              .            +INF             .          
+t36          .              .            +INF             .          
+t37          .              .            +INF            EPS         
+t38          .              .            +INF             .          
+t39          .              .            +INF             .          
+t4           .              .            +INF             .          
+t40          .              .            +INF             .          
+t41          .              .            +INF             .          
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 21
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE pv Using LP From line 73
 
@@ -1075,56 +1027,56 @@ Solution Report     SOLVE pv Using LP From line 73
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t42          .           830.0310        +INF             .          
-t43          .           830.0310        +INF             .          
-t44          .           830.0310        +INF             .          
-t45          .           737.6970        +INF             .          
-t46          .            35.4234        +INF             .          
+t42          .              .            +INF             .          
+t43          .              .            +INF             .          
+t44          .              .            +INF             .          
+t45          .              .            +INF             .          
+t46          .              .            +INF             .          
 t47          .              .            +INF             .          
-t48          .              .            +INF            0.1174      
+t48          .              .            +INF             .          
 t5           .              .            +INF            EPS         
-t6           .              .            +INF            EPS         
+t6           .              .            +INF             .          
 t7           .              .            +INF            EPS         
-t8           .              .            +INF            0.0056      
-t9           .              .            +INF            0.0500      
+t8           .              .            +INF            EPS         
+t9           .              .            +INF            0.1800      
 
 ---- VAR x_direct_use  
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t1           .           200.3630        +INF             .          
-t10          .           465.9441        +INF             .          
-t11          .           333.2210        +INF             .          
-t12          .            36.8574        +INF             .          
-t13          .           279.3092        +INF             .          
-t14          .           117.2343        +INF             .          
-t15          .           102.2942        +INF             .          
-t16          .            18.2734        +INF             .          
-t17          .            37.3505        +INF             .          
-t18          .          1023.5356        +INF             .          
-t19          .           594.7071        +INF             .          
-t2           .          1375.9350        +INF             .          
-t20          .          1059.3585        +INF             .          
-t21          .          1090.1331        +INF             .          
-t22          .            52.0364        +INF             .          
-t23          .           452.6769        +INF             .          
-t24          .           285.2704        +INF             .          
-t25          .           436.7468        +INF             .          
-t26          .           557.4823        +INF             .          
-t27          .           562.9634        +INF             .          
-t28          .           248.1430        +INF             .          
-t29          .           318.0703        +INF             .          
-t3           .           219.5515        +INF             .          
-t30          .          1278.6269        +INF             .          
-t31          .           410.7314        +INF             .          
-t32          .           999.8122        +INF             .          
-t33          .           488.5587        +INF             .          
-t34          .          1217.0013        +INF             .          
-t35          .            16.3366        +INF             .          
-t36          .           506.6646        +INF             .          
-t37          .            38.9066        +INF             .          
-t38          .          1131.7598        +INF             .          
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 23
+t1           .              .            +INF      2.775558E-17      
+t10          .              .            +INF             .          
+t11          .              .            +INF            0.5105      
+t12          .              .            +INF             .          
+t13          .              .            +INF             .          
+t14          .              .            +INF             .          
+t15          .              .            +INF             .          
+t16          .              .            +INF             .          
+t17          .              .            +INF             .          
+t18          .              .            +INF             .          
+t19          .              .            +INF             .          
+t2           .              .            +INF             .          
+t20          .              .            +INF             .          
+t21          .              .            +INF             .          
+t22          .              .            +INF             .          
+t23          .              .            +INF             .          
+t24          .              .            +INF             .          
+t25          .              .            +INF             .          
+t26          .              .            +INF             .          
+t27          .              .            +INF             .          
+t28          .              .            +INF             .          
+t29          .              .            +INF             .          
+t3           .              .            +INF             .          
+t30          .              .            +INF             .          
+t31          .              .            +INF             .          
+t32          .              .            +INF             .          
+t33          .              .            +INF             .          
+t34          .              .            +INF             .          
+t35          .              .            +INF             .          
+t36          .              .            +INF             .          
+t37          .              .            +INF             .          
+t38          .              .            +INF             .          
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 22
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE pv Using LP From line 73
 
@@ -1133,56 +1085,56 @@ Solution Report     SOLVE pv Using LP From line 73
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t39          .           157.1374        +INF             .          
-t4           .           211.1948        +INF             .          
-t40          .          1217.1480        +INF             .          
-t41          .          1033.6654        +INF             .          
-t42          .           785.0036        +INF             .          
-t43          .           804.0747        +INF             .          
-t44          .           705.1377        +INF             .          
-t45          .          1247.8416        +INF             .          
-t46          .           341.1305        +INF             .          
-t47          .          1058.2690        +INF             .          
-t48          .           312.1477        +INF             .          
-t5           .          1171.5229        +INF             .          
-t6           .          1371.3704        +INF             .          
-t7           .           506.9814        +INF             .          
-t8           .           833.5242        +INF             .          
-t9           .           980.0709        +INF             .          
+t39          .              .            +INF             .          
+t4           .              .            +INF             .          
+t40          .              .            +INF             .          
+t41          .              .            +INF             .          
+t42          .              .            +INF             .          
+t43          .              .            +INF             .          
+t44          .              .            +INF             .          
+t45          .              .            +INF             .          
+t46          .              .            +INF             .          
+t47          .              .            +INF             .          
+t48          .              .            +INF             .          
+t5           .              .            +INF             .          
+t6           .              .            +INF             .          
+t7           .              .            +INF             .          
+t8           .              .            +INF             .          
+t9           .              .            +INF             .          
 
 ---- VAR x_curtailment  
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t1           .              .            +INF            0.0500      
-t10          .              .            +INF            0.0500      
-t11          .              .            +INF            0.0556      
-t12          .              .            +INF            0.0556      
-t13          .              .            +INF            0.0500      
-t14          .              .            +INF            0.0500      
-t15          .              .            +INF            0.0500      
-t16          .              .            +INF            0.0500      
-t17          .              .            +INF            0.0500      
-t18          .              .            +INF            0.0500      
-t19          .              .            +INF            0.0500      
-t2           .              .            +INF            0.0500      
-t20          .              .            +INF            0.0500      
-t21          .              .            +INF            0.0500      
-t22          .              .            +INF            0.0556      
-t23          .              .            +INF            0.0500      
-t24          .              .            +INF            0.0500      
-t25          .              .            +INF            0.1729      
-t26          .              .            +INF            0.1729      
-t27          .              .            +INF            0.1729      
-t28          .              .            +INF            0.1729      
-t29          .              .            +INF            0.1729      
-t3           .              .            +INF            0.1729      
-t30          .              .            +INF            0.1556      
-t31          .              .            +INF            0.1729      
-t32          .              .            +INF            0.1729      
-t33          .              .            +INF            0.1729      
-t34          .              .            +INF            0.1729      
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 24
+t1           .              .            +INF            0.1800      
+t10          .              .            +INF            0.1800      
+t11          .              .            +INF            0.6905      
+t12          .              .            +INF            0.1800      
+t13          .              .            +INF            0.1800      
+t14          .              .            +INF            0.1800      
+t15          .              .            +INF            0.1800      
+t16          .              .            +INF            0.1800      
+t17          .              .            +INF            0.1800      
+t18          .              .            +INF            0.1800      
+t19          .              .            +INF            0.1800      
+t2           .              .            +INF            0.1800      
+t20          .              .            +INF            0.1800      
+t21          .              .            +INF            0.1800      
+t22          .              .            +INF            0.1800      
+t23          .              .            +INF            0.1800      
+t24          .              .            +INF            0.1800      
+t25          .              .            +INF            0.1800      
+t26          .              .            +INF            0.1800      
+t27          .              .            +INF            0.1800      
+t28          .              .            +INF            0.1800      
+t29          .              .            +INF            0.1800      
+t3           .              .            +INF            0.1800      
+t30          .              .            +INF            0.1800      
+t31          .              .            +INF            0.1800      
+t32          .              .            +INF            0.1800      
+t33          .              .            +INF            0.1800      
+t34          .              .            +INF            0.1800      
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 23
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE pv Using LP From line 73
 
@@ -1191,35 +1143,97 @@ Solution Report     SOLVE pv Using LP From line 73
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t35          .              .            +INF            0.1729      
-t36          .              .            +INF            0.1729      
-t37          .              .            +INF            0.1729      
-t38          .              .            +INF            0.1729      
-t39          .              .            +INF            0.1729      
-t4           .              .            +INF            0.1007      
-t40          .              .            +INF            0.1119      
-t41          .              .            +INF            0.1007      
-t42          .              .            +INF            0.1729      
-t43          .              .            +INF            0.1729      
-t44          .              .            +INF            0.1729      
-t45          .              .            +INF            0.1729      
-t46          .              .            +INF            0.1729      
-t47          .              .            +INF            0.1729      
-t48          .              .            +INF            0.1729      
-t5           .              .            +INF            0.0500      
-t6           .              .            +INF            0.0500      
-t7           .              .            +INF            0.0500      
-t8           .              .            +INF            0.0500      
-t9           .              .            +INF            0.0500      
+t35          .              .            +INF            0.1800      
+t36          .              .            +INF            0.1800      
+t37          .              .            +INF            0.1800      
+t38          .              .            +INF            0.1800      
+t39          .              .            +INF            0.1800      
+t4           .              .            +INF            0.1800      
+t40          .              .            +INF            0.1800      
+t41          .              .            +INF            0.1800      
+t42          .              .            +INF            0.1800      
+t43          .              .            +INF            0.1800      
+t44          .              .            +INF            0.1800      
+t45          .              .            +INF            0.1800      
+t46          .              .            +INF            0.1800      
+t47          .              .            +INF            0.1800      
+t48          .              .            +INF            0.1800      
+t5           .              .            +INF            0.1800      
+t6           .              .            +INF            0.1800      
+t7           .              .            +INF            0.1800      
+t8           .              .            +INF            0.1800      
+t9           .              .            +INF            0.1800      
 
 ---- VAR x_buy_from_grid  
 
            LOWER          LEVEL          UPPER         MARGINAL
 
+t1           .           316.7538        +INF             .          
+t10          .          1002.3721        +INF             .          
+t11          .          1294.2454        +INF             .          
+t12          .          1382.8934        +INF             .          
+t13          .          1129.1464        +INF             .          
+t14          .          1100.4797        +INF             .          
+t15          .          1382.5469        +INF             .          
+t16          .          1110.2439        +INF             .          
+t17          .           129.3032        +INF             .          
+t18          .           124.7905        +INF             .          
+t19          .            52.5371        +INF             .          
+t2           .           278.9299        +INF             .          
+t20          .           189.4968        +INF             .          
+t21          .           466.9266        +INF             .          
+t22          .           250.5097        +INF             .          
+t23          .           393.3291        +INF             .          
+t24          .           320.2202        +INF             .          
+t25          .          1207.0391        +INF             .          
+t26          .          1394.2570        +INF             .          
+t27          .          1043.1647        +INF             .          
+t28          .           223.2557        +INF             .          
+t29          .            31.2163        +INF             .          
+t3           .           294.8537        +INF             .          
+t30          .           118.5603        +INF             .          
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 24
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE pv Using LP From line 73
+
+
+     VAR x_buy_from_grid  
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+t31          .           188.6884        +INF             .          
+t32          .            29.3114        +INF             .          
+t33          .           239.5268        +INF             .          
+t34          .           132.8027        +INF             .          
+t35          .           323.3415        +INF             .          
+t36          .           183.2410        +INF             .          
+t37          .           289.5275        +INF             .          
+t38          .          1374.6896        +INF             .          
+t39          .            70.8365        +INF             .          
+t4           .           286.7635        +INF             .          
+t40          .           286.1451        +INF             .          
+t41          .           382.7454        +INF             .          
+t42          .           380.0977        +INF             .          
+t43          .           489.0782        +INF             .          
+t44          .           434.0873        +INF             .          
+t45          .           174.6006        +INF             .          
+t46          .           326.4706        +INF             .          
+t47          .            23.9801        +INF             .          
+t48          .           378.7219        +INF             .          
+t5           .           438.7551        +INF             .          
+t6           .          1386.3475        +INF             .          
+t7           .          1201.4423        +INF             .          
+t8           .          1348.9285        +INF             .          
+t9           .          1238.4204        +INF             .          
+
+---- VAR x_sell_to_grid  
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
 t1           .              .            +INF            0.1300      
 t10          .              .            +INF            0.1300      
-t11          .              .            +INF            0.1244      
-t12          .              .            +INF            0.1244      
+t11          .              .            +INF            0.6405      
+t12          .              .            +INF            0.1300      
 t13          .              .            +INF            0.1300      
 t14          .              .            +INF            0.1300      
 t15          .              .            +INF            0.1300      
@@ -1230,75 +1244,13 @@ t19          .              .            +INF            0.1300
 t2           .              .            +INF            0.1300      
 t20          .              .            +INF            0.1300      
 t21          .              .            +INF            0.1300      
-t22          .              .            +INF            0.1244      
+t22          .              .            +INF            0.1300      
 t23          .              .            +INF            0.1300      
 t24          .              .            +INF            0.1300      
-t25          .              .            +INF            0.0071      
-t26          .              .            +INF            0.0071      
-t27          .              .            +INF            0.0071      
-t28          .              .            +INF            0.0071      
-t29          .              .            +INF            0.0071      
-t3           .              .            +INF            0.0071      
-t30          .              .            +INF            0.0244      
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 25
-G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Solution Report     SOLVE pv Using LP From line 73
-
-
-     VAR x_buy_from_grid  
-
-           LOWER          LEVEL          UPPER         MARGINAL
-
-t31          .              .            +INF            0.0071      
-t32          .              .            +INF            0.0071      
-t33          .              .            +INF            0.0071      
-t34          .              .            +INF            0.0071      
-t35          .              .            +INF            0.0071      
-t36          .              .            +INF            0.0071      
-t37          .              .            +INF            0.0071      
-t38          .              .            +INF            0.0071      
-t39          .              .            +INF            0.0071      
-t4           .              .            +INF            0.0793      
-t40          .              .            +INF            0.0681      
-t41          .              .            +INF            0.0793      
-t42          .              .            +INF            0.0071      
-t43          .              .            +INF            0.0071      
-t44          .              .            +INF            0.0071      
-t45          .              .            +INF            0.0071      
-t46          .              .            +INF            0.0071      
-t47          .              .            +INF            0.0071      
-t48          .              .            +INF            0.0071      
-t5           .              .            +INF            0.1300      
-t6           .              .            +INF            0.1300      
-t7           .              .            +INF            0.1300      
-t8           .              .            +INF            0.1300      
-t9           .              .            +INF            0.1300      
-
----- VAR x_sell_to_grid  
-
-           LOWER          LEVEL          UPPER         MARGINAL
-
-t1           .           150.6327        +INF             .          
-t10          .              .            +INF            EPS         
-t11          .              .            +INF            0.0056      
-t12          .              .            +INF            0.0056      
-t13          .            76.0336        +INF             .          
-t14          .            17.6850        +INF             .          
-t15          .              .            +INF            EPS         
-t16          .           124.1047        +INF             .          
-t17          .           371.2119        +INF             .          
-t18          .           261.8573        +INF             .          
-t19          .              .            +INF            EPS         
-t2           .             5.6857        +INF             .          
-t20          .             9.6247        +INF             .          
-t21          .              .            +INF            EPS         
-t22          .              .            +INF            0.0056      
-t23          .              .            +INF            EPS         
-t24          .              .            +INF            EPS         
-t25          .              .            +INF            0.1229      
-t26          .              .            +INF            0.1229      
-t27          .              .            +INF            0.1229      
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 26
+t25          .              .            +INF            0.1300      
+t26          .              .            +INF            0.1300      
+t27          .              .            +INF            0.1300      
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 25
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE pv Using LP From line 73
 
@@ -1307,56 +1259,56 @@ Solution Report     SOLVE pv Using LP From line 73
 
            LOWER          LEVEL          UPPER         MARGINAL
 
-t28          .              .            +INF            0.1229      
-t29          .              .            +INF            0.1229      
-t3           .              .            +INF            0.1229      
-t30          .              .            +INF            0.1056      
-t31          .              .            +INF            0.1229      
-t32          .              .            +INF            0.1229      
-t33          .              .            +INF            0.1229      
-t34          .              .            +INF            0.1229      
-t35          .              .            +INF            0.1229      
-t36          .              .            +INF            0.1229      
-t37          .              .            +INF            0.1229      
-t38          .              .            +INF            0.1229      
-t39          .              .            +INF            0.1229      
-t4           .              .            +INF            0.0507      
-t40          .              .            +INF            0.0619      
-t41          .              .            +INF            0.0507      
-t42          .              .            +INF            0.1229      
-t43          .              .            +INF            0.1229      
-t44          .              .            +INF            0.1229      
-t45          .              .            +INF            0.1229      
-t46          .              .            +INF            0.1229      
-t47          .              .            +INF            0.1229      
-t48          .              .            +INF            0.1229      
-t5           .              .            +INF            EPS         
-t6           .              .            +INF            EPS         
-t7           .              .            +INF            EPS         
-t8           .              .            +INF            EPS         
-t9           .              .            +INF            EPS         
+t28          .              .            +INF            0.1300      
+t29          .              .            +INF            0.1300      
+t3           .              .            +INF            0.1300      
+t30          .              .            +INF            0.1300      
+t31          .              .            +INF            0.1300      
+t32          .              .            +INF            0.1300      
+t33          .              .            +INF            0.1300      
+t34          .              .            +INF            0.1300      
+t35          .              .            +INF            0.1300      
+t36          .              .            +INF            0.1300      
+t37          .              .            +INF            0.1300      
+t38          .              .            +INF            0.1300      
+t39          .              .            +INF            0.1300      
+t4           .              .            +INF            0.1300      
+t40          .              .            +INF            0.1300      
+t41          .              .            +INF            0.1300      
+t42          .              .            +INF            0.1300      
+t43          .              .            +INF            0.1300      
+t44          .              .            +INF            0.1300      
+t45          .              .            +INF            0.1300      
+t46          .              .            +INF            0.1300      
+t47          .              .            +INF            0.1300      
+t48          .              .            +INF            0.1300      
+t5           .              .            +INF            0.1300      
+t6           .              .            +INF            0.1300      
+t7           .              .            +INF            0.1300      
+t8           .              .            +INF            0.1300      
+t9           .              .            +INF            0.1300      
 
 ---- VAR x_control_demand  
 
            LOWER          LEVEL          UPPER         MARGINAL
 
 t1           .              .            +INF            EPS         
-t10          .              .            +INF            EPS         
-t11          .              .            +INF            0.0056      
-t12          .              .            +INF            0.0056      
-t13          .              .            +INF            EPS         
-t14          .              .            +INF            EPS         
-t15          .              .            +INF            EPS         
-t16          .              .            +INF            EPS         
+t10          .          1000.0000        +INF             .          
+t11          .          1000.0000        +INF             .          
+t12          .          1000.0000        +INF             .          
+t13          .          1000.0000        +INF             .          
+t14          .          1000.0000        +INF             .          
+t15          .          1000.0000        +INF             .          
+t16          .           846.6291        +INF             .          
 t17          .              .            +INF            EPS         
-t18          .           683.3219        +INF             .          
-t19          .           459.7005        +INF             .          
-t2           .          1000.0000        +INF             .          
-t20          .          1000.0000        +INF             .          
-t21          .           927.4633        +INF             .          
-t22          .              .            +INF            0.0056      
+t18          .              .            +INF            EPS         
+t19          .              .            +INF            EPS         
+t2           .              .            +INF            EPS         
+t20          .              .            +INF            EPS         
+t21          .              .            +INF            EPS         
+t22          .              .            +INF            EPS         
 t23          .              .            +INF            EPS         
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 27
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 26
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE pv Using LP From line 73
 
@@ -1366,52 +1318,52 @@ Solution Report     SOLVE pv Using LP From line 73
            LOWER          LEVEL          UPPER         MARGINAL
 
 t24          .              .            +INF            EPS         
-t25          .           275.8665        +INF             .          
-t26          .           152.2246        +INF             .          
-t27          .           148.9627        +INF             .          
-t28          .           214.5187        +INF             .          
-t29          .           163.8290        +INF             .          
-t3           .              .            +INF            0.1229      
-t30          .          1000.0000        +INF             .          
-t31          .           153.0717        +INF             .          
-t32          .          1000.0000        +INF             .          
-t33          .            35.5611        +INF             .          
-t34          .          1000.0000        +INF             .          
+t25          .          1000.0000        +INF             .          
+t26          .          1000.0000        +INF             .          
+t27          .           949.4872        +INF             .          
+t28          .              .            +INF            EPS         
+t29          .              .            +INF            EPS         
+t3           .              .            +INF            EPS         
+t30          .              .            +INF            EPS         
+t31          .              .            +INF            EPS         
+t32          .              .            +INF            EPS         
+t33          .              .            +INF            EPS         
+t34          .              .            +INF            EPS         
 t35          .              .            +INF            EPS         
-t36          .           359.3185        +INF             .          
+t36          .              .            +INF            EPS         
 t37          .              .            +INF            EPS         
-t38          .           716.9878        +INF             .          
+t38          .          1000.0000        +INF             .          
 t39          .              .            +INF            EPS         
-t4           .              .            +INF            0.0507      
-t40          .          1000.0000        +INF             .          
-t41          .          1000.0000        +INF             .          
-t42          .          1000.0000        +INF             .          
-t43          .           571.7338        +INF             .          
-t44          .           396.3023        +INF             .          
-t45          .          1000.0000        +INF             .          
-t46          .           584.7312        +INF             .          
-t47          .          1000.0000        +INF             .          
-t48          .           181.5374        +INF             .          
-t5           .           679.4544        +INF             .          
-t6           .           945.8968        +INF             .          
-t7           .           318.7288        +INF             .          
-t8           .           445.9978        +INF             .          
-t9           .           576.8225        +INF             .          
+t4           .              .            +INF            EPS         
+t40          .              .            +INF            EPS         
+t41          .              .            +INF            EPS         
+t42          .              .            +INF            EPS         
+t43          .              .            +INF            EPS         
+t44          .              .            +INF            EPS         
+t45          .              .            +INF            EPS         
+t46          .              .            +INF            EPS         
+t47          .              .            +INF            EPS         
+t48          .              .            +INF            EPS         
+t5           .              .            +INF            EPS         
+t6           .          1000.0000        +INF             .          
+t7           .          1000.0000        +INF             .          
+t8           .          1000.0000        +INF             .          
+t9           .          1000.0000        +INF             .          
 
                            LOWER          LEVEL          UPPER         MARGINAL
 
----- VAR x_cost            -INF         3739.1698        +INF             .          
+---- VAR x_cost            -INF         4832.2118        +INF             .          
 
 
 **** REPORT SUMMARY :        0     NONOPT
                              0 INFEASIBLE
                              0  UNBOUNDED
-GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/15/20 08:46:55 Page 28
+GAMS 30.3.0  rc5da09e Released Mar  6, 2020 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              04/17/20 13:22:58 Page 27
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 E x e c u t i o n
 
 
-EXECUTION TIME       =        0.016 SECONDS      3 MB  30.3.0 rc5da09e WEX-WEI
+EXECUTION TIME       =        0.015 SECONDS      3 MB  30.3.0 rc5da09e WEX-WEI
 
 
 USER: Small MUD - 5 User License                     S190207:0914AO-GEN

@@ -1,19 +1,19 @@
-library(tidyverse)
-
-##### These 2 lines have to be run only once!
-library(devtools)
-#install_github('lolow/gdxtools')
-
-library(gdxtools)
-
-
-#### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
-#### E.G: igdx("C:/GAMS/win64/30.2")
-igdx(dirname(Sys.which('gams')))
-
-setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
-             "/../../")
-)
+# library(tidyverse)
+# 
+# ##### These 2 lines have to be run only once!
+# library(devtools)
+# #install_github('lolow/gdxtools')
+# 
+# library(gdxtools)
+# 
+# 
+# #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
+# #### E.G: igdx("C:/GAMS/win64/30.2")
+# igdx(dirname(Sys.which('gams')))
+# 
+# setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+#              "/../../")
+# )
 
 ############# CREATING INPUT DATA
 
@@ -25,35 +25,6 @@ source("src/R/functions_astrid.R")
 
 timesteps <- 24*2
 
-############# average pv generation for random generation in kw. random generation should be replaced by real production data.
-pvgis_data <- read.csv("data/input/PV_2016_hr.csv")        #PVGis hourly data for 2016
-
-pv_data <- as.vector(pvgis_data$X0[1: timesteps])       #4609:4681 -> 11.-13.Juli
-#pv_data <- as.vector(pvgis_data$X0)
-
-#timesteps <- length(pv_data)
-
-
-# avg_pv <- 0.1
-# pv <- runif(timesteps) * avg_pv
-
-interest_rate <- 0.1
-run_time <- 20
-
-pv_invest <- 1200 # in Euro/kw
-pv_invest_annualized <- annualize(pv_invest,
-                                  interest_rate,
-                                  run_time,
-                                  timesteps)
-
-run_time <- 10
-
-storage_invest <- 800 # in Euro/kWh
-storage_invest_annualized <- annualize(storage_invest,
-                                       interest_rate,
-                                       run_time,
-                                       timesteps)
-
 ############# average demand for random generation in kw. random generation should be replaced by real load data
 avg_demand <- 500
 demand <- runif(timesteps) * avg_demand
@@ -61,11 +32,36 @@ demand <- runif(timesteps) * avg_demand
 controllable_demand <- runif(timesteps / 24) * avg_demand * 24
 
 
+############# average pv generation for random generation in kw. random generation should be replaced by real production data.
+pvgis_data <- read.csv("data/input/PV_2016_hr.csv")        #PVGis hourly data for 2016
+# 
+# pv <- as.vector(pvgis_data$X0[1: timesteps])       #4609:4681 -> 11.-13.Juli
+# #pv <- as.vector(pvgis_data$X0)
+
+avg_pv <- 0.1
+pv <- runif(timesteps) * avg_pv
 
 
-gridcosts <- 0.18 # power from grid in Euro/kWh
+interest_rate <- 0.1
+run_time <- 20
 
-feed_in_tariff <- 0.06 # subsidy received for feeding power to grid
+pv_invest <- 400 # in €/kw
+pv_invest_annualized <- annualize(pv_invest,
+                                  interest_rate,
+                                  run_time,
+                                  timesteps)
+
+run_time <- 10
+
+storage_invest <- 200 # in €/kWh
+storage_invest_annualized <- annualize(storage_invest,
+                                       interest_rate,
+                                       run_time,
+                                       timesteps)
+
+gridcosts <- 0.18 # power from grid in €/kWh
+
+feed_in_tariff <- 0.05 # subsidy received for feeding power to grid
 
 efficiency_storage <- 0.9
 maximum_power_controllable_demand <- 1000 # how much power the controllable demand can use at most in one instant of time. In kW
@@ -74,7 +70,7 @@ maximum_power_controllable_demand <- 1000 # how much power the controllable dema
 #### the function is contained in the script "model.R"
 create_input_data(timesteps = timesteps,
                   demand_in = demand,
-                  pv_gen = pv_data,
+                  pv_gen = pv,
                   controllable_demand_in = controllable_demand,
                   pv_invest_annualized = pv_invest_annualized,
                   storage_invest_annualized = storage_invest_annualized,
@@ -82,7 +78,7 @@ create_input_data(timesteps = timesteps,
                   feed_in_tariff = feed_in_tariff,
                   efficiency_storage = efficiency_storage,
                   maximum_power_controllable_demand = maximum_power_controllable_demand
-                  )
+)
 
 ############# Running gams
 gams("src/GAMS/pvsimple.gms")
@@ -125,7 +121,7 @@ timeseries %>%
 ###### figure for operation
 demand_original <- timeseries %>%
   filter(Var %in% c("demand"
-    ))
+  ))
 
 controllable_original_demand <- timeseries %>%
   filter(Var %in% c("demand",
@@ -142,17 +138,17 @@ gens_positive <- timeseries %>%
   filter(Var %in% c("direct_use",
                     "grid_power",
                     "x_out"
-              ))
+  ))
 
 gens_negative <- timeseries %>%
   filter(Var %in% c("curtailment",
                     "power_fed_in"))
 
 all <- bind_rows(
-                 gens_positive,
-                 gens_negative)
+  gens_positive,
+  gens_negative)
 
 all %>% ggplot(aes(x = time, y = value)) +
   geom_area(aes(fill = Var)) +
-  geom_line(data = controllable_original_demand, aes(col = Var), fill = NA, size = 1)
+  geom_line(data = controllable_original_demand, aes(col = Var), fill = NA, size = 2)
 

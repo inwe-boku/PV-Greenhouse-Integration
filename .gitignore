@@ -44,3 +44,12 @@ docs/
 *.txt
 *.gdx
 src/test.x.r
+src/R/model_astrid.R
+src/GAMS/pvsimple.lxi
+src/GAMS/pvsimple.log
+pvsimple.log
+project1.gpr
+project1.dat
+pvsimple.lst
+pvsimple.lxi
+src/GAMS/pvsimple.lst
