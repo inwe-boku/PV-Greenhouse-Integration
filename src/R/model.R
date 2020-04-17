@@ -9,7 +9,8 @@ library(gdxtools)
 
 #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
 #### E.G: igdx("C:/GAMS/win64/30.2")
-igdx(dirname(Sys.which('gams')))
+(igdx("C:/GAMS/win64/30.2"))
+  #dirname(Sys.which('gams')))
 
 setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
              "/../../")
@@ -23,7 +24,7 @@ output_dir <- "data/output/"
 source("src/R/functions.R")
 
 
-timesteps <- 48
+timesteps <- 8
 
 ############# average demand for random generation in kw. random generation should be replaced by real load data
 avg_demand <- 500
@@ -35,6 +36,8 @@ controllable_demand <- runif(timesteps / 24) * avg_demand * 24
 ############# average pv generation for random generation in kw. random generation should be replaced by real production data.
 avg_pv <- 0.1
 pv <- runif(timesteps) * avg_pv
+
+pv <- c(0, 0, 0, 0, 0, 0.2, 0.2, 0.2)
 
 interest_rate <- 0.1
 run_time <- 20
@@ -102,29 +105,29 @@ installed_pv_capacity
 installed_storage_capacity
 sum_electricity_from_grid
 
-timeseries <- read_timeseries_from_results()
+timeseries <- read_timeseries_from_results(mygdx)
 
 ###### figure for storage operation
 timeseries %>%
   filter(Var %in% c("SOC",
                     "x_in",
                     "x_out")) %>%
-  ggplot(aes(x=time, y=value)) +
+  ggplot(aes(x=time, y=Value)) +
   geom_line(aes(col=Var))
 
 ###### figure for operation
 demand_original <- timeseries %>%
   filter(Var %in% c("demand"
-    ))
+  ))
 
 controllable_original_demand <- timeseries %>%
   filter(Var %in% c("demand",
                     "control_demand"
   )) %>%
-  dplyr::select(time, Var, value) %>%
-  spread(Var, value) %>%
+  dplyr::select(time, Var, Value) %>%
+  spread(Var, Value) %>%
   mutate(total_demand = control_demand + demand) %>%
-  gather(Var, value, -time) %>%
+  gather(Var, Value, -time) %>%
   filter(Var %in% c("total_demand", "demand"))
 
 
@@ -132,17 +135,17 @@ gens_positive <- timeseries %>%
   filter(Var %in% c("direct_use",
                     "grid_power",
                     "x_out"
-              ))
+  ))
 
 gens_negative <- timeseries %>%
   filter(Var %in% c("curtailment",
                     "power_fed_in"))
 
 all <- bind_rows(
-                 gens_positive,
-                 gens_negative)
+  gens_positive,
+  gens_negative)
 
-all %>% ggplot(aes(x = time, y = value)) +
+all %>% ggplot(aes(x = time, y = Value)) +
   geom_area(aes(fill = Var)) +
   geom_line(data = controllable_original_demand, aes(col = Var), fill = NA, size = 2)
 
