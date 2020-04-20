@@ -1,19 +1,19 @@
-library(tidyverse)
-
-##### These 2 lines have to be run only once!
-library(devtools)
-#install_github('lolow/gdxtools')
-
-library(gdxtools)
-
-
-#### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
-#### E.G: igdx("C:/GAMS/win64/30.2")
-igdx(dirname(Sys.which('gams')))
-
-setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
-             "/../../")
-)
+# library(tidyverse)
+# 
+# ##### These 2 lines have to be run only once!
+# library(devtools)
+# #install_github('lolow/gdxtools')
+# 
+# library(gdxtools)
+# 
+# 
+# #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
+# #### E.G: igdx("C:/GAMS/win64/30.2")
+# igdx(dirname(Sys.which('gams')))
+# 
+# setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+#              "/../../")
+# )
 
 ############# CREATING INPUT DATA
 
@@ -23,24 +23,26 @@ output_dir <- "data/output/"
 source("src/R/functions.R")
 
 
-timesteps <- 24*2
+timesteps <- 48
 #
 
 ############# average demand for random generation in kw. random generation should be replaced by real load data
 avg_demand <- 500
 demand <- runif(timesteps) * avg_demand
 
+#demand <- c(rep(101,timesteps))
+
 controllable_demand <- runif(timesteps / 24) * avg_demand * 24
 
 
 ############# average pv generation for random generation in kw. random generation should be replaced by real production data.
-pvgis_data <- read.csv("data/input/PV_2016_hr.csv")        #PVGis hourly data for 2016
-#
-pv <- as.vector(pvgis_data$X0[1: timesteps])/1000       #4609:4681 -> 11.-13.Juli
-#pv <- as.vector(pvgis_data$X0)
+# pvgis_data <- read.csv("data/input/PV_2016_hr.csv")        #PVGis hourly data for 2016
+# #
+# pv <- as.vector(pvgis_data$X0[1:timesteps])/1000       #4609:4656 -> 11.-13.Juli
+# #pv <- as.vector(pvgis_data$X0)
 
-# avg_pv <- 0.1
-# pv <- runif(timesteps) * avg_pv
+avg_pv <- 0.1
+pv <- runif(timesteps) * avg_pv
 
 
 interest_rate <- 0.1
@@ -68,6 +70,7 @@ feed_in_tariff <- 0.05 # subsidy received for feeding power to grid
 
 efficiency_storage <- 0.9
 maximum_power_controllable_demand <- 1000 # how much power the controllable demand can use at most in one instant of time. In kW
+
 
 #### this function writes the gdx file to disk for GAMS to use
 #### the function is contained in the script "model.R"
