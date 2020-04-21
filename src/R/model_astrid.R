@@ -1,19 +1,19 @@
-# library(tidyverse)
-# 
+ library(tidyverse)
+#
 # ##### These 2 lines have to be run only once!
 # library(devtools)
 # #install_github('lolow/gdxtools')
-# 
-# library(gdxtools)
-# 
-# 
+#
+ library(gdxtools)
+#
+#
 # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
 # #### E.G: igdx("C:/GAMS/win64/30.2")
-# igdx(dirname(Sys.which('gams')))
-# 
-# setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
-#              "/../../")
-# )
+ igdx(dirname(Sys.which('gams')))
+#
+ setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+              "/../../")
+ )
 
 ############# CREATING INPUT DATA
 
@@ -28,7 +28,7 @@ pvgis_data <- read.csv("data/input/PV_2016_hr.csv", header=FALSE)        #PVGis 
 # pv <- as.vector(pvgis_data$V1[1:48])/1000              #Winter: 1:48 -> 1.-2.January
 # pv <- as.vector(pvgis_data$V1[2521:2568])/1000         #Spring: 2521:2568 -> 15.-16.April
 # pv <- as.vector(pvgis_data$V1[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
-pv <- as.vector(pvgis_data$V1[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
+pv <- as.vector(pvgis_data$V1)/1000         #Fall: 6577:6624 -> 1.-2. October
 
 # pv <- as.vector(pvgis_data$V1)                          #year 2016
 
@@ -37,7 +37,7 @@ pv <- as.vector(pvgis_data$V1[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2.
 timesteps <- length (pv)
 
 
-############# average demand in kw. 
+############# average demand in kw.
 avg_demand <- 100                       #kW for a production area of 720 m2
 demand <- c(rep(avg_demand, timesteps))
 
@@ -50,9 +50,11 @@ interest_rate <- 0.1
 run_time <- 20
 
 #Land cost
-land_cost <- 6.5                                  #Euro/m2 greenland
+land_cost <- 6.5                                  #Euro/m2 greenland.
 
-pv_invest <- 1200+land_cost # in €/kw
+                                                  #1 KW needs more than 1 m2!, so it has to be multiplied by land-use of PV
+
+pv_invest <- 1200 + land_cost # in €/kw
 pv_invest_annualized <- annualize(pv_invest,
                                   interest_rate,
                                   run_time,
@@ -67,14 +69,14 @@ storage_invest_annualized <- annualize(storage_invest,
                                        timesteps)
 
 #Emission cost
-co2.price <- 15.5/1000  #co2 price Euro/kg
-co2.kWh <- 100.27/1000      #co2 kg/kWh
-co2 <- co2.price*co2.kWh
+co2.price <- 15.5/10^6  #co2 price Euro/g
+co2.kWh <- 100.27      #co2 g/kWh
+co2 <- co2.price * co2.kWh
 
 #Grid cost
-gridcosts <- 100000+co2 # power from grid in €/kWh
+gridcosts <- 100000 + co2 # power from grid in €/kWh
 
-feed_in_tariff <- 0.06 # subsidy received for feeding power to grid
+feed_in_tariff <- 0.0 # subsidy received for feeding power to grid
 
 #technical parameters
 efficiency_storage <- 0.9
@@ -161,10 +163,22 @@ all <- bind_rows(
   gens_positive,
   gens_negative)
 
-all %>% ggplot(aes(x = time, y = Value)) +
-  geom_area(aes(fill = Var)) +
-  geom_line(data = controllable_original_demand, aes(col = Var), fill = NA, size = 1.2)+
-  labs(title = "Energy Supply", subtitle = "", x = "hour", y = "kWh")
+
+###daily aggregation of results
+
+all %>%
+  group_by(Var) %>%
+  mutate(Day = rep(1:366, each = 24)) %>%
+  ungroup() %>%
+  group_by(Day, Var) %>%
+  summarize(Value = sum(Value)) %>%
+  ggplot(aes(x = Day, y = Value)) +
+  geom_area(aes(fill = Var))
+
+
+#+
+#  geom_line(data = controllable_original_demand, aes(col = Var), fill = NA, size = 1.2)+
+#  labs(title = "Energy Supply", subtitle = "", x = "day", y = "kWh")
 
 #Solution
 installed_pv_capacity
