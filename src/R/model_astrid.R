@@ -27,8 +27,9 @@ timesteps <- 48
 #
 
 ############# average demand for random generation in kw. random generation should be replaced by real load data
-avg_demand <- 500
-demand <- runif(timesteps) * avg_demand
+avg_demand <- 100
+demand <- c(rep(avg_demand, timesteps))
+# demand <- runif(timesteps) * avg_demand
 
 #demand <- c(rep(101,timesteps))
 
@@ -36,21 +37,21 @@ controllable_demand <- runif(timesteps / 24) * avg_demand * 24
 
 
 ############# average pv generation for random generation in kw. random generation should be replaced by real production data.
-# pvgis_data <- read.csv("data/input/PV_2016_hr.csv")        #PVGis hourly data for 2016
-# #
-# pv <- as.vector(pvgis_data$X0[1:timesteps])/1000       #4609:4656 -> 11.-13.Juli
-# #pv <- as.vector(pvgis_data$X0)
+pvgis_data <- read.csv("data/input/PV_2016_hr.csv")        #PVGis hourly data for 2016
+#
+pv <- as.vector(pvgis_data$X0[4609:4656])/1000       #4609:4656 -> 11.-13.Juli
+#pv <- as.vector(pvgis_data$X0)
 
-avg_pv <- 0.1
-pv <- runif(timesteps) * avg_pv
+# avg_pv <- 0.1
+# pv <- runif(timesteps) * avg_pv
 
 
 interest_rate <- 0.1
 run_time <- 20
 
 #Landcost
-land_cost <- 15
-pv_invest <- 400+land_cost # in €/kw
+land_cost <- 600
+pv_invest <- 1200+land_cost # in €/kw
 pv_invest_annualized <- annualize(pv_invest,
                                   interest_rate,
                                   run_time,
@@ -58,18 +59,22 @@ pv_invest_annualized <- annualize(pv_invest,
 
 run_time <- 10
 
-storage_invest <- 200 # in €/kWh
+storage_invest <- 800 # in €/kWh
 storage_invest_annualized <- annualize(storage_invest,
                                        interest_rate,
                                        run_time,
                                        timesteps)
 
-gridcosts <- 0.18 # power from grid in €/kWh
+co2.price <- 15.5/1000  #co2 price Euro/kg
+co2.kWh <- 136.81/1000      #co2 kg/kWh
+co2 <- co2.price*co2.kWh
 
-feed_in_tariff <- 0.05 # subsidy received for feeding power to grid
+gridcosts <- 100+co2 # power from grid in €/kWh
+
+feed_in_tariff <- 0.06 # subsidy received for feeding power to grid
 
 efficiency_storage <- 0.9
-maximum_power_controllable_demand <- 1000 # how much power the controllable demand can use at most in one instant of time. In kW
+maximum_power_controllable_demand <- 500 # how much power the controllable demand can use at most in one instant of time. In kW
 
 
 #### this function writes the gdx file to disk for GAMS to use
@@ -122,7 +127,8 @@ timeseries %>%
                     "x_in",
                     "x_out")) %>%
   ggplot(aes(x=time, y=Value)) +
-  geom_line(aes(col=Var))
+  geom_line(aes(col=Var)) +
+  labs(title = "Storage Balance", subtitle = "1. & 2. January", x = "hour", y = "kWh")
 
 ###### figure for operation
 demand_original <- timeseries %>%
@@ -156,7 +162,8 @@ all <- bind_rows(
 
 all %>% ggplot(aes(x = time, y = Value)) +
   geom_area(aes(fill = Var)) +
-  geom_line(data = controllable_original_demand, aes(col = Var), fill = NA, size = 2)
+  geom_line(data = controllable_original_demand, aes(col = Var), fill = NA, size = 1.2)+
+  labs(title = "Energy Supply", subtitle = "1. & 2. January", x = "hour", y = "kWh")
 
-#save.image(file = "Image.RData")
+save.image(file = "Image.RData")
 
