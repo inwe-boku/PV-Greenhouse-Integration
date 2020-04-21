@@ -1,19 +1,19 @@
- library(tidyverse)
-#
-# ##### These 2 lines have to be run only once!
-# library(devtools)
-# #install_github('lolow/gdxtools')
-#
- library(gdxtools)
-#
-#
-# #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
-# #### E.G: igdx("C:/GAMS/win64/30.2")
- igdx(dirname(Sys.which('gams')))
-#
- setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
-              "/../../")
- )
+#  library(tidyverse)
+# #
+# # ##### These 2 lines have to be run only once!
+# # library(devtools)
+# # #install_github('lolow/gdxtools')
+# #
+#  library(gdxtools)
+# #
+# #
+# # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
+# # #### E.G: igdx("C:/GAMS/win64/30.2")
+#  igdx(dirname(Sys.which('gams')))
+# #
+#  setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+#               "/../../")
+#  )
 
 ############# CREATING INPUT DATA
 
@@ -52,9 +52,9 @@ run_time <- 20
 #Land cost
 land_cost <- 6.5                                  #Euro/m2 greenland.
 
-                                                  #1 KW needs more than 1 m2!, so it has to be multiplied by land-use of PV
+pv_land <- 15                                     #1 KW needs more than 1 m2!, so it has to be multiplied by land-use of PV
 
-pv_invest <- 1200 + land_cost # in €/kw
+pv_invest <- 1200 + land_cost*pv_land # in €/kw
 pv_invest_annualized <- annualize(pv_invest,
                                   interest_rate,
                                   run_time,
@@ -74,9 +74,9 @@ co2.kWh <- 100.27      #co2 g/kWh
 co2 <- co2.price * co2.kWh
 
 #Grid cost
-gridcosts <- 100000 + co2 # power from grid in €/kWh
+gridcosts <- 0.18 + co2 # power from grid in €/kWh
 
-feed_in_tariff <- 0.0 # subsidy received for feeding power to grid
+feed_in_tariff <- 0.06 # subsidy received for feeding power to grid
 
 #technical parameters
 efficiency_storage <- 0.9
@@ -131,7 +131,7 @@ timeseries %>%
                     "x_out")) %>%
   ggplot(aes(x=time, y=Value)) +
   geom_line(aes(col=Var)) +
-  labs(title = "Storage Balance", subtitle = " ", x = "hour", y = "kWh")
+  labs(title = "Storage Balance", subtitle = " ", x = "day", y = "kWh")
 
 ###### figure for operation
 demand_original <- timeseries %>%
@@ -173,7 +173,8 @@ all %>%
   group_by(Day, Var) %>%
   summarize(Value = sum(Value)) %>%
   ggplot(aes(x = Day, y = Value)) +
-  geom_area(aes(fill = Var))
+  geom_area(aes(fill = Var))+
+  labs(title = "Energy Supply", subtitle = "", y = "kWh")
 
 
 #+
