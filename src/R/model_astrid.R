@@ -22,35 +22,36 @@ output_dir <- "data/output/"
 
 source("src/R/functions.R")
 
-
-timesteps <- 48
-#
-
-############# average demand for random generation in kw. random generation should be replaced by real load data
-avg_demand <- 100
-demand <- c(rep(avg_demand, timesteps))
-# demand <- runif(timesteps) * avg_demand
-
-#demand <- c(rep(101,timesteps))
-
-controllable_demand <- runif(timesteps / 24) * avg_demand * 24
-
-
 ############# average pv generation for random generation in kw. random generation should be replaced by real production data.
-pvgis_data <- read.csv("data/input/PV_2016_hr.csv")        #PVGis hourly data for 2016
-#
-pv <- as.vector(pvgis_data$X0[4609:4656])/1000       #4609:4656 -> 11.-13.Juli
-#pv <- as.vector(pvgis_data$X0)
+pvgis_data <- read.csv("data/input/PV_2016_hr.csv", header=FALSE)        #PVGis hourly data for 2016
 
-# avg_pv <- 0.1
-# pv <- runif(timesteps) * avg_pv
+# pv <- as.vector(pvgis_data$V1[1:48])/1000              #Winter: 1:48 -> 1.-2.January
+# pv <- as.vector(pvgis_data$V1[2521:2568])/1000         #Spring: 2521:2568 -> 15.-16.April
+# pv <- as.vector(pvgis_data$V1[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
+pv <- as.vector(pvgis_data$V1[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
+
+# pv <- as.vector(pvgis_data$V1)                          #year 2016
+
+
+
+timesteps <- length (pv)
+
+
+############# average demand in kw. 
+avg_demand <- 100                       #kW for a production area of 720 m2
+demand <- c(rep(avg_demand, timesteps))
+
+
+controllable_demand <- runif(timesteps / 24) * avg_demand * 24 * 0
+
 
 
 interest_rate <- 0.1
 run_time <- 20
 
-#Landcost
-land_cost <- 600
+#Land cost
+land_cost <- 6.5                                  #Euro/m2 greenland
+
 pv_invest <- 1200+land_cost # in €/kw
 pv_invest_annualized <- annualize(pv_invest,
                                   interest_rate,
@@ -65,14 +66,17 @@ storage_invest_annualized <- annualize(storage_invest,
                                        run_time,
                                        timesteps)
 
+#Emission cost
 co2.price <- 15.5/1000  #co2 price Euro/kg
-co2.kWh <- 136.81/1000      #co2 kg/kWh
+co2.kWh <- 100.27/1000      #co2 kg/kWh
 co2 <- co2.price*co2.kWh
 
-gridcosts <- 100+co2 # power from grid in €/kWh
+#Grid cost
+gridcosts <- 100000+co2 # power from grid in €/kWh
 
 feed_in_tariff <- 0.06 # subsidy received for feeding power to grid
 
+#technical parameters
 efficiency_storage <- 0.9
 maximum_power_controllable_demand <- 500 # how much power the controllable demand can use at most in one instant of time. In kW
 
@@ -115,9 +119,6 @@ installed_storage_capacity<-mygdx["x_storage"]
 electricity_from_grid<-mygdx["x_buy_from_grid"]
 sum_electricity_from_grid<-sum(electricity_from_grid$value)
 
-installed_pv_capacity
-installed_storage_capacity
-sum_electricity_from_grid
 
 timeseries <- read_timeseries_from_results(mygdx)
 
@@ -128,7 +129,7 @@ timeseries %>%
                     "x_out")) %>%
   ggplot(aes(x=time, y=Value)) +
   geom_line(aes(col=Var)) +
-  labs(title = "Storage Balance", subtitle = "1. & 2. January", x = "hour", y = "kWh")
+  labs(title = "Storage Balance", subtitle = " ", x = "hour", y = "kWh")
 
 ###### figure for operation
 demand_original <- timeseries %>%
@@ -163,7 +164,12 @@ all <- bind_rows(
 all %>% ggplot(aes(x = time, y = Value)) +
   geom_area(aes(fill = Var)) +
   geom_line(data = controllable_original_demand, aes(col = Var), fill = NA, size = 1.2)+
-  labs(title = "Energy Supply", subtitle = "1. & 2. January", x = "hour", y = "kWh")
+  labs(title = "Energy Supply", subtitle = "", x = "hour", y = "kWh")
+
+#Solution
+installed_pv_capacity
+installed_storage_capacity
+sum_electricity_from_grid
 
 save.image(file = "Image.RData")
 
