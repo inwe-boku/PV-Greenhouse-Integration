@@ -25,12 +25,12 @@ source("src/R/functions.R")
 ############# average pv generation for random generation in kw. random generation should be replaced by real production data.
 pvgis_data <- read.csv("data/input/PV_2016_hr.csv", header=FALSE)        #PVGis hourly data for 2016
 
-# pv <- as.vector(pvgis_data$V1[1:48])/1000              #Winter: 1:48 -> 1.-2.January
+pv <- as.vector(pvgis_data$V1[1:48])/1000              #Winter: 1:48 -> 1.-2.January
 # pv <- as.vector(pvgis_data$V1[2521:2568])/1000         #Spring: 2521:2568 -> 15.-16.April
 # pv <- as.vector(pvgis_data$V1[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
 # pv <- as.vector(pvgis_data$V1[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
 
-pv <- as.vector(pvgis_data$V1)/1000                          #year 2016
+# pv <- as.vector(pvgis_data$V1)/1000                          #year 2016
 
 
 
@@ -74,7 +74,7 @@ co2.kWh <- 100.27      #co2 g/kWh
 co2 <- co2.price * co2.kWh
 
 #Grid cost
-gridcosts <- 1.18 + co2 # power from grid in €/kWh
+gridcosts <- 1000.18 + co2 # power from grid in €/kWh
 
 feed_in_tariff <- 0.06 # subsidy received for feeding power to grid, Euro/kWh
 
