@@ -166,10 +166,14 @@ all <- bind_rows(
   gens_positive,
   gens_negative)
 
+###hourly results
+all %>%
+  ggplot(aes(x = time, y = Value)) +
+  geom_area(aes(fill = Var))+
+  labs(title = "Energy Supply", subtitle = "", y = "kWh")
+
 
 ###daily aggregation of results
-
-
 all %>%
   group_by(Var) %>%
   mutate(Day = rep(1:days, each = 24)) %>%
