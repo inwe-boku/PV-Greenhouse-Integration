@@ -1,20 +1,20 @@
- library(tidyverse)
-# #
-# # ##### These 2 lines have to be run only once!
-# # library(devtools)
-# # #install_github('lolow/gdxtools')
-# #
-  library(gdxtools)
-# #
-# #
-# # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
-# # #### E.G: i
- #igdx("C:/GAMS/win64/30.2")
-  igdx(dirname(Sys.which('gams')))
-# #
-  setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
-               "/../../")
-  )
+#  library(tidyverse)
+# # #
+# # # ##### These 2 lines have to be run only once!
+# # # library(devtools)
+# # # #install_github('lolow/gdxtools')
+# # #
+#   library(gdxtools)
+# # #
+# # #
+# # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
+# # # #### E.G: i
+#  #igdx("C:/GAMS/win64/30.2")
+#   igdx(dirname(Sys.which('gams')))
+# # #
+#   setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+#                "/../../")
+#   )
 
 ############# CREATING INPUT DATA
 
@@ -26,12 +26,12 @@ source("src/R/functions.R")
 ############# average pv generation for random generation in kw. random generation should be replaced by real production data.
 pvgis_data <- read.csv("data/input/PV_2016_hr.csv", header=FALSE)        #PVGis hourly data for 2016
 
-pv <- as.vector(pvgis_data$V1[1:48])/1000              #Winter: 1:48 -> 1.-2.January
+# pv <- as.vector(pvgis_data$V1[1:48])/1000              #Winter: 1:48 -> 1.-2.January
 # pv <- as.vector(pvgis_data$V1[2521:2568])/1000         #Spring: 2521:2568 -> 15.-16.April
 # pv <- as.vector(pvgis_data$V1[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
 # pv <- as.vector(pvgis_data$V1[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
 
-# pv <- as.vector(pvgis_data$V1)/1000                          #year 2016
+pv <- as.vector(pvgis_data$V1)/1000                          #year 2016
 
 
 
