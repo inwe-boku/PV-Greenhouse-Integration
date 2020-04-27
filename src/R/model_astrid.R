@@ -1,19 +1,20 @@
-#  library(tidyverse)
+ library(tidyverse)
 # #
 # # ##### These 2 lines have to be run only once!
 # # library(devtools)
 # # #install_github('lolow/gdxtools')
 # #
-#  library(gdxtools)
+  library(gdxtools)
 # #
 # #
 # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
-# # #### E.G: igdx("C:/GAMS/win64/30.2")
-#  igdx(dirname(Sys.which('gams')))
+# # #### E.G: i
+ #igdx("C:/GAMS/win64/30.2")
+  igdx(dirname(Sys.which('gams')))
 # #
-#  setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
-#               "/../../")
-#  )
+  setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+               "/../../")
+  )
 
 ############# CREATING INPUT DATA
 
@@ -35,6 +36,8 @@ pv <- as.vector(pvgis_data$V1[1:48])/1000              #Winter: 1:48 -> 1.-2.Jan
 
 
 timesteps <- length (pv)
+days <- timesteps / 24
+  
 
 
 ############# average demand in kw.
@@ -42,7 +45,7 @@ avg_demand <- 100                       #kW for a production area of 720 m2
 demand <- c(rep(avg_demand, timesteps))
 
 
-controllable_demand <- runif(timesteps / 24) * avg_demand * 24 *0
+controllable_demand <- runif(days) * avg_demand * 24 *0
 
 
 
@@ -166,9 +169,10 @@ all <- bind_rows(
 
 ###daily aggregation of results
 
+
 all %>%
   group_by(Var) %>%
-  mutate(Day = rep(1:366, each = 24)) %>%
+  mutate(Day = rep(1:days, each = 24)) %>%
   ungroup() %>%
   group_by(Day, Var) %>%
   summarize(Value = sum(Value)) %>%
