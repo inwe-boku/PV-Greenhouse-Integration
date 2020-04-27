@@ -26,12 +26,12 @@ source("src/R/functions.R")
 ############# average pv generation for random generation in kw. random generation should be replaced by real production data.
 pvgis_data <- read.csv("data/input/PV_2016_hr.csv", header=FALSE)        #PVGis hourly data for 2016
 
-# pv <- as.vector(pvgis_data$V1[1:48])/1000              #Winter: 1:48 -> 1.-2.January
+pv <- as.vector(pvgis_data$V1[1:48])/1000              #Winter: 1:48 -> 1.-2.January
 # pv <- as.vector(pvgis_data$V1[2521:2568])/1000         #Spring: 2521:2568 -> 15.-16.April
 # pv <- as.vector(pvgis_data$V1[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
 # pv <- as.vector(pvgis_data$V1[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
 
-pv <- as.vector(pvgis_data$V1)/1000                          #year 2016
+# pv <- as.vector(pvgis_data$V1)/1000                          #year 2016
 
 
 
@@ -197,4 +197,12 @@ installed_storage_capacity
 sum_electricity_from_grid
 
 save.image(file = "Image.RData")
+
+#figure for energy balancing amounts
+all %>% 
+  group_by(Var)   %>%
+  summarize(Value_Sum = sum(Value)) %>% 
+  ggplot(aes(x = Var, y = Value_Sum)) + 
+  geom_bar(stat = "Identity", aes (fill = Var))
+
 
