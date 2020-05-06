@@ -24,24 +24,24 @@ output_dir <- "data/output/"
 source("src/R/functions.R")
 
 ############# pv generation for 2016 in kw. 
-pvgis_data <- read.csv("data/input/PV_2016_hr.csv", header=FALSE)        #PVGis hourly data for 2016
-
+# pvgis_data <- read.csv("data/input/PV_2016_hr.csv", header=FALSE)        #PVGis hourly data for 2016
+# 
 # pv <- as.vector(pvgis_data$V1[1:48])/1000              #Winter: 1:48 -> 1.-2.January
-# pv <- as.vector(pvgis_data$V1[2521:2568])/1000         #Spring: 2521:2568 -> 15.-16.April
-# pv <- as.vector(pvgis_data$V1[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
-# pv <- as.vector(pvgis_data$V1[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
-
-pv <- as.vector(pvgis_data$V1)/1000                    #year 2016
+# # pv <- as.vector(pvgis_data$V1[2521:2568])/1000         #Spring: 2521:2568 -> 15.-16.April
+# # pv <- as.vector(pvgis_data$V1[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
+# # pv <- as.vector(pvgis_data$V1[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
+# 
+# # pv <- as.vector(pvgis_data$V1)/1000                    #year 2016
 
 
 ############# average pv generation for 2006 - 2016 in kw.
-# pvgis_data <- read.csv("data/input/PV_avg-06-16_hr.csv", header=TRUE, sep=";") #PVGis average hourly data 2006-2016
-# 
-# # pv <- as.vector(pvgis_data$P..W.[1:48])/1000              #Winter: 1:48 -> 1.-2.January
-# # pv <- as.vector(pvgis_data$P..W.[2521:2568])/1000         #Spring: 2521:2568 -> 15.-16.April
-# # pv <- as.vector(pvgis_data$P..W.[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
-# # pv <- as.vector(pvgis_data$P..W.[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
-# 
+pvgis_data <- read.csv("data/input/PV_avg-06-16_hr.csv", header=TRUE, sep=";") #PVGis average hourly data 2006-2016
+
+pv <- as.vector(pvgis_data$P..W.[1:48])/1000              #Winter: 1:48 -> 1.-2.January
+# pv <- as.vector(pvgis_data$P..W.[2521:2568])/1000         #Spring: 2521:2568 -> 15.-16.April
+# pv <- as.vector(pvgis_data$P..W.[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
+# pv <- as.vector(pvgis_data$P..W.[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
+
 # pv <- as.vector(pvgis_data$P..W.)/1000                 #year avg
 
 
@@ -52,7 +52,13 @@ days <- timesteps / 24
 
 
 ############# average demand in kw.
-avg_demand <- c(rep(0,6), rep(152.16, 12), rep(0,6))                       #kW for a production area of 720 m2 in the course of one day
+prod_area_VF <- 720                                                        #m2 actual production area which has to be illuminated
+energy_demand_VF <- 1234.15                                                #kWh/m2/a
+photo_time <- 16                                                           #hours
+dark_time <- 24-photo_time                                                            #hours
+demand_tot_VF <- prod_area_VF*energy_demand_VF/365/photo_time                      #total energy demand in kW/h
+
+avg_demand <- c(rep(0,dark_time/2), rep(demand_tot_VF, photo_time), rep(0,dark_time/2))                       #kW for a production area of 720 m2 in the course of one day
 demand <- c(rep(avg_demand, days))
 
 # avg_demand <- 100                       #kW for a production area of 720 m2
@@ -78,7 +84,7 @@ pv_invest_annualized <- annualize(pv_invest,
 
 run_time <- 10
 
-storage_invest <- 500 # in €/kWh
+storage_invest <- 200 # in €/kWh
 storage_invest_annualized <- annualize(storage_invest,
                                        interest_rate,
                                        run_time,
@@ -90,7 +96,7 @@ co2.kWh <- 100.27      #co2 g/kWh
 co2 <- co2.price * co2.kWh
 
 #Grid cost
-gridcosts <- 1000.18 + co2 # power from grid in €/kWh
+gridcosts <- 0.18 + co2 # power from grid in €/kWh
 
 feed_in_tariff <- 0.06 # subsidy received for feeding power to grid, Euro/kWh
 
@@ -136,7 +142,7 @@ installed_pv_capacity<-mygdx["x_pv"]
 installed_storage_capacity<-mygdx["x_storage"]
 electricity_from_grid<-mygdx["x_buy_from_grid"]
 sum_electricity_from_grid<-sum(electricity_from_grid$value)
-
+costs <- mygdx["x_cost"]
 
 timeseries <- read_timeseries_from_results(mygdx)
 
@@ -147,6 +153,7 @@ timeseries %>%
                     "x_out")) %>%
   ggplot(aes(x=time, y=Value)) +
   geom_line(aes(col=Var)) +
+  scale_color_manual(values=c( 'orange','dark green','dark blue'))
   labs(title = "Storage Balance", subtitle = " ", x = "day", y = "kWh")
 
 ###### figure for operation
@@ -198,19 +205,6 @@ all %>%
   labs(title = "Energy Balance", subtitle = "daily", y = "kWh")
 
 
-#+
-#  geom_line(data = controllable_original_demand, aes(col = Var), fill = NA, size = 1.2)+
-#  labs(title = "Energy Balance", subtitle = "", x = "day", y = "kWh")
-
-
-
-#Solution
-installed_pv_capacity
-installed_storage_capacity
-sum_electricity_from_grid
-
-save.image(file = "Image.RData")
-
 #figure for energy balancing amounts
 all %>% 
   group_by(Var)   %>%
@@ -219,4 +213,25 @@ all %>%
   geom_bar(stat = "Identity", aes (fill = Var)) +
   labs(title = "Energy balancing amounts", subtitle = "daily", x = "Energy 'sources'", y = "kWh")
 
+#Solution
+installed_pv_capacity
+installed_storage_capacity
+sum_electricity_from_grid
+costs
+
+save.image(file = "Image.RData")
+
+# sum_all <- sum(all$Value)
+# 
+# agg_all <- all %>% 
+#   group_by(Var) %>% 
+#   summarise(Value = sum(Value))
+# 
+# percentage <- agg_all$Value/sum_all*100
+
+
+#####economic considerations####
+retail_price <- 3.39                              #Euro/kg Salat
+productivity <- 100                               #kg/m2/a
+revenue <- retail_price*productivity*prod_area_VF #Euro/a
 
