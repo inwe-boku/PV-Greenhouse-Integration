@@ -1,20 +1,20 @@
-#  library(tidyverse)
+ library(tidyverse)
 # # #
 # # # ##### These 2 lines have to be run only once!
 # # # library(devtools)
 # # # #install_github('lolow/gdxtools')
 # # #
-#   library(gdxtools)
+   library(gdxtools)
 # # #
 # # #
 # # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
 # # # #### E.G: i
 #  #igdx("C:/GAMS/win64/30.2")
-#   igdx(dirname(Sys.which('gams')))
+   igdx(dirname(Sys.which('gams')))
 # # #
-#   setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
-#                "/../../")
-#   )
+ setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+                "/../../")
+   )
 
 ############# CREATING INPUT DATA
 
@@ -23,14 +23,14 @@ output_dir <- "data/output/"
 
 source("src/R/functions.R")
 
-############# pv generation for 2016 in kw. 
+############# pv generation for 2016 in kw.
 # pvgis_data <- read.csv("data/input/PV_2016_hr.csv", header=FALSE)        #PVGis hourly data for 2016
-# 
+#
 # pv <- as.vector(pvgis_data$V1[1:48])/1000              #Winter: 1:48 -> 1.-2.January
 # # pv <- as.vector(pvgis_data$V1[2521:2568])/1000         #Spring: 2521:2568 -> 15.-16.April
 # # pv <- as.vector(pvgis_data$V1[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
 # # pv <- as.vector(pvgis_data$V1[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
-# 
+#
 # # pv <- as.vector(pvgis_data$V1)/1000                    #year 2016
 
 
@@ -48,7 +48,7 @@ pv <- as.vector(pvgis_data$P..W.[1:48])/1000              #Winter: 1:48 -> 1.-2.
 
 timesteps <- length (pv)
 days <- timesteps / 24
-  
+
 
 
 ############# average demand in kw.
@@ -58,8 +58,9 @@ photo_time <- 16                                                           #hour
 dark_time <- 24-photo_time                                                            #hours
 demand_tot_VF <- prod_area_VF*energy_demand_VF/365/photo_time                      #total energy demand in kW/h
 
-avg_demand <- c(rep(0,dark_time/2), rep(demand_tot_VF, photo_time), rep(0,dark_time/2))                       #kW for a production area of 720 m2 in the course of one day
-demand <- c(rep(avg_demand, days))
+avg_demand <- 100
+demand_ <- c(rep(0,dark_time/2), rep(demand_tot_VF, photo_time), rep(0,dark_time/2))                       #kW for a production area of 720 m2 in the course of one day
+demand <- c(rep(demand_, days))
 
 # avg_demand <- 100                       #kW for a production area of 720 m2
 # demand <- c(rep(avg_demand, timesteps))
@@ -153,7 +154,7 @@ timeseries %>%
                     "x_out")) %>%
   ggplot(aes(x=time, y=Value)) +
   geom_line(aes(col=Var)) +
-  scale_color_manual(values=c( 'orange','dark green','dark blue'))
+  scale_color_manual(values=c( 'orange','dark green','dark blue')) %>%
   labs(title = "Storage Balance", subtitle = " ", x = "day", y = "kWh")
 
 ###### figure for operation
@@ -205,13 +206,28 @@ all %>%
   labs(title = "Energy Balance", subtitle = "daily", y = "kWh")
 
 
+
+
 #figure for energy balancing amounts
-all %>% 
+all %>%
   group_by(Var)   %>%
-  summarize(Value_Sum = sum(Value)) %>% 
-  ggplot(aes(x = Var, y = Value_Sum)) + 
+  summarize(Value_Sum = sum(Value)) %>%
+  ggplot(aes(x = Var, y = Value_Sum)) +
   geom_bar(stat = "Identity", aes (fill = Var)) +
   labs(title = "Energy balancing amounts", subtitle = "daily", x = "Energy 'sources'", y = "kWh")
+
+
+
+##results in percentage
+s_demand <- sum(demand)
+
+all %>%
+  group_by(Var)   %>%
+  summarize(Value_Sum = sum(Value)) %>%
+  ggplot(aes(x = Var, y = 100 * Value_Sum/s_demand)) +
+  geom_bar(stat = "Identity", aes (fill = Var)) +
+  labs(title = "Energy balancing amounts", subtitle = "daily", x = "Energy 'sources'", y = "% of Demand")
+
 
 #Solution
 installed_pv_capacity
@@ -222,11 +238,11 @@ costs
 save.image(file = "Image.RData")
 
 # sum_all <- sum(all$Value)
-# 
-# agg_all <- all %>% 
-#   group_by(Var) %>% 
+#
+# agg_all <- all %>%
+#   group_by(Var) %>%
 #   summarise(Value = sum(Value))
-# 
+#
 # percentage <- agg_all$Value/sum_all*100
 
 
