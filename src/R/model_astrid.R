@@ -1,20 +1,20 @@
- library(tidyverse)
-# # #
-# # # ##### These 2 lines have to be run only once!
-# # # library(devtools)
-# # # #install_github('lolow/gdxtools')
-# # #
-   library(gdxtools)
-# # #
-# # #
-# # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
-# # # #### E.G: i
-#  #igdx("C:/GAMS/win64/30.2")
-   igdx(dirname(Sys.which('gams')))
-# # #
- setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
-                "/../../")
-   )
+#  library(tidyverse)
+# # # #
+# # # # ##### These 2 lines have to be run only once!
+# # # # library(devtools)
+# # # # #install_github('lolow/gdxtools')
+# # # #
+#    library(gdxtools)
+# # # #
+# # # #
+# # # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
+# # # # #### E.G: i
+# #  #igdx("C:/GAMS/win64/30.2")
+#    igdx(dirname(Sys.which('gams')))
+# # # #
+#  setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+#                 "/../../")
+#    )
 
 ############# CREATING INPUT DATA
 
@@ -23,27 +23,15 @@ output_dir <- "data/output/"
 
 source("src/R/functions.R")
 
-############# pv generation for 2016 in kw.
-# pvgis_data <- read.csv("data/input/PV_2016_hr.csv", header=FALSE)        #PVGis hourly data for 2016
-#
-# pv <- as.vector(pvgis_data$V1[1:48])/1000              #Winter: 1:48 -> 1.-2.January
-# # pv <- as.vector(pvgis_data$V1[2521:2568])/1000         #Spring: 2521:2568 -> 15.-16.April
-# # pv <- as.vector(pvgis_data$V1[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
-# # pv <- as.vector(pvgis_data$V1[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
-#
-# # pv <- as.vector(pvgis_data$V1)/1000                    #year 2016
-
-
 ############# average pv generation for 2006 - 2016 in kw.
 pvgis_data <- read.csv("data/input/PV_avg-06-16_hr.csv", header=TRUE, sep=";") #PVGis average hourly data 2006-2016
 
-pv <- as.vector(pvgis_data$P..W.[1:48])/1000              #Winter: 1:48 -> 1.-2.January
+# pv <- as.vector(pvgis_data$P..W.[1:48])/1000              #Winter: 1:48 -> 1.-2.January
 # pv <- as.vector(pvgis_data$P..W.[2521:2568])/1000         #Spring: 2521:2568 -> 15.-16.April
 # pv <- as.vector(pvgis_data$P..W.[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
 # pv <- as.vector(pvgis_data$P..W.[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
 
-# pv <- as.vector(pvgis_data$P..W.)/1000                 #year avg
-
+pv <- as.vector(pvgis_data$P..W.)/1000                 #year avg
 
 
 timesteps <- length (pv)
@@ -51,8 +39,8 @@ days <- timesteps / 24
 
 
 
-############# average demand in kw.
-prod_area_VF <- 720                                                        #m2 actual production area which has to be illuminated
+############# average demand VF in kw.
+prod_area_VF <- 360                                                        #m2 actual production area which has to be illuminated
 energy_demand_VF <- 1234.15                                                #kWh/m2/a
 photo_time <- 16                                                           #hours
 dark_time <- 24-photo_time                                                            #hours
@@ -62,10 +50,8 @@ avg_demand <- 100
 demand_ <- c(rep(0,dark_time/2), rep(demand_tot_VF, photo_time), rep(0,dark_time/2))                       #kW for a production area of 720 m2 in the course of one day
 demand <- c(rep(demand_, days))
 
-# avg_demand <- 100                       #kW for a production area of 720 m2
-# demand <- c(rep(avg_demand, timesteps))
 
-controllable_demand <- runif(days) * avg_demand *0
+controllable_demand <- runif(days) * avg_demand * 0   #*days statt 0
 
 
 
@@ -85,11 +71,18 @@ pv_invest_annualized <- annualize(pv_invest,
 
 run_time <- 10
 
-storage_invest <- 200 # in €/kWh
+storage_invest <- 800 # in €/kWh
 storage_invest_annualized <- annualize(storage_invest,
                                        interest_rate,
                                        run_time,
-                                       timesteps)
+#                                       timesteps)
+# run_time <- 30
+# GH_invest <- 1185000
+# GH_invest_annualized <- annualize(GH_invest,
+#                                   interest_rate,
+#                                   run_time,
+#                                   timesteps)
+
 
 #Emission cost
 co2.price <- 15.5/10^6  #co2 price Euro/g
@@ -154,7 +147,7 @@ timeseries %>%
                     "x_out")) %>%
   ggplot(aes(x=time, y=Value)) +
   geom_line(aes(col=Var)) +
-  scale_color_manual(values=c( 'orange','dark green','dark blue')) %>%
+  scale_color_manual(values=c('dark green','orange','dark blue')) +
   labs(title = "Storage Balance", subtitle = " ", x = "day", y = "kWh")
 
 ###### figure for operation
@@ -228,26 +221,38 @@ all %>%
   geom_bar(stat = "Identity", aes (fill = Var)) +
   labs(title = "Energy balancing amounts", subtitle = "daily", x = "Energy 'sources'", y = "% of Demand")
 
-
-#Solution
-installed_pv_capacity
-installed_storage_capacity
-sum_electricity_from_grid
-costs
-
-save.image(file = "Image.RData")
-
-# sum_all <- sum(all$Value)
-#
-# agg_all <- all %>%
-#   group_by(Var) %>%
-#   summarise(Value = sum(Value))
-#
-# percentage <- agg_all$Value/sum_all*100
-
-
 #####economic considerations####
 retail_price <- 3.39                              #Euro/kg Salat
 productivity <- 100                               #kg/m2/a
 revenue <- retail_price*productivity*prod_area_VF #Euro/a
+
+####PV_area_consumption
+kWp <- 7.5                                       #m2
+pv_area <- installed_pv_capacity*kWp
+
+###co2 emissions
+emissions <- (sum_electricity_from_grid*co2.kWh)/10^6
+
+ground_area <- 100   #m2
+
+
+save.image(file = "Image.RData")
+
+
+results <- data.frame(c("pv_capacity",
+                        "ES_capacity",
+                        "Grid",
+                        "Costs",
+                        "PV_area",
+                        "Emissions"),
+                      c(installed_pv_capacity$value,
+                                   installed_storage_capacity$value,
+                                   sum_electricity_from_grid,
+                                   costs$value,
+                                   pv_area$value,
+                                   emissions),
+                      c("kWp", "kWh", "kWh", "Euro", "m2", "tons")
+                      )
+names(results) <- c("parameters", "values", "units")
+results
 
