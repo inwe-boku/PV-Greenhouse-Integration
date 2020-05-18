@@ -39,19 +39,34 @@ days <- timesteps / 24
 
 
 
-############# average demand VF in kw.
-prod_area_VF <- 360                                                        #m2 actual production area which has to be illuminated
-energy_demand_VF <- 1234.15                                                #kWh/m2/a
-photo_time <- 16                                                           #hours
-dark_time <- 24-photo_time                                                            #hours
-demand_tot_VF <- prod_area_VF*energy_demand_VF/365/photo_time                      #total energy demand in kW/h
+# ############# average demand VF in kw.
+# prod_area_VF <- 360                                                        #m2 actual production area which has to be illuminated
+# energy_demand_VF <- 1234.15                                                #kWh/m2/a
+# photo_time <- 16                                                           #hours
+# dark_time <- 24-photo_time                                                            #hours
+# demand_tot_VF <- prod_area_VF*energy_demand_VF/365/photo_time                      #total energy demand in kW/h
+# 
+# avg_demand <- 100
+# demand_ <- c(rep(0,dark_time/2), rep(demand_tot_VF, photo_time), rep(0,dark_time/2))                       #kW for a production area of 720 m2 in the course of one day
+# demand <- c(rep(demand_, days))
+# 
+# 
+# controllable_demand <- runif(days) * avg_demand * 0   #*days statt 0
+
+########### demand GH in kw/m2
+GH_demand <- read.csv("data/input/GH-demand.csv", header=TRUE, sep=";")
+
+GH_lettuce <- as.vector(GH_demand$Coldhouse)
+GH_tomato <- as.vector(GH_demand$Hothouse)
+
+GH_area <- 400           #m2
 
 avg_demand <- 100
-demand_ <- c(rep(0,dark_time/2), rep(demand_tot_VF, photo_time), rep(0,dark_time/2))                       #kW for a production area of 720 m2 in the course of one day
-demand <- c(rep(demand_, days))
-
+GH_demand_ <- GH_lettuce*GH_area
+demand <- GH_demand_
 
 controllable_demand <- runif(days) * avg_demand * 0   #*days statt 0
+
 
 
 
@@ -75,7 +90,7 @@ storage_invest <- 800 # in €/kWh
 storage_invest_annualized <- annualize(storage_invest,
                                        interest_rate,
                                        run_time,
-#                                       timesteps)
+                                       timesteps)
 # run_time <- 30
 # GH_invest <- 1185000
 # GH_invest_annualized <- annualize(GH_invest,
@@ -90,7 +105,7 @@ co2.kWh <- 100.27      #co2 g/kWh
 co2 <- co2.price * co2.kWh
 
 #Grid cost
-gridcosts <- 0.18 + co2 # power from grid in €/kWh
+gridcosts <- 10000.18 + co2 # power from grid in €/kWh
 
 feed_in_tariff <- 0.06 # subsidy received for feeding power to grid, Euro/kWh
 
