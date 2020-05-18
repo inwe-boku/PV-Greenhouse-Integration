@@ -31,8 +31,10 @@ pvgis_data <- read.csv("data/input/PV_avg-06-16_hr.csv", header=TRUE, sep=";") #
 # pv <- as.vector(pvgis_data$P..W.[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
 # pv <- as.vector(pvgis_data$P..W.[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
 
-pv <- as.vector(pvgis_data$P..W.)/1000                 #year avg
+# pv <- as.vector(pvgis_data$P..W.)/1000                 #year avg
 
+
+pv <- as.vector(pvgis_data$P..W.[7500:7667])/1000
 
 timesteps <- length (pv)
 days <- timesteps / 24
@@ -56,8 +58,18 @@ days <- timesteps / 24
 ########### demand GH in kw/m2
 GH_demand <- read.csv("data/input/GH-demand.csv", header=TRUE, sep=";")
 
-GH_lettuce <- as.vector(GH_demand$Coldhouse)
-GH_tomato <- as.vector(GH_demand$Hothouse)
+# GH_lettuce <- as.vector(GH_demand$Coldhouse)
+
+# GH_lettuce <- as.vector(GH_demand$Coldhous[1:48])              #Winter: 1:48 -> 1.-2.January
+# GH_lettuce <- as.vector(GH_demand$Coldhous[2521:2568])         #Spring: 2521:2568 -> 15.-16.April
+# GH_lettuce <- as.vector(GH_demand$Coldhous[4609:4656])         #Summer: 4609:4656 -> 11.-12.July
+# GH_lettuce <- as.vector(GH_demand$Coldhous[6577:6624])         #Fall: 6577:6624 -> 1.-2. October
+
+GH_lettuce <- as.vector(GH_demand$Coldhous[7500:7667])
+
+
+
+# GH_tomato <- as.vector(GH_demand$Hothouse)
 
 GH_area <- 400           #m2
 
