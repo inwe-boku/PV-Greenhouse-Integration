@@ -1,8 +1,5 @@
 #  library(tidyverse)
 # # # #
-# # # # ##### These 2 lines have to be run only once!
-# # # # library(devtools)
-# # # # #install_github('lolow/gdxtools')
 # # # #
 #    library(gdxtools)
 # # # #
@@ -22,6 +19,14 @@ input_dir <- "data/input/"
 output_dir <- "data/output/"
 
 source("src/R/functions.R")
+
+
+#scenarios
+
+scenarios_demand <- seq(1,10,1)
+for (mult in scenarios_demand) {
+
+
 
 ############# average pv generation for 2006 - 2016 in kw.
 pvgis_data <- read.csv("data/input/PV_avg-06-16_hr.csv", header=TRUE, sep=";") #PVGis average hourly data 2006-2016
@@ -67,14 +72,18 @@ GH_demand <- read.csv("data/input/GH-demand.csv", header=TRUE, sep=";")
 
 GH_lettuce <- as.vector(GH_demand$Coldhous[7500:7667])
 
+COP.HP <- 3.5                                                     #Coefficient of performance (COP) of the heatpump (HP)
 
+
+GH_d <- GH_lettuce/COP.HP
+# GH_d*scenarios_demand
 
 # GH_tomato <- as.vector(GH_demand$Hothouse)
 
 GH_area <- 400           #m2
 
 avg_demand <- 100
-GH_demand_ <- GH_lettuce*GH_area
+GH_demand_ <- GH_d*GH_area
 demand <- GH_demand_
 
 controllable_demand <- runif(days) * avg_demand * 0   #*days statt 0
@@ -248,25 +257,25 @@ all %>%
   geom_bar(stat = "Identity", aes (fill = Var)) +
   labs(title = "Energy balancing amounts", subtitle = "daily", x = "Energy 'sources'", y = "% of Demand")
 
-#####economic considerations####
-retail_price <- 3.39                              #Euro/kg Salat
-productivity <- 100                               #kg/m2/a
-revenue <- retail_price*productivity*prod_area_VF #Euro/a
+#####economic considerations VF####
+# retail_price <- 3.39                              #Euro/kg Salat
+# productivity <- 100                               #kg/m2/a
+# revenue <- retail_price*productivity*prod_area_VF #Euro/a
 
 ####PV_area_consumption
-kWp <- 7.5                                       #m2
-pv_area <- installed_pv_capacity*kWp
+kWp_area <- 7.5                                       #m2
+pv_area <- installed_pv_capacity*kWp_area
 
 ###co2 emissions
-emissions <- (sum_electricity_from_grid*co2.kWh)/10^6
+emissions.t <- (sum_electricity_from_grid*co2.kWh)/10^6 #tons
 
 ground_area <- 100   #m2
 
 
 save.image(file = "Image.RData")
+}
 
-
-results <- data.frame(c("pv_capacity",
+results <- data.frame(c("PV_capacity",
                         "ES_capacity",
                         "Grid",
                         "Costs",
@@ -277,9 +286,10 @@ results <- data.frame(c("pv_capacity",
                                    sum_electricity_from_grid,
                                    costs$value,
                                    pv_area$value,
-                                   emissions),
-                      c("kWp", "kWh", "kWh", "Euro", "m2", "tons")
+                                   emissions.t),
+                      c("kWp", "kWh", "kWh", "Euro", "m2", "tons"),
+                      c(scenarios_demand)
                       )
-names(results) <- c("parameters", "values", "units")
+names(results) <- c("parameters", "values", "units", "scenarios")
 results
 
