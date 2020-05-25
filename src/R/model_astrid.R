@@ -1,17 +1,17 @@
-   library(tidyverse)
-# # # # #
-# # # # #
-    library(gdxtools)
-# # # # #
-# # # # #
-# # # # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
-# # # # # #### E.G: i
-igdx("C:/GAMS/win64/30.2")
-#     igdx(dirname(Sys.which('gams')))
-# # # # #
-   setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
-                  "/../../")
-     )
+#    library(tidyverse)
+# # # # # #
+# # # # # #
+#     library(gdxtools)
+# # # # # #
+# # # # # #
+# # # # # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
+# # # # # # #### E.G: i
+# # igdx("C:/GAMS/win64/30.2")
+#      igdx(dirname(Sys.which('gams')))
+# # # # # #
+#    setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+#                   "/../../")
+#      )
 
 ############# CREATING INPUT DATA
 
@@ -25,12 +25,13 @@ source("src/R/functions.R")
 
 final_results <- NULL
 
-# scenarios_demand <- seq(1,10,0.5)
-scenarios_pv <- seq(5,1,-1)
+# scenarios_demand <- c(1)
+scenarios_pv <- seq(1, 0.1, -0.1)
+# scenarios_pv <- seq(1.5,0.5,-0.1)
 # scenarios_grid <- seq(1,51,10)
-scenarios_storage <- seq(1,3,0.5)
+scenarios_storage <- seq(1,3,1)
 
-for(mult in scenarios_pv){
+for(pv_mult in scenarios_pv){
   # for (storage_mult in scenarios_storage) {
   
   
@@ -113,7 +114,7 @@ for(mult in scenarios_pv){
                                     interest_rate,
                                     run_time,
                                     timesteps)
-  pv_invest_annualized <- pv_invest_annualized*mult
+  pv_invest_annualized <- pv_invest_annualized*pv_mult
   
   run_time <- 10
   
@@ -122,6 +123,9 @@ for(mult in scenarios_pv){
                                          interest_rate,
                                          run_time,
                                          timesteps)
+  # storage_invest_annualized <- storage_invest_annualized*storage_mult
+  
+  
   # run_time <- 30
   # GH_invest <- 1185000
   # GH_invest_annualized <- annualize(GH_invest,
@@ -307,7 +311,8 @@ for(mult in scenarios_pv){
                           pv_area$value,
                           emissions.t),
                         c("kWh","Euro/kWp","kWp","Euro/kWh", "kWh", "Euro/kWh", "kWh", "Euro", "m2", "tons"),
-                        mult
+                        pv_mult
+                        # storage_mult
   )
   names(results) <- c("parameters", "values", "units", "scenario")
   final_results <- bind_rows(final_results, results)
