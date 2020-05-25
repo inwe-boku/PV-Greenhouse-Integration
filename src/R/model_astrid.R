@@ -1,7 +1,7 @@
-library(tidyverse)
+   library(tidyverse)
 # # # # #
 # # # # #
-library(gdxtools)
+    library(gdxtools)
 # # # # #
 # # # # #
 # # # # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
@@ -9,9 +9,9 @@ library(gdxtools)
 igdx("C:/GAMS/win64/30.2")
 #     igdx(dirname(Sys.which('gams')))
 # # # # #
-setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
-             "/../../")
-)
+   setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+                  "/../../")
+     )
 
 ############# CREATING INPUT DATA
 
