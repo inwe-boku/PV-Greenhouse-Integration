@@ -26,13 +26,13 @@ source("src/R/functions.R")
 final_results <- NULL
 
 # scenarios_demand <- c(1)
-scenarios_pv <- seq(1, 0.1, -0.1)
+scenarios_pv <- seq(1, 0.5, -0.25)
 # scenarios_pv <- seq(1.5,0.5,-0.1)
 # scenarios_grid <- seq(1,51,10)
-scenarios_storage <- seq(1,3,1)
+scenarios_storage <- seq(0.5,1.5,0.5)
 
 for(pv_mult in scenarios_pv){
-  # for (storage_mult in scenarios_storage) {
+   for (storage_mult in scenarios_storage) {
   
   
   
@@ -123,7 +123,7 @@ for(pv_mult in scenarios_pv){
                                          interest_rate,
                                          run_time,
                                          timesteps)
-  # storage_invest_annualized <- storage_invest_annualized*storage_mult
+  storage_invest_annualized <- storage_invest_annualized*storage_mult
   
   
   # run_time <- 30
@@ -143,7 +143,7 @@ for(pv_mult in scenarios_pv){
   gridcosts <- 0.18 + co2 # power from grid in €/kWh
   # gridcosts <- gridcosts*mult
   
-  feed_in_tariff <- 0.06 # subsidy received for feeding power to grid, Euro/kWh
+  feed_in_tariff <- 0.04 # subsidy received for feeding power to grid, Euro/kWh
   
   #technical parameters
   efficiency_storage <- 0.9
@@ -311,14 +311,14 @@ for(pv_mult in scenarios_pv){
                           pv_area$value,
                           emissions.t),
                         c("kWh","Euro/kWp","kWp","Euro/kWh", "kWh", "Euro/kWh", "kWh", "Euro", "m2", "tons"),
-                        pv_mult
-                        # storage_mult
+                        pv_mult,
+                        storage_mult
   )
-  names(results) <- c("parameters", "values", "units", "scenario")
+  names(results) <- c("parameters", "values", "units", "scenario_pv", "scenario_storage")
   final_results <- bind_rows(final_results, results)
   
 }
-# }
+ }
 
 final_results
 
@@ -328,7 +328,8 @@ final_results %>%
                            "ES_capacity",
                            "Grid")) %>%
   group_by(parameters) %>% 
-  mutate(values_prop=values/max(values)) %>% 
+  mutate(values_prop=values/max(values)) %>%
+  mutate(scenario=paste0("PV",scenario_pv,"storage",scenario_storage)) %>% 
   ggplot(aes(x=scenario, y=values_prop)) +
   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
   labs(title = "Sensitivity analyses", x = "Scenario (PV_costs)", y = "Relation of output to maximum of all scenarios (%)")
