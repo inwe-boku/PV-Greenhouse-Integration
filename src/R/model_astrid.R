@@ -1,17 +1,17 @@
-  library(tidyverse)
-# # # #
-# # # #
-    library(gdxtools)
-# # # #
-# # # #
-# # # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
-# # # # #### E.G: i
-# #  #igdx("C:/GAMS/win64/30.2")
-    igdx(dirname(Sys.which('gams')))
-# # # #
-  setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
-                 "/../../")
-    )
+library(tidyverse)
+# # # # #
+# # # # #
+library(gdxtools)
+# # # # #
+# # # # #
+# # # # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
+# # # # # #### E.G: i
+igdx("C:/GAMS/win64/30.2")
+#     igdx(dirname(Sys.which('gams')))
+# # # # #
+setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+             "/../../")
+)
 
 ############# CREATING INPUT DATA
 
@@ -25,91 +25,99 @@ source("src/R/functions.R")
 
 final_results <- NULL
 
-scenarios_demand <- seq(1,3,1)
-for (mult in scenarios_demand) {
+# scenarios_demand <- seq(1,10,0.5)
+scenarios_pv <- seq(5,1,-1)
+# scenarios_grid <- seq(1,51,10)
+scenarios_storage <- seq(1,3,0.5)
 
-
-
+for(mult in scenarios_pv){
+  # for (storage_mult in scenarios_storage) {
+  
+  
+  
   ############# average pv generation for 2006 - 2016 in kw.
   pvgis_data <- read.csv("data/input/PV_avg-06-16_hr.csv", header=TRUE, sep=";") #PVGis average hourly data 2006-2016
-
+  
   # pv <- as.vector(pvgis_data$P..W.[1:48])/1000              #Winter: 1:48 -> 1.-2.January
   # pv <- as.vector(pvgis_data$P..W.[2521:2568])/1000         #Spring: 2521:2568 -> 15.-16.April
   # pv <- as.vector(pvgis_data$P..W.[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
   # pv <- as.vector(pvgis_data$P..W.[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
-
-  # pv <- as.vector(pvgis_data$P..W.)/1000                 #year avg
-
-
-  pv <- as.vector(pvgis_data$P..W.[7500:7667])/1000
-
+  
+  pv <- as.vector(pvgis_data$P..W.)/1000                 #year avg
+  
+  
+  # pv <- as.vector(pvgis_data$P..W.[7500:7667])/1000
+  
   timesteps <- length (pv)
   days <- timesteps / 24
-
-
-
-  # ############# average demand VF in kw.
-  # prod_area_VF <- 360                                                        #m2 actual production area which has to be illuminated
-  # energy_demand_VF <- 1234.15                                                #kWh/m2/a
-  # photo_time <- 16                                                           #hours
-  # dark_time <- 24-photo_time                                                            #hours
-  # demand_tot_VF <- prod_area_VF*energy_demand_VF/365/photo_time                      #total energy demand in kW/h
-  #
-  # avg_demand <- 100
-  # demand_ <- c(rep(0,dark_time/2), rep(demand_tot_VF, photo_time), rep(0,dark_time/2))                       #kW for a production area of 720 m2 in the course of one day
-  # demand <- c(rep(demand_, days))
-  #
-  #
-  # controllable_demand <- runif(days) * avg_demand * 0   #*days statt 0
-
-  ########### demand GH in kw/m2
-  GH_demand <- read.csv("data/input/GH-demand.csv", header=TRUE, sep=";")
-
+  
+  
+  
+  ############# average demand VF in kw.
+  prod_area_VF <- 360                                                        #m2 actual production area which has to be illuminated
+  energy_demand_VF <- 1234.15                                                #kWh/m2/a
+  photo_time <- 16                                                           #hours
+  dark_time <- 24-photo_time                                                            #hours
+  demand_tot_VF <- prod_area_VF*energy_demand_VF/365/photo_time                      #total energy demand in kW/h
+  
+  demand_ <- c(rep(0,dark_time/2), rep(demand_tot_VF, photo_time), rep(0,dark_time/2))                       #kW for a production area of 720 m2 in the course of one day
+  demand <- c(rep(demand_, days))#*mult
+  
+  
+  
+  # ########### demand GH in kw/m2
+  # GH_demand <- read.csv("data/input/GH-demand.csv", header=TRUE, sep=";")
+  # 
   # GH_lettuce <- as.vector(GH_demand$Coldhouse)
-
-  # GH_lettuce <- as.vector(GH_demand$Coldhous[1:48])              #Winter: 1:48 -> 1.-2.January
-  #  GH_lettuce <- as.vector(GH_demand$Coldhous[2521:2568])         #Spring: 2521:2568 -> 15.-16.April
-  # GH_lettuce <- as.vector(GH_demand$Coldhous[4609:4656])         #Summer: 4609:4656 -> 11.-12.July
-  # GH_lettuce <- as.vector(GH_demand$Coldhous[6577:6624])         #Fall: 6577:6624 -> 1.-2. October
-
-  GH_lettuce <- as.vector(GH_demand$Coldhous[7500:7667])
-
-  COP.HP <- 3.5                                                     #Coefficient of performance (COP) of the heatpump (HP)
-
-
-  GH_d <- GH_lettuce/COP.HP
-  # GH_d*scenarios_demand
-
-  # GH_tomato <- as.vector(GH_demand$Hothouse)
-
-  GH_area <- 400           #m2
-
+  # 
+  # # GH_lettuce <- as.vector(GH_demand$Coldhous[1:48])              #Winter: 1:48 -> 1.-2.January
+  # # GH_lettuce <- as.vector(GH_demand$Coldhous[2521:2568])         #Spring: 2521:2568 -> 15.-16.April
+  # # GH_lettuce <- as.vector(GH_demand$Coldhous[4609:4656])         #Summer: 4609:4656 -> 11.-12.July
+  # # GH_lettuce <- as.vector(GH_demand$Coldhous[6577:6624])         #Fall: 6577:6624 -> 1.-2. October
+  # 
+  # # GH_lettuce <- as.vector(GH_demand$Coldhous[7500:7667])
+  # 
+  # COP.HP <- 3.5                                                     #Coefficient of performance (COP) of the heatpump (HP)
+  # 
+  # 
+  # GH_d <- GH_lettuce/COP.HP
+  # 
+  # 
+  # # GH_tomato <- as.vector(GH_demand$Hothouse)
+  # 
+  # GH_area <- 400           #m2
+  # 
+  # 
+  # GH_demand_ <- GH_d*GH_area
+  # demand <- GH_demand_ #* mult
+  
+  
+  
+  #####controllable demand
   avg_demand <- 100
-  GH_demand_ <- GH_d*GH_area
-  demand <- GH_demand_ * mult
-
   controllable_demand <- runif(days) * avg_demand * 0   #*days statt 0
-
-
-
-
+  
+  
+  #########investment costs
+  
   interest_rate <- 0.1
   run_time <- 20
-
+  
   #Land cost
   land_cost <- 6.5                                  #Euro/m2 greenland.
-
-  pv_land <- 0                                     #1 KW needs more than 1 m2!, so it has to be multiplied by land-use of PV
-
-  pv_invest <- 1200 + land_cost*pv_land # in €/kw
+  
+  pv_land <- 7.5                                     #1 KW needs more than 1 m2!, so it has to be multiplied by land-use of PV
+  
+  pv_invest <- 900 + land_cost*pv_land # in €/kw
   pv_invest_annualized <- annualize(pv_invest,
                                     interest_rate,
                                     run_time,
                                     timesteps)
-
+  pv_invest_annualized <- pv_invest_annualized*mult
+  
   run_time <- 10
-
-  storage_invest <- 800 # in €/kWh
+  
+  storage_invest <- 600 # in €/kWh
   storage_invest_annualized <- annualize(storage_invest,
                                          interest_rate,
                                          run_time,
@@ -120,23 +128,24 @@ for (mult in scenarios_demand) {
   #                                   interest_rate,
   #                                   run_time,
   #                                   timesteps)
-
-
+  
+  
   #Emission cost
   co2.price <- 15.5/10^6  #co2 price Euro/g
   co2.kWh <- 100.27      #co2 g/kWh
   co2 <- co2.price * co2.kWh
-
+  
   #Grid cost
-  gridcosts <- 10000.18 + co2 # power from grid in €/kWh
-
+  gridcosts <- 0.18 + co2 # power from grid in €/kWh
+  # gridcosts <- gridcosts*mult
+  
   feed_in_tariff <- 0.06 # subsidy received for feeding power to grid, Euro/kWh
-
+  
   #technical parameters
   efficiency_storage <- 0.9
   maximum_power_controllable_demand <- 500 # how much power the controllable demand can use at most in one instant of time. In kW
-
-
+  
+  
   #### this function writes the gdx file to disk for GAMS to use
   #### the function is contained in the script "model.R"
   create_input_data(timesteps = timesteps,
@@ -150,14 +159,14 @@ for (mult in scenarios_demand) {
                     efficiency_storage = efficiency_storage,
                     maximum_power_controllable_demand = maximum_power_controllable_demand
   )
-
+  
   ############# Running gams
   gams("src/GAMS/pvsimple.gms")
-
+  
   ############# Reading results
-
+  
   mygdx <- gdx('data/output/output.gdx')
-
+  
   ###### THESE 2 VALUES HAVE TO BE 1, otherwise there was a problem when solving!
   if(mygdx["modelstat"] != 1){
     print("Caution: model was not solved properly, results should not be trusted.")
@@ -165,19 +174,19 @@ for (mult in scenarios_demand) {
   if(mygdx["solvestat"] != 1){
     print("Caution: model was not solved properly, results should not be trusted.")
   }
-
+  
   ############# show all available items in results
   all_items(mygdx)
-
+  
   ############# extract some interesting items
   installed_pv_capacity<-mygdx["x_pv"]
   installed_storage_capacity<-mygdx["x_storage"]
   electricity_from_grid<-mygdx["x_buy_from_grid"]
   sum_electricity_from_grid<-sum(electricity_from_grid$value)
   costs <- mygdx["x_cost"]
-
+  
   timeseries <- read_timeseries_from_results(mygdx)
-
+  
   ###### figure for storage operation
   timeseries %>%
     filter(Var %in% c("SOC",
@@ -187,12 +196,12 @@ for (mult in scenarios_demand) {
     geom_line(aes(col=Var)) +
     scale_color_manual(values=c('dark green','orange','dark blue')) +
     labs(title = "Storage Balance", subtitle = " ", x = "day", y = "kWh")
-
+  
   ###### figure for operation
   demand_original <- timeseries %>%
     filter(Var %in% c("demand"
     ))
-
+  
   controllable_original_demand <- timeseries %>%
     filter(Var %in% c("demand",
                       "control_demand"
@@ -202,29 +211,29 @@ for (mult in scenarios_demand) {
     mutate(total_demand = control_demand + demand) %>%
     gather(Var, Value, -time) %>%
     filter(Var %in% c("total_demand", "demand"))
-
-
+  
+  
   gens_positive <- timeseries %>%
     filter(Var %in% c("direct_use",
                       "grid_power",
                       "x_out"
     ))
-
+  
   gens_negative <- timeseries %>%
     filter(Var %in% c("curtailment",
                       "power_fed_in"))
-
+  
   all <- bind_rows(
     gens_positive,
     gens_negative)
-
+  
   ###hourly results
   all %>%
     ggplot(aes(x = time, y = Value)) +
     geom_area(aes(fill = Var))+
     labs(title = "Energy Supply", subtitle = "hourly", y = "kWh")
-
-
+  
+  
   ###daily aggregation of results
   all %>%
     group_by(Var) %>%
@@ -235,10 +244,10 @@ for (mult in scenarios_demand) {
     ggplot(aes(x = Day, y = Value)) +
     geom_area(aes(fill = Var))+
     labs(title = "Energy Balance", subtitle = "daily", y = "kWh")
-
-
-
-
+  
+  
+  
+  
   #figure for energy balancing amounts
   all %>%
     group_by(Var)   %>%
@@ -246,54 +255,79 @@ for (mult in scenarios_demand) {
     ggplot(aes(x = Var, y = Value_Sum)) +
     geom_bar(stat = "Identity", aes (fill = Var)) +
     labs(title = "Energy balancing amounts", subtitle = "daily", x = "Energy 'sources'", y = "kWh")
-
-
-
+  
+  
+  
   ##results in percentage
   s_demand <- sum(demand)
-
+  
   all %>%
     group_by(Var)   %>%
     summarize(Value_Sum = sum(Value)) %>%
     ggplot(aes(x = Var, y = 100 * Value_Sum/s_demand)) +
     geom_bar(stat = "Identity", aes (fill = Var)) +
     labs(title = "Energy balancing amounts", subtitle = "daily", x = "Energy 'sources'", y = "% of Demand")
-
+  
   #####economic considerations VF####
   # retail_price <- 3.39                              #Euro/kg Salat
   # productivity <- 100                               #kg/m2/a
   # revenue <- retail_price*productivity*prod_area_VF #Euro/a
-
+  
   ####PV_area_consumption
   kWp_area <- 7.5                                       #m2
   pv_area <- installed_pv_capacity*kWp_area
-
+  
   ###co2 emissions
   emissions.t <- (sum_electricity_from_grid*co2.kWh)/10^6 #tons
-
+  
   ground_area <- 100   #m2
-
-
+  
+  
   save.image(file = "Image.RData")
-
-
-  results <- data.frame(c("PV_capacity",
-                        "ES_capacity",
-                        "Grid",
-                        "Costs",
-                        "PV_area",
-                        "Emissions"),
-                      c(installed_pv_capacity$value,
-                        installed_storage_capacity$value,
-                        sum_electricity_from_grid,
-                        costs$value,
-                        pv_area$value,
-                        emissions.t),
-                      c("kWp", "kWh", "kWh", "Euro", "m2", "tons"),
-                      mult
+  
+  
+  results <- data.frame(c("Demand",
+                          "PV_costs",
+                          "PV_capacity",
+                          "ES_costs",
+                          "ES_capacity",
+                          "Grid_costs",
+                          "Grid",
+                          "Costs",
+                          "PV_area",
+                          "Emissions"),
+                        c(s_demand,
+                          pv_invest_annualized,
+                          installed_pv_capacity$value,
+                          storage_invest_annualized,
+                          installed_storage_capacity$value,
+                          gridcosts,
+                          sum_electricity_from_grid,
+                          costs$value,
+                          pv_area$value,
+                          emissions.t),
+                        c("kWh","Euro/kWp","kWp","Euro/kWh", "kWh", "Euro/kWh", "kWh", "Euro", "m2", "tons"),
+                        mult
   )
   names(results) <- c("parameters", "values", "units", "scenario")
   final_results <- bind_rows(final_results, results)
+  
 }
+# }
 
 final_results
+
+final_results %>%
+  filter(parameters %in% c("PV_costs",
+                           "PV_capacity",
+                           "ES_capacity",
+                           "Grid")) %>%
+  group_by(parameters) %>% 
+  mutate(values_prop=values/max(values)) %>% 
+  ggplot(aes(x=scenario, y=values_prop)) +
+  geom_line(aes(col=parameters)) +
+  labs(title = "Sensitivity analyses", x = "Scenario (PV_costs)", y = "Relation of output to maximum of all scenarios (%)")
+
+
+
+
