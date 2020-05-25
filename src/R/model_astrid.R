@@ -29,7 +29,7 @@ final_results <- NULL
 scenarios_pv <- seq(1, 0.5, -0.25)
 # scenarios_pv <- seq(1.5,0.5,-0.1)
 # scenarios_grid <- seq(1,51,10)
-scenarios_storage <- seq(0.5,1.5,0.5)
+scenarios_storage <- seq(0.1,1.1,0.5)
 
 for(pv_mult in scenarios_pv){
    for (storage_mult in scenarios_storage) {
