@@ -325,7 +325,7 @@ final_results %>%
   group_by(parameters) %>% 
   mutate(values_prop=values/max(values)) %>% 
   ggplot(aes(x=scenario, y=values_prop)) +
-  geom_line(aes(col=parameters)) +
+  geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
   labs(title = "Sensitivity analyses", x = "Scenario (PV_costs)", y = "Relation of output to maximum of all scenarios (%)")
 
 
