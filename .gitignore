@@ -44,6 +44,7 @@ docs/
 *.txt
 *.gdx
 
+
 *.lst
 *.png
 *.RData
@@ -72,3 +73,4 @@ project1.dat
 pvsimple.lst
 pvsimple.lxi
 src/GAMS/pvsimple.lst
+/results/Scenario_Grid_costs.csv
