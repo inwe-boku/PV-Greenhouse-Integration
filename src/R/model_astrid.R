@@ -120,7 +120,7 @@ for (grid_mult in scenarios_grid) {
   
   pv_land <- 7.5                                     #1 KW needs more than 1 m2!, so it has to be multiplied by land-use of PV
   
-  pv_invest <- 900 + land_cost*pv_land # in €/kw
+  pv_invest <- 1000 + land_cost*pv_land # in €/kw
   pv_invest_annualized <- annualize(pv_invest,
                                     interest_rate,
                                     run_time,
@@ -157,7 +157,7 @@ for (grid_mult in scenarios_grid) {
   feed_in_tariff <- 0.08 # subsidy received for feeding power to grid, Euro/kWh
   
   #technical parameters
-  efficiency_storage <- 0.9
+  efficiency_storage <- 0.95
   maximum_power_controllable_demand <- 500 # how much power the controllable demand can use at most in one instant of time. In kW
   
   
