@@ -1,20 +1,23 @@
-#    library(tidyverse)
+library(tidyverse)
 # # # # # #
 # # # # # #
-#     library(gdxtools)
+library(gdxtools)
 # # # # # #
 # # # # # #
+igdx(dirname(Sys.which('gams')))
 # # # # # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
 # # # # # # #### E.G: i
 # # igdx("C:/GAMS/win64/30.2")
-#      igdx(dirname(Sys.which('gams')))
-# # # # # #
-#    setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
-#                   "/../../")
-#      )
+      
+      # # # # # #
+setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+      "/../../"))
+
+dir.create("results")
 
 ############# CREATING INPUT DATA
 
+results_dir <- "results/"
 input_dir <- "data/input/"
 output_dir <- "data/output/"
 
@@ -26,14 +29,13 @@ source("src/R/functions.R")
 final_results <- NULL
 
 # scenarios_demand <- c(1)
-scenarios_pv <- seq(1, 0.5, -0.25)
-# scenarios_pv <- seq(1.5,0.5,-0.1)
-# scenarios_grid <- seq(1,51,10)
-scenarios_storage <- seq(0.1,1.1,0.5)
+scenarios_pv <- seq(2.5, 1, -0.1)
+scenarios_storage <- seq(1,21,5)
+scenarios_grid <- seq(1,2,0.5)
 
-for(pv_mult in scenarios_pv){
-   for (storage_mult in scenarios_storage) {
-  
+# for(pv_mult in scenarios_pv){
+# for (storage_mult in scenarios_storage) {
+for (grid_mult in scenarios_grid) {
   
   
   ############# average pv generation for 2006 - 2016 in kw.
@@ -55,13 +57,15 @@ for(pv_mult in scenarios_pv){
   
   
   ############# average demand VF in kw.
-  prod_area_VF <- 360                                                        #m2 actual production area which has to be illuminated
-  energy_demand_VF <- 1234.15                                                #kWh/m2/a
+  prod_area_VF <- 720                                                        #m2 actual production area which has to be illuminated
+  energy_demand_VF <- 1009.53                                                #kWh/m2/a
   photo_time <- 16                                                           #hours
-  dark_time <- 24-photo_time                                                            #hours
-  demand_tot_VF <- prod_area_VF*energy_demand_VF/365/photo_time                      #total energy demand in kW/h
+  dark_time <- 24-photo_time                                                 #hours
+  demand_tot_VF <- prod_area_VF*energy_demand_VF/365/photo_time              #total energy demand in kW/h
   
-  demand_ <- c(rep(0,dark_time/2), rep(demand_tot_VF, photo_time), rep(0,dark_time/2))                       #kW for a production area of 720 m2 in the course of one day
+  demand_ <- c(rep(0,dark_time/2), 
+               rep(demand_tot_VF, photo_time), 
+               rep(0,dark_time/2))                                           #kW in the course of one day
   demand <- c(rep(demand_, days))#*mult
   
   
@@ -69,6 +73,10 @@ for(pv_mult in scenarios_pv){
   # ########### demand GH in kw/m2
   # GH_demand <- read.csv("data/input/GH-demand.csv", header=TRUE, sep=";")
   # 
+  # GH_area <- 400           #m2
+  # COP.HP <- 3.5                                                     #Coefficient of performance (COP) of the heatpump (HP)  
+  
+  
   # GH_lettuce <- as.vector(GH_demand$Coldhouse)
   # 
   # # GH_lettuce <- as.vector(GH_demand$Coldhous[1:48])              #Winter: 1:48 -> 1.-2.January
@@ -78,15 +86,11 @@ for(pv_mult in scenarios_pv){
   # 
   # # GH_lettuce <- as.vector(GH_demand$Coldhous[7500:7667])
   # 
-  # COP.HP <- 3.5                                                     #Coefficient of performance (COP) of the heatpump (HP)
-  # 
-  # 
   # GH_d <- GH_lettuce/COP.HP
   # 
   # 
   # # GH_tomato <- as.vector(GH_demand$Hothouse)
   # 
-  # GH_area <- 400           #m2
   # 
   # 
   # GH_demand_ <- GH_d*GH_area
@@ -106,6 +110,7 @@ for(pv_mult in scenarios_pv){
   
   #Land cost
   land_cost <- 6.5                                  #Euro/m2 greenland.
+  build_land_cost <- 200                            #Euro/m2
   
   pv_land <- 7.5                                     #1 KW needs more than 1 m2!, so it has to be multiplied by land-use of PV
   
@@ -114,7 +119,7 @@ for(pv_mult in scenarios_pv){
                                     interest_rate,
                                     run_time,
                                     timesteps)
-  pv_invest_annualized <- pv_invest_annualized*pv_mult
+  # pv_invest_annualized <- pv_invest_annualized*pv_mult
   
   run_time <- 10
   
@@ -123,9 +128,9 @@ for(pv_mult in scenarios_pv){
                                          interest_rate,
                                          run_time,
                                          timesteps)
-  storage_invest_annualized <- storage_invest_annualized*storage_mult
+  # storage_invest_annualized <- storage_invest_annualized*storage_mult
   
-  
+  ###GH_invest  
   # run_time <- 30
   # GH_invest <- 1185000
   # GH_invest_annualized <- annualize(GH_invest,
@@ -136,14 +141,14 @@ for(pv_mult in scenarios_pv){
   
   #Emission cost
   co2.price <- 15.5/10^6  #co2 price Euro/g
-  co2.kWh <- 100.27      #co2 g/kWh
+  co2.kWh <- 125.91      #co2 g/kWh
   co2 <- co2.price * co2.kWh
   
   #Grid cost
-  gridcosts <- 0.18 + co2 # power from grid in €/kWh
-  # gridcosts <- gridcosts*mult
+  gridcosts <- 0.199 + co2 # power from grid in €/kWh
+  gridcosts <- gridcosts*grid_mult
   
-  feed_in_tariff <- 0.04 # subsidy received for feeding power to grid, Euro/kWh
+  feed_in_tariff <- 0.08 # subsidy received for feeding power to grid, Euro/kWh
   
   #technical parameters
   efficiency_storage <- 0.9
@@ -311,29 +316,59 @@ for(pv_mult in scenarios_pv){
                           pv_area$value,
                           emissions.t),
                         c("kWh","Euro/kWp","kWp","Euro/kWh", "kWh", "Euro/kWh", "kWh", "Euro", "m2", "tons"),
-                        pv_mult,
-                        storage_mult
+                        # pv_mult
+                        # storage_mult
+                        grid_mult
   )
-  names(results) <- c("parameters", "values", "units", "scenario_pv", "scenario_storage")
+  names(results) <- c("parameters", "values", "units", "scenario")
   final_results <- bind_rows(final_results, results)
   
 }
- }
+# }
 
 final_results
+# 
+# #final results PV
+# 
+# final_results %>%
+#   filter(parameters %in% c("PV_costs",
+#                            "PV_capacity",
+#                            "ES_capacity",
+#                            "Grid")) %>%
+#   group_by(parameters) %>%
+#   mutate(values_prop=values/max(values)) %>%
+#   ggplot(aes(x=scenario, y=values_prop)) +
+#   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
+#   labs(title = "Sensitivity analyses", x = "Scenario (PV_costs)", y = "Relation of output to maximum of all scenarios (%)")
+
+
+# #final results storage
+# 
+# final_results %>%
+#   filter(parameters %in% c("ES_costs",
+#                            "PV_capacity",
+#                            "ES_capacity",
+#                            "Grid")) %>%
+#   group_by(parameters) %>% 
+#   mutate(values_prop=values/max(values)) %>% 
+#   ggplot(aes(x=scenario, y=values_prop)) +
+#   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
+#   labs(title = "Sensitivity analyses", x = "Scenario (ES_costs)", y = "Relation of output to maximum of all scenarios (%)")
+
+
+#final results grid
 
 final_results %>%
-  filter(parameters %in% c("PV_costs",
+  filter(parameters %in% c("Grid_costs",
                            "PV_capacity",
                            "ES_capacity",
                            "Grid")) %>%
-  group_by(parameters) %>% 
+  group_by(parameters) %>%
   mutate(values_prop=values/max(values)) %>%
-  mutate(scenario=paste0("PV",scenario_pv,"storage",scenario_storage)) %>% 
   ggplot(aes(x=scenario, y=values_prop)) +
   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
-  labs(title = "Sensitivity analyses", x = "Scenario (PV_costs)", y = "Relation of output to maximum of all scenarios (%)")
+  labs(title = "Sensitivity analyses", x = "Scenario (Grid_costs)", y = "Relation of output to maximum of all scenarios (%)")
 
+final_results
 
-
-
+write.csv(final_results,paste0(results_dir,Scenario_Grid_costs_2805.csv), row.names = FALSE)
