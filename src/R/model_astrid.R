@@ -1,20 +1,26 @@
-library(tidyverse)
-# # # # # #
-# # # # # #
-library(gdxtools)
-# # # # # #
-# # # # # #
-igdx(dirname(Sys.which('gams')))
-# # # # # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
-# # # # # # #### E.G: i
-# # igdx("C:/GAMS/win64/30.2")
+run<-FALSE
+
+if(!run){
+
+  library(tidyverse)
+  # # # # # #
+  # # # # # #
+  library(gdxtools)
+  # # # # # #
+  # # # # # #
+  igdx(dirname(Sys.which('gams')))
+  # # # # # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
+  # # # # # # #### E.G: i
+  # # igdx("C:/GAMS/win64/30.2")
       
       # # # # # #
-setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+  setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
       "/../../"))
 
-dir.create("results")
+  dir.create("results")
 
+  run<-TRUE
+  }
 ############# CREATING INPUT DATA
 
 results_dir <- "results/"
