@@ -1,4 +1,4 @@
-run<-FALSE
+# run<-FALSE
 
 if(!run){
 
@@ -36,12 +36,12 @@ final_results <- NULL
 
 # scenarios_demand <- c(1)
 scenarios_pv <- seq(2.5, 1, -0.1)
-scenarios_storage <- seq(1,21,5)
+scenarios_storage <- seq(1,3,1)
 scenarios_grid <- seq(1,2,0.5)
 
 # for(pv_mult in scenarios_pv){
-# for (storage_mult in scenarios_storage) {
-for (grid_mult in scenarios_grid) {
+for (storage_mult in scenarios_storage) {
+# for (grid_mult in scenarios_grid) {
   
   
   ############# average pv generation for 2006 - 2016 in kw.
@@ -69,9 +69,9 @@ for (grid_mult in scenarios_grid) {
   dark_time <- 24-photo_time                                                 #hours
   demand_tot_VF <- prod_area_VF*energy_demand_VF/365/photo_time              #total energy demand in kW/h
   
-  demand_ <- c(rep(0,dark_time/2), 
+  demand_ <- c(rep(demand_tot_VF*0.3,dark_time/2), 
                rep(demand_tot_VF, photo_time), 
-               rep(0,dark_time/2))                                           #kW in the course of one day
+               rep(demand_tot_VF*0.3,dark_time/2))                                           #kW in the course of one day
   demand <- c(rep(demand_, days))#*mult
   
   
@@ -129,12 +129,12 @@ for (grid_mult in scenarios_grid) {
   
   run_time <- 10
   
-  storage_invest <- 600 # in €/kWh
+  storage_invest <- 100 # in €/kWh
   storage_invest_annualized <- annualize(storage_invest,
                                          interest_rate,
                                          run_time,
                                          timesteps)
-  # storage_invest_annualized <- storage_invest_annualized*storage_mult
+  storage_invest_annualized <- storage_invest_annualized*storage_mult
   
   ###GH_invest  
   # run_time <- 30
@@ -152,7 +152,7 @@ for (grid_mult in scenarios_grid) {
   
   #Grid cost
   gridcosts <- 0.199 + co2 # power from grid in €/kWh
-  gridcosts <- gridcosts*grid_mult
+  # gridcosts <- gridcosts*grid_mult
   
   feed_in_tariff <- 0.08 # subsidy received for feeding power to grid, Euro/kWh
   
@@ -323,8 +323,8 @@ for (grid_mult in scenarios_grid) {
                           emissions.t),
                         c("kWh","Euro/kWp","kWp","Euro/kWh", "kWh", "Euro/kWh", "kWh", "Euro", "m2", "tons"),
                         # pv_mult
-                        # storage_mult
-                        grid_mult
+                        storage_mult
+                        # grid_mult
   )
   names(results) <- c("parameters", "values", "units", "scenario")
   final_results <- bind_rows(final_results, results)
@@ -348,24 +348,10 @@ final_results
 #   labs(title = "Sensitivity analyses", x = "Scenario (PV_costs)", y = "Relation of output to maximum of all scenarios (%)")
 
 
-# #final results storage
-# 
-# final_results %>%
-#   filter(parameters %in% c("ES_costs",
-#                            "PV_capacity",
-#                            "ES_capacity",
-#                            "Grid")) %>%
-#   group_by(parameters) %>% 
-#   mutate(values_prop=values/max(values)) %>% 
-#   ggplot(aes(x=scenario, y=values_prop)) +
-#   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
-#   labs(title = "Sensitivity analyses", x = "Scenario (ES_costs)", y = "Relation of output to maximum of all scenarios (%)")
-
-
-#final results grid
+#final results storage
 
 final_results %>%
-  filter(parameters %in% c("Grid_costs",
+  filter(parameters %in% c("ES_costs",
                            "PV_capacity",
                            "ES_capacity",
                            "Grid")) %>%
@@ -373,7 +359,21 @@ final_results %>%
   mutate(values_prop=values/max(values)) %>%
   ggplot(aes(x=scenario, y=values_prop)) +
   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
-  labs(title = "Sensitivity analyses", x = "Scenario (Grid_costs)", y = "Relation of output to maximum of all scenarios (%)")
+  labs(title = "Sensitivity analyses", x = "Scenario (ES_costs)", y = "Relation of output to maximum of all scenarios (%)")
+
+
+# #final results grid
+# 
+# final_results %>%
+#   filter(parameters %in% c("Grid_costs",
+#                            "PV_capacity",
+#                            "ES_capacity",
+#                            "Grid")) %>%
+#   group_by(parameters) %>%
+#   mutate(values_prop=values/max(values)) %>%
+#   ggplot(aes(x=scenario, y=values_prop)) +
+#   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
+#   labs(title = "Sensitivity analyses", x = "Scenario (Grid_costs)", y = "Relation of output to maximum of all scenarios (%)")
 
 final_results
 
