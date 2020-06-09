@@ -51,16 +51,7 @@
 
       ############# average pv generation for 2006 - 2016 in kw.
       pvgis_data <- read.csv("data/input/PV_avg-06-16_hr.csv", header=TRUE, sep=";") #PVGis average hourly data 2006-2016
-
-      # pv <- as.vector(pvgis_data$P..W.[1:48])/1000              #Winter: 1:48 -> 1.-2.January
-      # pv <- as.vector(pvgis_data$P..W.[2521:2568])/1000         #Spring: 2521:2568 -> 15.-16.April
-      # pv <- as.vector(pvgis_data$P..W.[4609:4656])/1000         #Summer: 4609:4656 -> 11.-12.July
-      # pv <- as.vector(pvgis_data$P..W.[6577:6624])/1000         #Fall: 6577:6624 -> 1.-2. October
-
       pv <- as.vector(pvgis_data$P..W.)/1000                 #year avg
-
-
-      # pv <- as.vector(pvgis_data$P..W.[7500:7667])/1000
 
       timesteps <- length (pv)
       days <- timesteps / 24
@@ -86,25 +77,13 @@
       # ########### demand GH in kw/m2
       # GH_demand <- read.csv("data/input/GH-demand.csv", header=TRUE, sep=";")
       #
-      # GH_area <- 400           #m2
-      # COP.HP <- 3.5                                                     #Coefficient of performance (COP) of the heatpump (HP)
-
-
       # GH_lettuce <- as.vector(GH_demand$Coldhouse)
-      #
-      # # GH_lettuce <- as.vector(GH_demand$Coldhous[1:48])              #Winter: 1:48 -> 1.-2.January
-      # # GH_lettuce <- as.vector(GH_demand$Coldhous[2521:2568])         #Spring: 2521:2568 -> 15.-16.April
-      # # GH_lettuce <- as.vector(GH_demand$Coldhous[4609:4656])         #Summer: 4609:4656 -> 11.-12.July
-      # # GH_lettuce <- as.vector(GH_demand$Coldhous[6577:6624])         #Fall: 6577:6624 -> 1.-2. October
-      #
-      # # GH_lettuce <- as.vector(GH_demand$Coldhous[7500:7667])
+      # # GH_tomato <- as.vector(GH_demand$Hothouse)
+      
+      # GH_area <- 400                                                    #m2
+      # COP.HP <- 3.5                                                     #Coefficient of performance (COP) of the heatpump (HP)
       #
       # GH_d <- GH_lettuce/COP.HP
-      #
-      #
-      # # GH_tomato <- as.vector(GH_demand$Hothouse)
-      #
-      #
       #
       # GH_demand_ <- GH_d*GH_area
       # demand <- GH_demand_ #* mult
@@ -207,10 +186,11 @@
         filter(Var %in% c("SOC",
                           "x_in",
                           "x_out")) %>%
+        filter(time<48) %>%
         ggplot(aes(x=time, y=Value)) +
         geom_line(aes(col=Var)) +
         scale_color_manual(values=c('dark green','orange','dark blue')) +
-        labs(title = "Storage Balance", subtitle = " ", x = "day", y = "kWh")
+        labs(title = "Storage Balance", subtitle = " ", x = "hour", y = "kWh")
 
       ###daily aggregation of storage
       timeseries %>%
@@ -222,6 +202,7 @@
         ungroup() %>%
         group_by(Day, Var) %>%
         summarize(Value = sum(Value)) %>%
+        filter(Day<8) %>%
         ggplot(aes(x = Day, y = Value)) +
         geom_area(aes(fill = Var))+
         scale_fill_manual(values=c('dark green','orange','dark blue')) +
