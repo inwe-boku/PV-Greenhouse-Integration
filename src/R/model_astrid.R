@@ -68,17 +68,19 @@ for(pv_mult in scenarios_pv){
 
 
       ############# average demand VF in kw.
-      prod_area_VF <- 720                                                        #m2 actual production area which has to be illuminated
-      energy_demand_VF <- 1009.53                                                #kWh/m2/a
+      prod_area_VF <- 720 #*mult                                                        #m2 actual production area which has to be illuminated
+      energy_demand_VF <- 1009.53                                                #kWh/m2/a, includes illumination, irrigation, humidification, ventilation, ...
       photo_time <- 16                                                           #hours
-      dark_time <- 24-photo_time                                                 #hours
-      demand_tot_VF <- prod_area_VF*energy_demand_VF/365/photo_time              #total energy demand in kW/h
-
-      demand_ <- c(rep(demand_tot_VF*0.3,dark_time/2),
-                   rep(demand_tot_VF, photo_time),
-                   rep(demand_tot_VF*0.3,dark_time/2))                                           #kW in the course of one day
-      demand <- c(rep(demand_, days))#*mult
-
+      dark_time <- 24-photo_time                                                 #hours, during the dark period there is no illumination
+      demand_day <- prod_area_VF*energy_demand_VF/365                            #total energy demand in kW/h
+      demand_photo <- (demand_day*0.7)/photo_time                                #approx. 70 % of total energy demand accounts for illumination
+      demand_dark <- (demand_day*0.3)/24
+      demand_tot_VF <- demand_photo+demand_dark
+      
+      demand_ <- c(rep(demand_dark,dark_time/2), 
+                   rep(demand_tot_VF, photo_time), 
+                   rep(demand_dark,dark_time/2))                                           #kW in the course of one day
+      demand <- c(rep(demand_, days))
 
 
       # ########### demand GH in kw/m2
@@ -141,14 +143,7 @@ for(pv_mult in scenarios_pv){
                                              timesteps)
       storage_invest_annualized <- storage_invest_annualized*storage_mult
 
-      ###GH_invest
-      # run_time <- 30
-      # GH_invest <- 1185000
-      # GH_invest_annualized <- annualize(GH_invest,
-      #                                   interest_rate,
-      #                                   run_time,
-      #                                   timesteps)
-
+     
 
       #Emission cost
       co2.price <- 15.5/10^6  #co2 price Euro/g
@@ -288,10 +283,6 @@ for(pv_mult in scenarios_pv){
         geom_bar(stat = "Identity", aes (fill = Var)) +
         labs(title = "Energy balancing amounts", subtitle = "daily", x = "Energy 'sources'", y = "% of Demand")
 
-      #####economic considerations VF####
-      # retail_price <- 3.39                              #Euro/kg Salat
-      # productivity <- 100                               #kg/m2/a
-      # revenue <- retail_price*productivity*prod_area_VF #Euro/a
 
       ####PV_area_consumption
       kWp_area <- 7.5                                       #m2
@@ -342,28 +333,38 @@ for(pv_mult in scenarios_pv){
     }
   }
 }
+  
+  #####economic considerations lettuce####
+  # retail_price <- 2.83                              #Euro/kg Salat
+  # run_time <- 30                                    #years
+  
+  
+  ###economic considerations VF####
+  # VF_productivity <- 79.835                         #kg/m2/a 
+  # VF_invest <- 571.97*prod_area_VF                  #Euro/m2
+  # VF_invest_annualized <- annualize(VF_invest,
+  #                                   interest_rate,
+  #                                   run_time,
+  #                                   timesteps)
+  #revenue <- retail_price*VF_productivity*prod_area_VF #Euro/a
+  
+  ###economic considerations GH
+  # GH_area <- 400                                    #m2 production area
+  # GH_productivity <- 14.14                          #kg/m2/a
+  # GH_invest <- 262.77*GH_area                       #Euro/m2
+  # GH_invest_annualized <- annualize(GH_invest,
+  #                                   interest_rate,
+  #                                   run_time,
+  #                                   timesteps)
+  # GH_tot_costs <- GH_invest_annualized + costs
+
 
 final_results
-#
-# #final results PV
-#
-# final_results %>%
-#   filter(parameters %in% c("PV_costs",
-#                            "PV_capacity",
-#                            "ES_capacity",
-#                            "Grid")) %>%
-#   group_by(parameters) %>%
-#   mutate(values_prop=values/max(values)) %>%
-#   ggplot(aes(x=scenario, y=values_prop)) +
-#   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
-#   labs(title = "Sensitivity analyses", x = "Scenario (PV_costs)", y = "Relation of output to maximum of all scenarios (%)")
 
-
-#final results storage
 
 ####pv scenarios
 final_results %>%
-  filter(parameters %in% c("ES_costs",
+  filter(parameters %in% c("PV_costs",
                            "PV_capacity",
                            "ES_capacity",
                            "Grid")) %>%
@@ -392,7 +393,7 @@ final_results %>%
 
 ###grid_cost_scenario
 final_results %>%
-  filter(parameters %in% c("ES_costs",
+  filter(parameters %in% c("Grid_costs",
                            "PV_capacity",
                            "ES_capacity",
                            "Grid")) %>%
@@ -405,18 +406,6 @@ final_results %>%
   labs(title = "Sensitivity analyses", x = "Scenario (grid costs)", y = "Relation of output to maximum of all scenarios (%)")
 
 
-# #final results grid
-#
-# final_results %>%
-#   filter(parameters %in% c("Grid_costs",
-#                            "PV_capacity",
-#                            "ES_capacity",
-#                            "Grid")) %>%
-#   group_by(parameters) %>%
-#   mutate(values_prop=values/max(values)) %>%
-#   ggplot(aes(x=scenario, y=values_prop)) +
-#   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
-#   labs(title = "Sensitivity analyses", x = "Scenario (Grid_costs)", y = "Relation of output to maximum of all scenarios (%)")
 
 final_results
 
