@@ -44,7 +44,8 @@ pv_balance,
 stor_max,
 stor_balance,
 control_dem,
-control_dem_max;
+control_dem_max,
+max_cap_pv;
 
 obj..x_cost =E= costs("investment_costs_PV") * x_pv +
                 costs("investment_costs_storage") * x_storage +
@@ -67,6 +68,8 @@ stor_balance(t)..x_soc(t) =E= x_soc(t-1) + technical_parameters("efficiency_stor
 control_dem(d)..controllable_demand(d) =E= SUM(t$t_in_d(t,d), x_control_demand(t));
 
 control_dem_max(t)..x_control_demand(t) =L= technical_parameters("max_power_controllable_load");
+
+max_cap_pv..x_pv =L= 1000000;
 
 model pv /all/;
 
