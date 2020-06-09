@@ -1,52 +1,52 @@
-# run<-FALSE
-
-if(!run){
-
-  library(tidyverse)
-  # # # # # #
-  # # # # # #
-  library(gdxtools)
-  # # # # # #
-  # # # # # #
-  igdx(dirname(Sys.which('gams')))
-  # # # # # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
-  # # # # # # #### E.G: i
-  # # igdx("C:/GAMS/win64/30.2")
-
-  # # # # # #
-  setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
-               "/../../"))
-
-  dir.create("results")
-
-  run<-TRUE
-}
-############# CREATING INPUT DATA
-
-results_dir <- "results/"
-input_dir <- "data/input/"
-output_dir <- "data/output/"
-
-source("src/R/functions.R")
-
-
-#scenarios
-
-final_results     <- NULL
-
-scenarios_pv      <- c(0.8, 1, 1.5)
-scenarios_storage <- seq(0.5,1.5, 0.5)
-scenarios_grid    <- seq(0.5,1.5, 0.5)
-
-
-for(pv_mult in scenarios_pv){
-  for (storage_mult in scenarios_storage) {
-    for (grid_mult in scenarios_grid) {
-
-      print("####storage####")
-      print(pv_mult)
-      print(storage_mult)
-      print(grid_mult)
+# # run<-FALSE
+# 
+# if(!run){
+# 
+#   library(tidyverse)
+#   # # # # # #
+#   # # # # # #
+#   library(gdxtools)
+#   # # # # # #
+#   # # # # # #
+#   igdx(dirname(Sys.which('gams')))
+#   # # # # # # #### IF THIS DOES NOT WORK, GAMS DIRECTORY HAS TO BE SET MANUALLY
+#   # # # # # # #### E.G: i
+#   # # igdx("C:/GAMS/win64/30.2")
+# 
+#   # # # # # #
+#   setwd(paste0(dirname(rstudioapi::getActiveDocumentContext()$path),
+#                "/../../"))
+# 
+#   dir.create("results")
+# 
+#   run<-TRUE
+# }
+# ############# CREATING INPUT DATA
+# 
+# results_dir <- "results/"
+# input_dir <- "data/input/"
+# output_dir <- "data/output/"
+# 
+# source("src/R/functions.R")
+# 
+# 
+# #scenarios
+# 
+# final_results     <- NULL
+# 
+# scenarios_pv      <- c(0.8, 1, 1.5)
+# scenarios_storage <- seq(0.5,1.5, 0.5)
+# scenarios_grid    <- seq(0.5,1.5, 0.5)
+# 
+# 
+# for(pv_mult in scenarios_pv){
+#   for (storage_mult in scenarios_storage) {
+#     for (grid_mult in scenarios_grid) {
+# 
+#       print("####storage####")
+#       print(pv_mult)
+#       print(storage_mult)
+#       print(grid_mult)
 
 
       ############# average pv generation for 2006 - 2016 in kw.
@@ -118,7 +118,7 @@ for(pv_mult in scenarios_pv){
 
       #########investment costs
 
-      interest_rate <- 0.1
+      interest_rate <- 0.04
       run_time <- 20
 
       #Land cost
@@ -132,16 +132,16 @@ for(pv_mult in scenarios_pv){
                                         interest_rate,
                                         run_time,
                                         timesteps)
-      pv_invest_annualized <- pv_invest_annualized*pv_mult
+      # pv_invest_annualized <- pv_invest_annualized*pv_mult
 
       run_time <- 10
 
-      storage_invest <- 200 # in €/kWh
+      storage_invest <- 600 # in €/kWh
       storage_invest_annualized <- annualize(storage_invest,
                                              interest_rate,
                                              run_time,
                                              timesteps)
-      storage_invest_annualized <- storage_invest_annualized*storage_mult
+      # storage_invest_annualized <- storage_invest_annualized*storage_mult
 
      
 
@@ -152,7 +152,7 @@ for(pv_mult in scenarios_pv){
 
       #Grid cost
       gridcosts <- 0.199 + co2 # power from grid in €/kWh
-      gridcosts <- gridcosts*grid_mult
+      # gridcosts <- gridcosts*grid_mult
 
       feed_in_tariff <- 0.05 # subsidy received for feeding power to grid, Euro/kWh
 
@@ -212,7 +212,23 @@ for(pv_mult in scenarios_pv){
         scale_color_manual(values=c('dark green','orange','dark blue')) +
         labs(title = "Storage Balance", subtitle = " ", x = "day", y = "kWh")
 
-      ###### figure for operation
+      ###daily aggregation of storage
+      timeseries %>%
+        filter(Var %in% c("SOC",
+                          "x_in",
+                          "x_out")) %>%
+        group_by(Var) %>%
+        mutate(Day = rep(1:days, each = 24)) %>%
+        ungroup() %>%
+        group_by(Day, Var) %>%
+        summarize(Value = sum(Value)) %>%
+        ggplot(aes(x = Day, y = Value)) +
+        geom_area(aes(fill = Var))+
+        scale_fill_manual(values=c('dark green','orange','dark blue')) +
+        labs(title = "Storage Balance", subtitle = " ", x = "day", y = "kWh")   
+      
+      
+       ###### figure for operation
       demand_original <- timeseries %>%
         filter(Var %in% c("demand"
         ))
@@ -318,95 +334,96 @@ for(pv_mult in scenarios_pv){
                               pv_area$value,
                               emissions.t),
                             c("kWh","Euro/kWp","kWp","Euro/kWh", "kWh", "Euro/kWh", "kWh", "Euro", "m2", "tons"),
-                            pv_mult,
-                            storage_mult,
-                            grid_mult)
+                            # pv_mult,
+                            # storage_mult,
+                            # grid_mult)
       names(results) <- c("parameters",
                           "values",
-                          "units",
-                          "pv_cost_scenario",
-                          "storage_cost_scenario",
-                          "grid_cost_scenario")
+                          "units")
+                          # ,
+                          # "pv_cost_scenario",
+                          # "storage_cost_scenario",
+                          # "grid_cost_scenario")
 
-      final_results <- bind_rows(final_results, results)
-
-    }
-  }
-}
-  
-  #####economic considerations lettuce####
-  # retail_price <- 2.83                              #Euro/kg Salat
-  # run_time <- 30                                    #years
-  
-  
-  ###economic considerations VF####
-  # VF_productivity <- 79.835                         #kg/m2/a 
-  # VF_invest <- 571.97*prod_area_VF                  #Euro/m2
-  # VF_invest_annualized <- annualize(VF_invest,
-  #                                   interest_rate,
-  #                                   run_time,
-  #                                   timesteps)
-  #revenue <- retail_price*VF_productivity*prod_area_VF #Euro/a
-  
-  ###economic considerations GH
-  # GH_area <- 400                                    #m2 production area
-  # GH_productivity <- 14.14                          #kg/m2/a
-  # GH_invest <- 262.77*GH_area                       #Euro/m2
-  # GH_invest_annualized <- annualize(GH_invest,
-  #                                   interest_rate,
-  #                                   run_time,
-  #                                   timesteps)
-  # GH_tot_costs <- GH_invest_annualized + costs
-
-
-final_results
-
-
-####pv scenarios
-final_results %>%
-  filter(parameters %in% c("PV_costs",
-                           "PV_capacity",
-                           "ES_capacity",
-                           "Grid")) %>%
-  filter(storage_cost_scenario == 1) %>%
-  filter(grid_cost_scenario == 1) %>%
-  group_by(parameters) %>%
-  mutate(values_prop=values/max(values)) %>%
-  ggplot(aes(x=pv_cost_scenario, y=values_prop)) +
-  geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
-  labs(title = "Sensitivity analyses", x = "Scenario (pv_costs)", y = "Relation of output to maximum of all scenarios (%)")
-
-
-###storage cost scenario
-final_results %>%
-  filter(parameters %in% c("ES_costs",
-                           "PV_capacity",
-                           "ES_capacity",
-                           "Grid")) %>%
-  filter(pv_cost_scenario == 1) %>%
-  filter(grid_cost_scenario == 1) %>%
-  group_by(parameters) %>%
-  mutate(values_prop=values/max(values)) %>%
-  ggplot(aes(x=storage_cost_scenario, y=values_prop)) +
-  geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
-  labs(title = "Sensitivity analyses", x = "Scenario (ES_costs)", y = "Relation of output to maximum of all scenarios (%)")
-
-###grid_cost_scenario
-final_results %>%
-  filter(parameters %in% c("Grid_costs",
-                           "PV_capacity",
-                           "ES_capacity",
-                           "Grid")) %>%
-  filter(pv_cost_scenario == 1) %>%
-  filter(storage_cost_scenario == 1) %>%
-  group_by(parameters) %>%
-  mutate(values_prop=values/max(values)) %>%
-  ggplot(aes(x=grid_cost_scenario, y=values_prop)) +
-  geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
-  labs(title = "Sensitivity analyses", x = "Scenario (grid costs)", y = "Relation of output to maximum of all scenarios (%)")
-
-
-
-final_results
-
-write.csv(final_results,paste0(results_dir,'Scenario_Grid_costs.csv'), row.names = FALSE)
+#       final_results <- bind_rows(final_results, results)
+# 
+#     }
+#   }
+# }
+#   
+#   #####economic considerations lettuce####
+#   # retail_price <- 2.83                              #Euro/kg Salat
+#   # run_time <- 30                                    #years
+#   
+#   
+#   ###economic considerations VF####
+#   # VF_productivity <- 79.835                         #kg/m2/a 
+#   # VF_invest <- 571.97*prod_area_VF                  #Euro/m2
+#   # VF_invest_annualized <- annualize(VF_invest,
+#   #                                   interest_rate,
+#   #                                   run_time,
+#   #                                   timesteps)
+#   #revenue <- retail_price*VF_productivity*prod_area_VF #Euro/a
+#   
+#   ###economic considerations GH
+#   # GH_area <- 400                                    #m2 production area
+#   # GH_productivity <- 14.14                          #kg/m2/a
+#   # GH_invest <- 262.77*GH_area                       #Euro/m2
+#   # GH_invest_annualized <- annualize(GH_invest,
+#   #                                   interest_rate,
+#   #                                   run_time,
+#   #                                   timesteps)
+#   # GH_tot_costs <- GH_invest_annualized + costs
+# 
+# 
+# final_results
+# 
+# 
+# ####pv scenarios
+# final_results %>%
+#   filter(parameters %in% c("PV_costs",
+#                            "PV_capacity",
+#                            "ES_capacity",
+#                            "Grid")) %>%
+#   filter(storage_cost_scenario == 1) %>%
+#   filter(grid_cost_scenario == 1) %>%
+#   group_by(parameters) %>%
+#   mutate(values_prop=values/max(values)) %>%
+#   ggplot(aes(x=pv_cost_scenario, y=values_prop)) +
+#   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
+#   labs(title = "Sensitivity analyses", x = "Scenario (pv_costs)", y = "Relation of output to maximum of all scenarios (%)")
+# 
+# 
+# ###storage cost scenario
+# final_results %>%
+#   filter(parameters %in% c("ES_costs",
+#                            "PV_capacity",
+#                            "ES_capacity",
+#                            "Grid")) %>%
+#   filter(pv_cost_scenario == 1) %>%
+#   filter(grid_cost_scenario == 1) %>%
+#   group_by(parameters) %>%
+#   mutate(values_prop=values/max(values)) %>%
+#   ggplot(aes(x=storage_cost_scenario, y=values_prop)) +
+#   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
+#   labs(title = "Sensitivity analyses", x = "Scenario (ES_costs)", y = "Relation of output to maximum of all scenarios (%)")
+# 
+# ###grid_cost_scenario
+# final_results %>%
+#   filter(parameters %in% c("Grid_costs",
+#                            "PV_capacity",
+#                            "ES_capacity",
+#                            "Grid")) %>%
+#   filter(pv_cost_scenario == 1) %>%
+#   filter(storage_cost_scenario == 1) %>%
+#   group_by(parameters) %>%
+#   mutate(values_prop=values/max(values)) %>%
+#   ggplot(aes(x=grid_cost_scenario, y=values_prop)) +
+#   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
+#   labs(title = "Sensitivity analyses", x = "Scenario (grid costs)", y = "Relation of output to maximum of all scenarios (%)")
+# 
+# 
+# 
+# final_results
+# 
+# write.csv(final_results,paste0(results_dir,'Scenario_Grid_costs.csv'), row.names = FALSE)
