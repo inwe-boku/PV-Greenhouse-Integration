@@ -345,26 +345,35 @@ for(pv_mult in scenarios_pv){
 #   # run_time <- 30                                    #years
 #   
 #   
-#   ###economic considerations VF####
-#   # VF_productivity <- 79.835                         #kg/m2/a 
-#   # VF_invest <- 571.97*prod_area_VF                  #Euro/m2
-#   # VF_invest_annualized <- annualize(VF_invest,
-#   #                                   interest_rate,
-#   #                                   run_time,
-#   #                                   timesteps)
-#   #revenue <- retail_price*VF_productivity*prod_area_VF #Euro/a
-#   
-#   ###economic considerations GH
-#   # GH_area <- 400                                    #m2 production area
-#   # GH_productivity <- 14.14                          #kg/m2/a
-#   # GH_invest <- 262.77*GH_area                       #Euro/m2
-#   # GH_invest_annualized <- annualize(GH_invest,
-#   #                                   interest_rate,
-#   #                                   run_time,
-#   #                                   timesteps)
-#   # GH_tot_costs <- GH_invest_annualized + costs
+# ##economic considerations VF####
+# VF_productivity <- 79.835                             #kg/m2/a
+# VF_invest <- 571.97*prod_area_VF                      #Euro/m2
+# VF_invest_annualized <- annualize(VF_invest,
+#                                   interest_rate,
+#                                   run_time,
+#                                   timesteps)
+# VF_tot_costs <- VF_invest_annualized + costs
+# VF_producitivity_per_a <- VF_productivity*prod_area_VF
+
+# VF_producitivity_per_a                                #in kg/a
+# VF_tot_costs                                          #in Euro
+
+
+
+# ##economic considerations GH
+# GH_area <- 400                                        #m2 production area
+# GH_productivity <- 14.14                              #kg/m2/a
+# GH_invest <- 262.77*GH_area                           #Euro/m2
+# GH_invest_annualized <- annualize(GH_invest,
+#                                   interest_rate,
+#                                   run_time,
+#                                   timesteps)
+# GH_tot_costs <- GH_invest_annualized + costs
+# GH_productivity_per_a <- GH_area*GH_productivity
 # 
-# 
+# GH_tot_costs                                          #in Euro/a
+# GH_productivity_per_a                                 #in kg/a
+
 
 
 ####pv scenarios
