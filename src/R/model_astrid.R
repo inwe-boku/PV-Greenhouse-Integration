@@ -34,7 +34,7 @@ source("src/R/functions.R")
 
 final_results     <- NULL
 
-scenarios_pv      <- c(0.8, 1, 1.5)
+scenarios_pv      <- c(0.8, 1, 1.2)
 scenarios_storage <- seq(0.5,1.5, 0.5)
 scenarios_grid    <- seq(0.5,1.5, 0.5)
 scenarios_interest_r <- seq(0.5,1.5,0.5)
@@ -374,7 +374,7 @@ for(pv_mult in scenarios_pv){
 # GH_tot_costs                                          #in Euro/a
 # GH_productivity_per_a                                 #in kg/a
 
-
+##########################################################################
 
 ####pv scenarios
 final_results %>%
@@ -384,10 +384,12 @@ final_results %>%
                            "Grid")) %>%
   filter(storage_cost_scenario == 1) %>%
   filter(grid_cost_scenario == 1) %>%
+  filter(interest_rate_scenario==1)%>%
   group_by(parameters) %>%
   mutate(values_prop=values/max(values)) %>%
   ggplot(aes(x=pv_cost_scenario, y=values_prop)) +
   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
+  scale_fill_manual(values=c('brown2','green4', 'orange','mediumpurple'))+
   labs(title = "Sensitivity analyses", x = "Scenario (pv_costs)", y = "Relation of output to maximum of all scenarios (%)")
 
 
@@ -399,24 +401,28 @@ final_results %>%
                            "Grid")) %>%
   filter(pv_cost_scenario == 1) %>%
   filter(grid_cost_scenario == 1) %>%
+  filter(interest_rate_scenario==1)%>%
   group_by(parameters) %>%
   mutate(values_prop=values/max(values)) %>%
   ggplot(aes(x=storage_cost_scenario, y=values_prop)) +
   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
+  scale_fill_manual(values=c('brown2','mediumpurple', 'green4', 'orange'))+
   labs(title = "Sensitivity analyses", x = "Scenario (ES_costs)", y = "Relation of output to maximum of all scenarios (%)")
 
 ###grid_cost_scenario
 final_results %>%
   filter(parameters %in% c("Grid_costs",
-                           "PV_capacity",
                            "ES_capacity",
-                           "Grid")) %>%
+                           "Grid",
+                           "PV_capacity")) %>%
   filter(pv_cost_scenario == 1) %>%
   filter(storage_cost_scenario == 1) %>%
+  filter(interest_rate_scenario==1)%>%
   group_by(parameters) %>%
   mutate(values_prop=values/max(values)) %>%
   ggplot(aes(x=grid_cost_scenario, y=values_prop)) +
   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
+  scale_fill_manual(values=c('brown2','green4','mediumpurple', 'orange'))+
   labs(title = "Sensitivity analyses", x = "Scenario (grid costs)", y = "Relation of output to maximum of all scenarios (%)")
 
 ###interest_rate_scenario
@@ -431,6 +437,7 @@ final_results %>%
   mutate(values_prop=values/max(values)) %>%
   ggplot(aes(x=interest_rate_scenario, y=values_prop)) +
   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
+  scale_fill_manual(values=c('brown2','green4', 'orange'))+
   labs(title = "Sensitivity analyses", x = "Scenario (interest rate)", y = "Relation of output to maximum of all scenarios (%)")
 
 
