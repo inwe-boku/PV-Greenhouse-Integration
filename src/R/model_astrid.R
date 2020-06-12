@@ -443,4 +443,4 @@ final_results %>%
 
 final_results
 
-write.csv(final_results,paste0(results_dir,'Scenario_Grid_costs.csv'), row.names = FALSE)
+write.csv(final_results,paste0(results_dir,'results.csv'), row.names = FALSE)
