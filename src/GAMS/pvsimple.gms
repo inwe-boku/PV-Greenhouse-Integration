@@ -1,8 +1,12 @@
-set t;
+set t/
+$include data/input/t.txt
+/;
 
 set c;
 
-set d;
+set d/
+$include data/input/d.txt
+/;
 
 set tech_param;
 
@@ -20,7 +24,7 @@ parameter t_in_d(t, d);
 parameter  technical_parameters(tech_param)
 
 $gdxin data/input/input.gdx
-$load t d c tech_param demand pv_production costs controllable_demand t_in_d technical_parameters
+$load c tech_param demand pv_production costs controllable_demand t_in_d technical_parameters
 $gdxin
 
 positive variable
