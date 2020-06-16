@@ -1,4 +1,4 @@
-run<-FALSE
+# run<-FALSE
 
 if(!run){
   
@@ -48,23 +48,25 @@ demand_photo <- (demand_day*0.7)/photo_time                                #appr
 demand_dark <- (demand_day*0.3)/24
 demand_tot_VF <- demand_photo+demand_dark
 
-demand_ <- c(rep(demand_dark,dark_time/2), 
-             rep(demand_tot_VF, photo_time), 
+demand_ <- c(rep(demand_dark,dark_time/2),
+             rep(demand_tot_VF, photo_time),
              rep(demand_dark,dark_time/2))                                           #kW in the course of one day
 demand <- c(rep(demand_, days))
 
 
 # ########### demand GH in kw/m2
 # GH_demand <- read.csv("data/input/GH-demand.csv", header=TRUE, sep=";")
-#
+# 
+# GH_energy_demand <- sum(GH_demand$Coldhouse)
+# 
 # GH_lettuce <- as.vector(GH_demand$Coldhouse)
 # # GH_tomato <- as.vector(GH_demand$Hothouse)
-
+# 
 # GH_area <- 400                                                    #m2
 # COP.HP <- 3.5                                                     #Coefficient of performance (COP) of the heatpump (HP)
-#
+# 
 # GH_d <- GH_lettuce/COP.HP
-#
+# 
 # GH_demand_ <- GH_d*GH_area
 # demand <- GH_demand_ #* mult
 
@@ -290,9 +292,74 @@ results <- data.frame(c("Demand",
                         costs$value,
                         pv_area$value,
                         emissions.t),
-                      c("kWh","Euro/kWp","kWp","Euro/kWh", "kWh", "Euro/kWh", "kWh", "Euro", "m2", "tons")
+                      c("kWh","Euro/kWp","kWp","Euro/kWh", "kWh", "Euro/kWh", "kWh", "Euro", "m2", "tons"))
                       
 
 names(results) <- c("parameters",
                     "values",
                     "units")
+results
+
+  ####economic considerations lettuce####
+  retail_price <- 2.83                              #Euro/kg Salat
+  run_time <- 30                                    #years
+
+
+##economic considerations VF####
+VF_productivity <- 79.835                             #kg/m2/a
+VF_invest <- 571.97*prod_area_VF                      #Euro/m2
+VF_invest_annualized <- annualize(VF_invest,
+                                  interest_rate,
+                                  run_time,
+                                  timesteps)
+VF_tot_costs <- VF_invest_annualized + costs
+VF_productivity_per_a <- VF_productivity*prod_area_VF
+
+VF_productivity_per_a                                #in kg/a
+VF_tot_costs                                          #in Euro
+
+VF_econ <- VF_tot_costs/VF_productivity_per_a
+
+VF_econ                                              #in Euro/kg
+
+VF_emission <- (results[10,2]/VF_producitivity_per_a)*10^6 # in kg/kg
+VF_emission
+
+# ##economic considerations GH
+# GH_area <- 400                                        #m2 production area
+# GH_productivity <- 14.14                              #kg/m2/a
+# GH_invest <- 262.77*GH_area                           #Euro/m2
+# GH_invest_annualized <- annualize(GH_invest,
+#                                   interest_rate,
+#                                   run_time,
+#                                   timesteps)
+# GH_tot_costs <- GH_invest_annualized + costs
+# GH_productivity_per_a <- GH_area*GH_productivity
+# 
+# GH_tot_costs                                          #in Euro/a
+# GH_productivity_per_a                                 #in kg/a
+# 
+# GH_econ <- GH_tot_costs/GH_productivity_per_a
+# 
+# GH_econ                                              #in Euro/kg
+# 
+# GH_emission <- (results[10,2]/GH_productivity_per_a)*10^6 #in kg/kg
+# GH_emission
+
+###OFC###
+ofc_area <- 1/3.28                        #in m2/kg
+ofc_energy <- 0.2                         #in kWh/kg
+ofc_emission <- ofc_energy*co2.kWh        #in g/kg   
+
+
+results_comp <- data.frame(c("VF","GH","OFC"),
+                           c(VF_emission, GH_emission, ofc_emission),
+                           c(1/VF_productivity, 1/GH_productivity, ofc_area),
+                           c(energy_demand_VF/VF_productivity, GH_energy_demand/GH_productivity, ofc_energy),
+                           c(VF_econ[1,1], GH_econ[1,1], NA))
+names(results_comp) <- c("UAS",
+                         "CO2",
+                         "Land consumption",
+                         "Energy consumption",
+                         "Retailprice")
+results_comp

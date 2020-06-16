@@ -344,12 +344,12 @@ for(pv_mult in scenarios_pv){
 
 
 
-#   
-#   #####economic considerations lettuce####
-#   # retail_price <- 2.83                              #Euro/kg Salat
-#   # run_time <- 30                                    #years
-#   
-#   
+
+#   ####economic considerations lettuce####
+#   retail_price <- 2.83                              #Euro/kg Salat
+#   run_time <- 30                                    #years
+# 
+# 
 # ##economic considerations VF####
 # VF_productivity <- 79.835                             #kg/m2/a
 # VF_invest <- 571.97*prod_area_VF                      #Euro/m2
@@ -358,13 +358,15 @@ for(pv_mult in scenarios_pv){
 #                                   run_time,
 #                                   timesteps)
 # VF_tot_costs <- VF_invest_annualized + costs
-# VF_producitivity_per_a <- VF_productivity*prod_area_VF
-
-# VF_producitivity_per_a                                #in kg/a
+# VF_productivity_per_a <- VF_productivity*prod_area_VF
+# 
+# VF_productivity_per_a                                #in kg/a
 # VF_tot_costs                                          #in Euro
-
-
-
+# 
+# VF_econ <- VF_tot_costs/VF_productivity_per_a
+# 
+# VF_econ
+# 
 # ##economic considerations GH
 # GH_area <- 400                                        #m2 production area
 # GH_productivity <- 14.14                              #kg/m2/a
@@ -378,6 +380,10 @@ for(pv_mult in scenarios_pv){
 # 
 # GH_tot_costs                                          #in Euro/a
 # GH_productivity_per_a                                 #in kg/a
+# 
+# GH_econ <- GH_tot_costs/GH_productivity_per_a
+# 
+# GH_econ
 
 ##########################################################################
 
