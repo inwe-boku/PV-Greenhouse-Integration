@@ -22,14 +22,24 @@ create_input_data<-function(timesteps,
                             ){
 
   time_ <- paste0("t", 1:timesteps)
-
+  
   ############# we assume that load can be flexibly distributed within one day
   ############# so controllable load is distributed within one day.
   days_ <- paste0("d", 1:(timesteps / 24))
+  
 
+  fileConn<-file("data/input/t.txt")
+  writeLines(paste0("t1*t", timesteps), fileConn)
+  close(fileConn)
+
+  fileConn<-file("data/input/d.txt")
+  writeLines(paste0("d1*d", (timesteps / 24)), fileConn)
+  close(fileConn)
+  
+  
   ############# controls which hours is in which day
-  t_in_d <- data.frame(t = time_,
-                     d = rep(days_, each =24),
+  t_in_d <- data.frame(t = 1:timesteps,
+                     d = rep(1:(timesteps/24), each =24),
                      value = 1)
 
 
@@ -88,8 +98,9 @@ create_input_data<-function(timesteps,
                 controllable_demand = controllable_demand,
                 t_in_d = t_in_d,
                 technical_parameters = technical_parameters),
-           list(t = time.df,
-                d = days.df,
+           list(
+             #t = time.df,
+              #  d = days.df,
                 c = costs_parameters.df,
                 tech_param = technologies_parameters.df))
 
