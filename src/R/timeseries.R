@@ -29,13 +29,68 @@ output_dir <- "data/output/"
 
 source("src/R/functions.R")
 
-###INPUT VARIABLES###
-  VF.i <- 1009.53             #energy demand in kWh/m2/a
-  PV.i <- 1000                #investment cost in Euro/kWp
-  ES.i <- 600                 #investment cost in Euro/kWh
-  G.i <- 0.199                #grid costs in Euro/kWh
-  fit.i <- 0.05               #feed-in-tariff in Euro/kWh
 
+
+
+###Choice of UAS simulation###   
+  VF <- FALSE               #simulation VF
+  # GH <- FALSE               #simulation GH
+
+###Choice of Scenario
+  base <- FALSE            #Base-Scenario
+  # autarky <- FALSE          #Autarky-Scenario
+  # mix <- FALSE              #Mix-Scenario
+
+
+
+###INPUT VARIABLES###
+
+#Base-Scenario
+  if(!base){ 
+    
+    VF.i <- 1009.53             #energy demand in kWh/m2/a
+    PV.i <- 1000                #investment cost in Euro/kWp
+    ES.i <- 600                 #investment cost in Euro/kWh
+    G.i <- 0.199                #grid costs in Euro/kWh
+    fit.i <- 0.05               #feed-in-tariff in Euro/kWh
+    co2.i <- 125.91             #co2 g/kWh
+    land.c.i <- 6.5             #Euro/m2 greenland
+   
+    base <- TRUE
+  }
+  
+  
+#Autarky-Scenario  
+  if(!autarky){    
+
+    VF.i <- 1009.53             #energy demand in kWh/m2/a
+    PV.i <- 1000                #investment cost in Euro/kWp
+    ES.i <- 600                 #investment cost in Euro/kWh
+    G.i <- 0.199*10000           #grid costs in Euro/kWh
+    fit.i <- 0.05               #feed-in-tariff in Euro/kWh
+    co2.i <- 125.91             #co2 g/kWh
+    land.c.i <- 6.5             #Euro/m2 greenland
+    
+    autarky<-TRUE
+  }
+
+
+#Mix-Scenario
+  if(!mix){    
+    
+    VF.i <- 1009.53             #energy demand in kWh/m2/a
+    PV.i <- 1000                #investment cost in Euro/kWp
+    ES.i <- 600 *0.7            #investment cost in Euro/kWh
+    G.i <- 0.199*1.2            #grid costs in Euro/kWh
+    fit.i <- 0.05               #feed-in-tariff in Euro/kWh
+    co2.i <- 125.91             #co2 g/kWh
+    land.c.i <- 6.5             #Euro/m2 greenland
+    
+    mix<-TRUE
+  }
+
+############################################################  
+  
 ###MODEL - PREPARING DATA###
   
     ### PV: average pv generation for 2006 - 2016 in kw.
@@ -46,7 +101,7 @@ source("src/R/functions.R")
       days <- timesteps / 24
     
     
-    
+      if(!VF){
     ### VF: average demand VF in kw.
       prod_area_VF <- 720 #*mult                                                        #m2 actual production area which has to be illuminated
       energy_demand_VF <- VF.i                                              #kWh/m2/a, includes illumination, irrigation, humidification, ventilation, ...
@@ -56,30 +111,35 @@ source("src/R/functions.R")
       demand_photo <- (demand_day*0.7)/photo_time                                #approx. 70 % of total energy demand accounts for illumination
       demand_dark <- (demand_day*0.3)/24
       demand_tot_VF <- demand_photo+demand_dark
-      
+
       demand_ <- c(rep(demand_dark,dark_time/2),
                    rep(demand_tot_VF, photo_time),
                    rep(demand_dark,dark_time/2))                                           #kW in the course of one day
       demand <- c(rep(demand_, days))
-    
       
-    
-      # ### GH: demand  in kw/m2
-        # GH_demand <- read.csv("data/input/GH-demand.csv", header=TRUE, sep=";")
-        # 
-        # GH_energy_demand <- sum(GH_demand$Coldhouse)
-        # 
-        # GH_lettuce <- as.vector(GH_demand$Coldhouse)
-        # # GH_tomato <- as.vector(GH_demand$Hothouse)
-        # 
-        # GH_area <- 400                                                    #m2
-        # COP.HP <- 3.5                                                     #Coefficient of performance (COP) of the heatpump (HP)
-        # 
-        # GH_d <- GH_lettuce/COP.HP
-        # 
-        # GH_demand_ <- GH_d*GH_area
-        # demand <- GH_demand_ #* mult
-    
+      VF<-TRUE
+      }
+      
+      
+      if(!GH){
+      ### GH: demand  in kw/m2
+      GH_demand <- read.csv("data/input/GH-demand.csv", header=TRUE, sep=";")
+
+      GH_energy_demand <- sum(GH_demand$Coldhouse)
+
+      GH_lettuce <- as.vector(GH_demand$Coldhouse)
+      # GH_tomato <- as.vector(GH_demand$Hothouse)
+
+      GH_area <- 400                                                    #m2
+      COP.HP <- 3.5                                                     #Coefficient of performance (COP) of the heatpump (HP)
+
+      GH_d <- GH_lettuce/COP.HP
+
+      GH_demand_ <- GH_d*GH_area
+      demand <- GH_demand_ #* mult
+      
+      GH<-TRUE
+      }
     
     
       # controllable demand
@@ -93,11 +153,11 @@ source("src/R/functions.R")
           run_time <- 20
         
         # Land cost
-          land_cost <- 6.5                                  #Euro/m2 greenland.
-          build_land_cost <- 200                            #Euro/m2
+          land_cost <- land.c.i                                  #Euro/m2 greenland.
+          
         
         # PV costs    
-          pv_land <- 7.5                                     #1 KW needs more than 1 m2!, so it has to be multiplied by land-use of PV
+          pv_land <- 7.5                                     #im m2 fpr 1 kWp
           
           pv_invest <- PV.i + land_cost*pv_land # in €/kw
           pv_invest_annualized <- annualize(pv_invest,
@@ -118,7 +178,7 @@ source("src/R/functions.R")
       
         # Emission cost
           co2.price <- 15.5/10^6  #co2 price Euro/g
-          co2.kWh <- 125.91      #co2 g/kWh
+          co2.kWh <- co2.i        #co2 g/kWh
           co2 <- co2.price * co2.kWh
         
           
@@ -341,9 +401,11 @@ source("src/R/functions.R")
     retail_price <- 2.83                              #Euro/kg Salat
     run_time <- 30                                    #years
 
-
+ 
+    if(!VF){   
   ### Economic considerations VF ####
     VF_productivity <- 79.835                             #kg/m2/a
+    VF_area <- 100
     VF_invest <- 571.97*prod_area_VF                      #Euro/m2
     VF_invest_annualized <- annualize(VF_invest,
                                       interest_rate,
@@ -351,70 +413,82 @@ source("src/R/functions.R")
                                       timesteps)
     VF_tot_costs <- VF_invest_annualized + costs
     VF_productivity_per_a <- VF_productivity*prod_area_VF
-    
+
     VF_productivity_per_a                                #in kg/a
     VF_tot_costs                                          #in Euro
-    
+
     VF_econ <- VF_tot_costs/VF_productivity_per_a
-    
+
     VF_econ                                              #in Euro/kg
-    
-    VF_emission <- (results[12,2]/VF_productivity_per_a)*10^6 # in kg/kg
+
+    VF_emission <- (results[12,2]/VF_productivity_per_a)*10^6 # in g/kg
     VF_emission
-    
+
     results_VF <- data.frame(c("VF"),
                                c(VF_emission),
                                c(results[11,2]/VF_productivity),
                                c(energy_demand_VF/VF_productivity),
                                c(VF_econ[1,1]))
+  names(results_VF) <- c("UAS",
+                           "CO2",
+                           "Land consumption",
+                           "Energy consumption",
+                           "Average production costs")
     results_VF
+    
+    VF<-TRUE
+    }
   
-  
-  # ##economic considerations GH
-      # GH_area <- 400                                        #m2 production area
-      # GH_productivity <- 14.14                              #kg/m2/a
-      # GH_invest <- 262.77*GH_area                           #Euro/m2
-      # GH_invest_annualized <- annualize(GH_invest,
-      #                                   interest_rate,
-      #                                   run_time,
-      #                                   timesteps)
-      # GH_tot_costs <- GH_invest_annualized + costs
-      # GH_productivity_per_a <- GH_area*GH_productivity
-      # 
-      # GH_tot_costs                                          #in Euro/a
-      # GH_productivity_per_a                                 #in kg/a
-      # 
-      # GH_econ <- GH_tot_costs/GH_productivity_per_a
-      # 
-      # GH_econ                                              #in Euro/kg
-      # 
-      # GH_emission <- (results[10,2]/GH_productivity_per_a)*10^6 #in kg/kg
-      # GH_emission
-  
+    
+    if(!GH){
+  ### Economic considerations GH
+    GH_area <- 400                                        #m2 production area
+    GH_productivity <- 14.14                              #kg/m2/a
+    GH_invest <- 262.77*GH_area                           #Euro/m2
+    GH_invest_annualized <- annualize(GH_invest,
+                                      interest_rate,
+                                      run_time,
+                                      timesteps)
+    GH_tot_costs <- GH_invest_annualized + costs
+    GH_productivity_per_a <- GH_area*GH_productivity
+
+    GH_tot_costs                                          #in Euro/a
+    GH_productivity_per_a                                 #in kg/a
+
+    GH_econ <- GH_tot_costs/GH_productivity_per_a         #in Euro/kg
+
+
+    GH_emission <- (results[12,2]/GH_productivity_per_a)*10^6 #in g/kg
+
+      results_GH <- data.frame(c("GH"),
+                                 c(GH_emission),
+                                 c(results[11,2]/GH_productivity),
+                                 c(GH_energy_demand/GH_productivity),
+                                 c(GH_econ[1,1]))
+      names(results_GH) <- c("UAS",
+                               "CO2",
+                               "Land consumption",
+                               "Energy consumption",
+                               "Average production costs")
+      results_GH
+    
+      GH<-TRUE
+    }
+    
   ### OFC ###
     ofc_area <- 1/3.28                        #in m2/kg
     ofc_energy <- 0.2                         #in kWh/kg
     ofc_emission <- ofc_energy*co2.kWh        #in g/kg   
-    results_OFC <- data.frame(ofc_emission,ofc_area,ofc_energy,NA)
+    results_OFC <- data.frame("OFC",ofc_emission,ofc_area,ofc_energy,NA)
+    names(results_OFC) <- c("UAS",
+                             "CO2",
+                             "Land consumption",
+                             "Energy consumption",
+                             "Average production costs")
   
 ### Results for comparison ###  
-
-  # results_comp <- data.frame(c("VF","GH","OFC"),
-  #                            c(VF_emission, GH_emission, ofc_emission),
-  #                            c(1/VF_productivity, 1/GH_productivity, ofc_area),
-  #                            c(energy_demand_VF/VF_productivity, GH_energy_demand/GH_productivity, ofc_energy),
-  #                            c(VF_econ[1,1], GH_econ[1,1], NA))
-  # names(results_comp) <- c("UAS",
-  #                          "CO2",
-  #                          "Land consumption",
-  #                          "Energy consumption",
-  #                          "Retailprice")
-  # results_comp <- bind_rows(results_VF,results_GH,results_OFC)
-  # names(results_VF) <- c("UAS",
-  #                        "CO2",
-  #                        "Land consumption",
-  #                        "Energy consumption",
-  #                        "Average production costs")
-  # results_comp
+  results_comp <- rbind(results_VF, results_GH,results_OFC)
+ 
+  results_comp
 
   results
