@@ -492,3 +492,6 @@ source("src/R/functions.R")
   results_comp
 
   results
+
+  
+  save.image(file = "Image.RData")
