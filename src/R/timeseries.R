@@ -252,7 +252,14 @@ source("src/R/functions.R")
         ggplot(aes(x=time, y=Value)) +
         geom_line(aes(col=Var)) +
         scale_color_manual(values=c('dark green','orange','dark blue')) +
-        labs(title = "Storage Balance", subtitle = "1. and 2. January ", x = "hour", y = "kWh")
+        labs(title = "Storage Balance", subtitle = "1. and 2. January ", x = "hour", y = "kWh")+
+        theme(plot.title = element_text(size = 18),
+              plot.subtitle=element_text(size=16),
+              axis.title.y = element_text(size = 15),
+              axis.text.y = element_text(size = 15),
+              axis.title.x = element_text(size = 17.5),
+              axis.text.x = element_text(size = 15),
+              text = element_text(size = 20))   
       
     ### Daily aggregation of storage
       timeseries %>%
@@ -268,7 +275,14 @@ source("src/R/functions.R")
         ggplot(aes(x = Day, y = Value)) +
         geom_area(aes(fill = Var))+
         scale_fill_manual(values=c('dark green','orange','dark blue')) +
-        labs(title = "Storage Balance", subtitle = " ", x = "day", y = "kWh")   
+        labs(title = "Storage Balance", subtitle = " ", x = "day", y = "kWh")+
+        theme(plot.title = element_text(size = 18),
+              plot.subtitle=element_text(size=16),
+              axis.title.y = element_text(size = 17.5),
+              axis.text.y = element_text(size = 15),
+              axis.title.x = element_text(size = 17.5),
+              axis.text.x = element_text(size = 15),
+              text = element_text(size = 20))   
       
     
     ### Figure for operation
@@ -312,14 +326,28 @@ source("src/R/functions.R")
         filter(time<4129, time>4106) %>%
         ggplot(aes(x = time, y = Value)) +
         geom_area(aes(fill = Var))+
-        labs(title = "Energy Supply", subtitle = "21.June", x= "hour", y = "kWh")
+        labs(title = "Energy Supply", subtitle = "21.June", x= "hour", y = "kWh")+
+        theme(plot.title = element_text(size = 18),
+              plot.subtitle=element_text(size=16),
+              axis.title.y = element_text(size = 17.5),
+              axis.text.y = element_text(size = 15),
+              axis.title.x = element_text(size = 17.5),
+              axis.text.x = element_text(size = 15),
+              text = element_text(size = 20))
     
     ### Hourly results shortest day 22. December
       all %>%
         filter(time>8522, time<8545) %>%
         ggplot(aes(x = time, y = Value)) +
         geom_area(aes(fill = Var))+
-        labs(title = "Energy Supply", subtitle = "22.December", x= "hour", y = "kWh")
+        labs(title = "Energy Supply", subtitle = "22.December", x= "hour", y = "kWh")+
+        theme(plot.title = element_text(size = 18),
+              plot.subtitle=element_text(size=16),
+              axis.title.y = element_text(size = 17.5),
+              axis.text.y = element_text(size = 15),
+              axis.title.x = element_text(size = 17.5),
+              axis.text.x = element_text(size = 15),
+              text = element_text(size = 20))
       
     ### Daily aggregation of results
       all %>%
@@ -330,7 +358,13 @@ source("src/R/functions.R")
         summarize(Value = sum(Value)) %>%
         ggplot(aes(x = Day, y = Value)) +
         geom_area(aes(fill = Var))+
-        labs(title = "Energy Balance", subtitle = "daily", y = "kWh")
+        labs(title = "Energy Balance", subtitle = "daily", y = "kWh")+
+        theme(plot.title = element_text(size = 20),
+              axis.title.y = element_text(size = 17.5),
+              axis.text.y = element_text(size = 15),
+              axis.title.x = element_text(size = 17.5),
+              axis.text.x = element_text(size = 15),
+              text = element_text(size = 20))
     
     
     ### Figure for energy balancing amounts
@@ -339,7 +373,14 @@ source("src/R/functions.R")
         summarize(Value_Sum = sum(Value)) %>%
         ggplot(aes(x = Var, y = Value_Sum)) +
         geom_bar(stat = "Identity", aes (fill = Var)) +
-        labs(title = "Energy balancing amounts", subtitle = "daily", x = "Energy 'sources'", y = "kWh")
+        labs(title = "Energy balancing amounts", x = "Energy 'sources'", y = "kWh")+
+        theme(plot.title = element_text(size = 20),
+              axis.title.y = element_text(size = 17.5),
+              axis.text.y = element_text(size = 15),
+              axis.title.x = element_text(size = 17.5),
+              axis.text.x = element_text(size = 15),
+              text = element_text(size = 20))+
+        theme(axis.text.x = element_text(angle = 90))
     
     
     ### Results in percentage
@@ -350,8 +391,11 @@ source("src/R/functions.R")
         summarize(Value_Sum = sum(Value)) %>%
         ggplot(aes(x = Var, y = 100 * Value_Sum/s_demand)) +
         geom_bar(stat = "Identity", aes (fill = Var)) +
-        labs(title = "Energy balancing amounts", x = "Energy 'sources'", y = "% of Demand")
+        labs(title = "Energy balancing amounts", x = "Energy 'sources'", y = "% of Demand")+
+        theme(text = element_text(size = 20), axis.text.x = element_text(size = 15))+
+        theme(axis.text.x = element_text(angle = 90))
 
+      
 #######RESULTS#######
   #### PV_area_consumption
     kWp_area <- 7.5                                       #m2
@@ -426,7 +470,7 @@ source("src/R/functions.R")
 
     results_VF <- data.frame(c("VF"),
                                c(VF_emission),
-                               c(results[11,2]/VF_productivity),
+                               c((results[11,2]+VF_area)/VF_productivity),
                                c(energy_demand_VF/VF_productivity),
                                c(VF_econ[1,1]))
   names(results_VF) <- c("UAS",
@@ -462,7 +506,7 @@ source("src/R/functions.R")
 
       results_GH <- data.frame(c("GH"),
                                  c(GH_emission),
-                                 c(results[11,2]/GH_productivity),
+                                 c((results[11,2]+GH_area)/GH_productivity),
                                  c(GH_energy_demand/GH_productivity),
                                  c(GH_econ[1,1]))
       names(results_GH) <- c("UAS",

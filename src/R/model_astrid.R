@@ -401,7 +401,14 @@ final_results %>%
   ggplot(aes(x=pv_cost_scenario, y=values_prop)) +
   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
   scale_fill_manual(values=c('brown2','green4', 'orange','mediumpurple'))+
-  labs(title = "Sensitivity analyses", x = "Scenario (pv_costs)", y = "Relation of output to maximum of all scenarios (%)")
+  labs(title = "Sensitivity analyses", x = "Scenario (pv_costs)", y = "Relation of output to maximum of all scenarios (%)")+
+  theme(plot.title = element_text(size = 18),
+        plot.subtitle=element_text(size=16),
+        axis.title.y = element_text(size = 15),
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 17.5),
+        axis.text.x = element_text(size = 15),
+        text = element_text(size = 20))   
 
 
 ###storage cost scenario
@@ -418,7 +425,14 @@ final_results %>%
   ggplot(aes(x=storage_cost_scenario, y=values_prop)) +
   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
   scale_fill_manual(values=c('brown2','mediumpurple', 'green4', 'orange'))+
-  labs(title = "Sensitivity analyses", x = "Scenario (ES_costs)", y = "Relation of output to maximum of all scenarios (%)")
+  labs(title = "Sensitivity analyses", x = "Scenario (ES_costs)", y = "Relation of output to maximum of all scenarios (%)")+
+  theme(plot.title = element_text(size = 18),
+        plot.subtitle=element_text(size=16),
+        axis.title.y = element_text(size = 15),
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 17.5),
+        axis.text.x = element_text(size = 15),
+        text = element_text(size = 20))   
 
 ###grid_cost_scenario
 final_results %>%
@@ -434,7 +448,14 @@ final_results %>%
   ggplot(aes(x=grid_cost_scenario, y=values_prop)) +
   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
   scale_fill_manual(values=c('brown2','green4','mediumpurple', 'orange'))+
-  labs(title = "Sensitivity analyses", x = "Scenario (grid costs)", y = "Relation of output to maximum of all scenarios (%)")
+  labs(title = "Sensitivity analyses", x = "Scenario (grid costs)", y = "Relation of output to maximum of all scenarios (%)")+
+  theme(plot.title = element_text(size = 18),
+        plot.subtitle=element_text(size=16),
+        axis.title.y = element_text(size = 15),
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 17.5),
+        axis.text.x = element_text(size = 15),
+        text = element_text(size = 20))   
 
 ###interest_rate_scenario
 final_results %>%
@@ -449,7 +470,14 @@ final_results %>%
   ggplot(aes(x=interest_rate_scenario, y=values_prop)) +
   geom_bar(stat="identity", aes(fill=parameters), position="dodge") +
   scale_fill_manual(values=c('brown2','green4', 'orange'))+
-  labs(title = "Sensitivity analyses", x = "Scenario (interest rate)", y = "Relation of output to maximum of all scenarios (%)")
+  labs(title = "Sensitivity analyses", x = "Scenario (interest rate)", y = "Relation of output to maximum of all scenarios (%)")+
+  theme(plot.title = element_text(size = 18),
+        plot.subtitle=element_text(size=16),
+        axis.title.y = element_text(size = 15),
+        axis.text.y = element_text(size = 15),
+        axis.title.x = element_text(size = 17.5),
+        axis.text.x = element_text(size = 15),
+        text = element_text(size = 20))   
 
 
 final_results
