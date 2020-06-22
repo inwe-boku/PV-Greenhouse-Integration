@@ -32,7 +32,7 @@ source("src/R/functions.R")
 
 
 
-###Choice of UAS simulation###   
+###Choice of UAS simulation   
   VF <- FALSE               #simulation VF
   # GH <- FALSE               #simulation GH
 
@@ -539,3 +539,4 @@ source("src/R/functions.R")
 
   
   save.image(file = "Image.RData")
+ 
