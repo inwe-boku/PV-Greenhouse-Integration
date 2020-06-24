@@ -37,8 +37,9 @@ source("src/R/functions.R")
   # GH <- FALSE               #simulation GH
 
 ###Choice of Scenario
-  base <- FALSE            #Base-Scenario
-  # autarky <- FALSE          #Autarky-Scenario
+  # base <- FALSE            #Base-Scenario
+  autarky <- FALSE          #Autarky-Scenario
+  # autarky2 <- FALSE         #Autarky-Scenario 2
   # mix <- FALSE              #Mix-Scenario
 
 
@@ -73,6 +74,20 @@ source("src/R/functions.R")
     
     autarky<-TRUE
   }
+  
+#Autarky-Scenario  
+  if(!autarky2){    
+    
+    VF.i <- 1009.53             #energy demand in kWh/m2/a
+    PV.i <- 1000                #investment cost in Euro/kWp
+    ES.i <- 200                 #investment cost in Euro/kWh
+    G.i <- 0.199*10000           #grid costs in Euro/kWh
+    fit.i <- 0.05               #feed-in-tariff in Euro/kWh
+    co2.i <- 125.91             #co2 g/kWh
+    land.c.i <- 6.5             #Euro/m2 greenland
+    
+    autarky2<-TRUE
+  }
 
 
 #Mix-Scenario
@@ -96,7 +111,7 @@ source("src/R/functions.R")
     ### PV: average pv generation for 2006 - 2016 in kw.
       pvgis_data <- read.csv("data/input/PV_avg-06-16_hr.csv", header=TRUE, sep=";") #PVGis average hourly data 2006-2016
       pv <- as.vector(pvgis_data$P..W.)/1000                 #year avg
-      
+  
       timesteps <- length (pv)
       days <- timesteps / 24
     
@@ -116,6 +131,7 @@ source("src/R/functions.R")
                    rep(demand_tot_VF, photo_time),
                    rep(demand_dark,dark_time/2))                                           #kW in the course of one day
       demand <- c(rep(demand_, days))
+      
       
       VF<-TRUE
       }
@@ -236,7 +252,9 @@ source("src/R/functions.R")
     sum_pv_use <- sum(sum_pv$value)
     sum_storage_out <- mygdx["x_out"]
     sum_storage <- sum(sum_storage_out$value)
-  
+    sold_pv_energy <- mygdx["x_sell_to_grid"]
+    sum_pv_sold <- sum(sold_pv_energy$value)
+    
   timeseries <- read_timeseries_from_results(mygdx)
 
 
@@ -415,6 +433,7 @@ source("src/R/functions.R")
                             "ES_out",
                             "Grid_costs",
                             "Grid",
+                            "PV_sold",
                             "Costs",
                             "PV_area",
                             "Emissions"),
@@ -427,10 +446,11 @@ source("src/R/functions.R")
                             sum_storage,
                             gridcosts,
                             sum_electricity_from_grid,
+                            sum_pv_sold,
                             costs$value,
                             pv_area$value,
                             emissions.t),
-                          c("kWh","Euro/kWp","kWp", "kWh", "Euro/kWh", "kWh","kWh", "Euro/kWh", "kWh", "Euro", "m2", "tons"))
+                          c("kWh","Euro/kWp","kWp", "kWh", "Euro/kWh", "kWh","kWh", "Euro/kWh", "kWh","kWh", "Euro", "m2", "tons"))
                           
     
     names(results) <- c("parameters",
@@ -470,7 +490,7 @@ source("src/R/functions.R")
 
     results_VF <- data.frame(c("VF"),
                                c(VF_emission),
-                               c((results[11,2]+VF_area)/VF_productivity),
+                               c((results[11,2]+VF_area)/VF_productivity_per_a),
                                c(energy_demand_VF/VF_productivity),
                                c(VF_econ[1,1]))
   names(results_VF) <- c("UAS",
@@ -506,7 +526,7 @@ source("src/R/functions.R")
 
       results_GH <- data.frame(c("GH"),
                                  c(GH_emission),
-                                 c((results[11,2]+GH_area)/GH_productivity),
+                                 c((results[11,2]+GH_area)/GH_productivity_per_a),
                                  c(GH_energy_demand/GH_productivity),
                                  c(GH_econ[1,1]))
       names(results_GH) <- c("UAS",
