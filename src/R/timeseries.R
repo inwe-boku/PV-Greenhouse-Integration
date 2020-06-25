@@ -33,13 +33,12 @@ source("src/R/functions.R")
 
 
 ###Choice of UAS simulation   
-  VF <- FALSE               #simulation VF
-  # GH <- FALSE               #simulation GH
+  # VF <- FALSE               #simulation VF
+  GH <- FALSE               #simulation GH
 
 ###Choice of Scenario
-  # base <- FALSE            #Base-Scenario
-  autarky <- FALSE          #Autarky-Scenario
-  # autarky2 <- FALSE         #Autarky-Scenario 2
+  base <- FALSE            #Base-Scenario
+  # autarky <- FALSE          #Autarky-Scenario
   # mix <- FALSE              #Mix-Scenario
 
 
@@ -66,27 +65,13 @@ source("src/R/functions.R")
 
     VF.i <- 1009.53             #energy demand in kWh/m2/a
     PV.i <- 1000                #investment cost in Euro/kWp
-    ES.i <- 600*0.1                 #investment cost in Euro/kWh
-    G.i <- 0.199*10000           #grid costs in Euro/kWh
+    ES.i <- 600*0.2                 #investment cost in Euro/kWh
+    G.i <- 0.199 *10000          #grid costs in Euro/kWh
     fit.i <- 0.05               #feed-in-tariff in Euro/kWh
     co2.i <- 125.91             #co2 g/kWh
     land.c.i <- 6.5             #Euro/m2 greenland
     
     autarky<-TRUE
-  }
-  
-#Autarky-Scenario  
-  if(!autarky2){    
-    
-    VF.i <- 1009.53             #energy demand in kWh/m2/a
-    PV.i <- 1000                #investment cost in Euro/kWp
-    ES.i <- 200                 #investment cost in Euro/kWh
-    G.i <- 0.199*10000           #grid costs in Euro/kWh
-    fit.i <- 0.05               #feed-in-tariff in Euro/kWh
-    co2.i <- 125.91             #co2 g/kWh
-    land.c.i <- 6.5             #Euro/m2 greenland
-    
-    autarky2<-TRUE
   }
 
 
@@ -114,7 +99,8 @@ source("src/R/functions.R")
   
       timesteps <- length (pv)
       days <- timesteps / 24
-    
+ 
+        
     
       if(!VF){
     ### VF: average demand VF in kw.
@@ -152,12 +138,12 @@ source("src/R/functions.R")
       GH_d <- GH_lettuce/COP.HP
 
       GH_demand_ <- GH_d*GH_area
-      demand <- GH_demand_ #* mult
+      demand <- GH_demand_ 
       
       GH<-TRUE
       }
     
-    
+      
       # controllable demand
         avg_demand <- 100
         controllable_demand <- runif(days) * avg_demand * 0   #*days statt 0
@@ -279,28 +265,28 @@ source("src/R/functions.R")
               axis.text.x = element_text(size = 15),
               text = element_text(size = 20))   
       
-    ### Daily aggregation of storage
-      timeseries %>%
-        filter(Var %in% c("SOC",
-                          "x_in",
-                          "x_out")) %>%
-        group_by(Var) %>%
-        mutate(Day = rep(1:days, each = 24)) %>%
-        ungroup() %>%
-        group_by(Day, Var) %>%
-        summarize(Value = sum(Value)) %>%
-        filter(Day<8) %>%
-        ggplot(aes(x = Day, y = Value)) +
-        geom_area(aes(fill = Var))+
-        scale_fill_manual(values=c('dark green','orange','dark blue')) +
-        labs(title = "Storage Balance", subtitle = " ", x = "day", y = "kWh")+
-        theme(plot.title = element_text(size = 18),
-              plot.subtitle=element_text(size=16),
-              axis.title.y = element_text(size = 17.5),
-              axis.text.y = element_text(size = 15),
-              axis.title.x = element_text(size = 17.5),
-              axis.text.x = element_text(size = 15),
-              text = element_text(size = 20))   
+    # ### Daily aggregation of storage
+    #   timeseries %>%
+    #     filter(Var %in% c("SOC",
+    #                       "x_in",
+    #                       "x_out")) %>%
+    #     group_by(Var) %>%
+    #     mutate(Day = rep(1:days, each = 24)) %>%
+    #     ungroup() %>%
+    #     group_by(Day, Var) %>%
+    #     summarize(Value = sum(Value)) %>%
+    #     filter(Day<8) %>%
+    #     ggplot(aes(x = Day, y = Value)) +
+    #     geom_area(aes(fill = Var))+
+    #     scale_fill_manual(values=c('dark green','orange','dark blue')) +
+    #     labs(title = "Storage Balance", subtitle = " ", x = "day", y = "kWh")+
+    #     theme(plot.title = element_text(size = 18),
+    #           plot.subtitle=element_text(size=16),
+    #           axis.title.y = element_text(size = 17.5),
+    #           axis.text.y = element_text(size = 15),
+    #           axis.title.x = element_text(size = 17.5),
+    #           axis.text.x = element_text(size = 15),
+    #           text = element_text(size = 20))   
       
     
     ### Figure for operation
@@ -557,7 +543,6 @@ source("src/R/functions.R")
 
   results
 
-  
   save.image(file = "Image.RData")
 
   
