@@ -66,7 +66,7 @@ source("src/R/functions.R")
 
     VF.i <- 1009.53             #energy demand in kWh/m2/a
     PV.i <- 1000                #investment cost in Euro/kWp
-    ES.i <- 600                 #investment cost in Euro/kWh
+    ES.i <- 600*0.1                 #investment cost in Euro/kWh
     G.i <- 0.199*10000           #grid costs in Euro/kWh
     fit.i <- 0.05               #feed-in-tariff in Euro/kWh
     co2.i <- 125.91             #co2 g/kWh
@@ -485,12 +485,12 @@ source("src/R/functions.R")
 
     VF_econ                                              #in Euro/kg
 
-    VF_emission <- (results[12,2]/VF_productivity_per_a)*10^6 # in g/kg
+    VF_emission <- (emissions.t/VF_productivity_per_a)*10^6 # in g/kg
     VF_emission
 
     results_VF <- data.frame(c("VF"),
                                c(VF_emission),
-                               c((results[11,2]+VF_area)/VF_productivity_per_a),
+                               c((pv_area+VF_area)/VF_productivity_per_a),
                                c(energy_demand_VF/VF_productivity),
                                c(VF_econ[1,1]))
   names(results_VF) <- c("UAS",
@@ -522,11 +522,11 @@ source("src/R/functions.R")
     GH_econ <- GH_tot_costs/GH_productivity_per_a         #in Euro/kg
 
 
-    GH_emission <- (results[12,2]/GH_productivity_per_a)*10^6 #in g/kg
+    GH_emission <- (emissions.t/GH_productivity_per_a)*10^6 #in g/kg
 
       results_GH <- data.frame(c("GH"),
                                  c(GH_emission),
-                                 c((results[11,2]+GH_area)/GH_productivity_per_a),
+                                 c((pv_area+GH_area)/GH_productivity_per_a),
                                  c(GH_energy_demand/GH_productivity),
                                  c(GH_econ[1,1]))
       names(results_GH) <- c("UAS",
@@ -559,4 +559,5 @@ source("src/R/functions.R")
 
   
   save.image(file = "Image.RData")
- 
+
+  
