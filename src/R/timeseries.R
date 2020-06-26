@@ -33,8 +33,8 @@ source("src/R/functions.R")
 
 
 ###Choice of UAS simulation   
-  # VF <- FALSE               #simulation VF
-  GH <- FALSE               #simulation GH
+  VF <- FALSE               #simulation VF
+  # GH <- FALSE               #simulation GH
 
 ###Choice of Scenario
   base <- FALSE            #Base-Scenario
@@ -401,10 +401,14 @@ source("src/R/functions.R")
 
       
 #######RESULTS#######
-  #### PV_area_consumption
-    kWp_area <- 7.5                                       #m2
-    pv_area <- installed_pv_capacity*kWp_area
-  
+  #### LAND_consumption
+    kWp_area <- 7.5                                       #m2/kWp
+    pv_area <- installed_pv_capacity*kWp_area             #m2
+    grid_area_consumption <- 0.005                        #m2/kWh
+    grid_area <- sum_electricity_from_grid*grid_area_consumption #m2
+    es_cap_area <- 6/10^3                                 #m2/kWh
+    es_area <- es_cap_area*installed_storage_capacity     #m2
+    
   ### CO2 emissions
     emissions.t <- (sum_electricity_from_grid*co2.kWh)/10^6 #tons
     
@@ -476,7 +480,7 @@ source("src/R/functions.R")
 
     results_VF <- data.frame(c("VF"),
                                c(VF_emission),
-                               c((pv_area+VF_area)/VF_productivity_per_a),
+                               c((pv_area+es_area+grid_area+VF_area)/VF_productivity_per_a),
                                c(energy_demand_VF/VF_productivity),
                                c(VF_econ[1,1]))
   names(results_VF) <- c("UAS",
@@ -512,7 +516,7 @@ source("src/R/functions.R")
 
       results_GH <- data.frame(c("GH"),
                                  c(GH_emission),
-                                 c((pv_area+GH_area)/GH_productivity_per_a),
+                                 c((pv_area+es_area+grid_area++GH_area)/GH_productivity_per_a),
                                  c(GH_energy_demand/GH_productivity),
                                  c(GH_econ[1,1]))
       names(results_GH) <- c("UAS",
@@ -544,5 +548,3 @@ source("src/R/functions.R")
   results
 
   save.image(file = "Image.RData")
-
-  
