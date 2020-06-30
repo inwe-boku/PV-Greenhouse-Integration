@@ -1,4 +1,4 @@
-run<-FALSE
+# run<-FALSE
 
 if(!run){
 
@@ -56,6 +56,8 @@ for(pv_mult in scenarios_pv){
       pvgis_data <- read.csv("data/input/PV_avg-06-16_hr.csv", header=TRUE, sep=";") #PVGis average hourly data 2006-2016
       pv <- as.vector(pvgis_data$P..W.)/1000                 #year avg
 
+      pv <- c(pv[1:24],pv) 
+      
       timesteps <- length (pv)
       days <- timesteps / 24
 
@@ -74,8 +76,9 @@ for(pv_mult in scenarios_pv){
       demand_ <- c(rep(demand_dark,dark_time/2), 
                    rep(demand_tot_VF, photo_time), 
                    rep(demand_dark,dark_time/2))                                           #kW in the course of one day
-      demand <- c(rep(demand_, days))
-
+      demand <- c(rep(demand_, days-1))
+      demand <- c(rep(0,24),demand)
+      
 
       # ########### demand GH in kw/m2
       # GH_demand <- read.csv("data/input/GH-demand.csv", header=TRUE, sep=";")
@@ -89,7 +92,7 @@ for(pv_mult in scenarios_pv){
       # GH_d <- GH_lettuce/COP.HP
       #
       # GH_demand_ <- GH_d*GH_area
-      # demand <- GH_demand_ #* mult
+      # demand <- c(rep(0,24),GH_demand_) 
 
 
 

@@ -37,8 +37,8 @@ source("src/R/functions.R")
   # GH <- FALSE               #simulation GH
 
 ###Choice of Scenario
-  # base <- FALSE            #Base-Scenario
-  autarky <- FALSE          #Autarky-Scenario
+  base <- FALSE            #Base-Scenario
+  # autarky <- FALSE          #Autarky-Scenario
   # mix <- FALSE              #Mix-Scenario
 
 
@@ -48,7 +48,7 @@ source("src/R/functions.R")
 #Base-Scenario
   if(!base){ 
     
-    VF.i <- 1009.53             #energy demand in kWh/m2/a
+    VF.i <- 800 #1009.53             #energy demand in kWh/m2/a
     PV.i <- 1000                #investment cost in Euro/kWp
     ES.i <- 600                 #investment cost in Euro/kWh
     G.i <- 0.199                #grid costs in Euro/kWh
@@ -140,7 +140,7 @@ source("src/R/functions.R")
       GH_d <- GH_lettuce/COP.HP
 
       GH_demand_ <- GH_d*GH_area
-      demand <- GH_demand_ 
+      demand <- c(rep(0,24),GH_demand_) 
       
       GH<-TRUE
       }
@@ -491,6 +491,7 @@ source("src/R/functions.R")
                            "Energy consumption",
                            "Average production costs")
     results_VF
+    results_VF_mix <- results_VF
     
     VF<-TRUE
     }
@@ -535,7 +536,7 @@ source("src/R/functions.R")
     ofc_area <- 1/3.28                        #in m2/kg
     ofc_energy <- 0.2                         #in kWh/kg
     ofc_emission <- ofc_energy*co2.kWh        #in g/kg   
-    results_OFC <- data.frame("OFC",ofc_emission,ofc_area,ofc_energy,NA)
+    results_OFC <- data.frame("OFC",ofc_emission,ofc_area,ofc_energy,1.32)
     names(results_OFC) <- c("UAS",
                              "CO2",
                              "Land consumption",
