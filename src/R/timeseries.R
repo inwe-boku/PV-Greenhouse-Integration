@@ -1,4 +1,4 @@
-run<-FALSE
+# run<-FALSE
 
 if(!run){
   
@@ -37,8 +37,8 @@ source("src/R/functions.R")
   # GH <- FALSE               #simulation GH
 
 ###Choice of Scenario
-  base <- FALSE            #Base-Scenario
-  # autarky <- FALSE          #Autarky-Scenario
+  # base <- FALSE            #Base-Scenario
+  autarky <- FALSE          #Autarky-Scenario
   # mix <- FALSE              #Mix-Scenario
 
 
@@ -96,11 +96,13 @@ source("src/R/functions.R")
     ### PV: average pv generation for 2006 - 2016 in kw.
       pvgis_data <- read.csv("data/input/PV_avg-06-16_hr.csv", header=TRUE, sep=";") #PVGis average hourly data 2006-2016
       pv <- as.vector(pvgis_data$P..W.)/1000                 #year avg
-  
+      
+      pv <- c(pv[1:24],pv) 
+      
       timesteps <- length (pv)
       days <- timesteps / 24
  
-        
+       
     
       if(!VF){
     ### VF: average demand VF in kw.
@@ -116,8 +118,8 @@ source("src/R/functions.R")
       demand_ <- c(rep(demand_dark,dark_time/2),
                    rep(demand_tot_VF, photo_time),
                    rep(demand_dark,dark_time/2))                                           #kW in the course of one day
-      demand <- c(rep(demand_, days))
-      
+      demand <- c(rep(demand_, days-1))
+      demand <- c(rep(0,24),demand)
       
       VF<-TRUE
       }

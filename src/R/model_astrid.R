@@ -39,11 +39,6 @@ scenarios_storage <- seq(0.5,1.5, 0.5)
 scenarios_grid    <- seq(0.5,1.5, 0.5)
 scenarios_interest_r <- seq(0.5,1.5,0.5)
 
-# scenarios_pv      <- c(1)
-# scenarios_storage <- c(1)
-# scenarios_grid    <- c(1)
-# scenarios_interest_r <- c(1)
-
 
 for(pv_mult in scenarios_pv){
   for (storage_mult in scenarios_storage) {
