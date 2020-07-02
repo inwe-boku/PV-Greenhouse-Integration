@@ -37,9 +37,9 @@ source("src/R/functions.R")
   # GH <- FALSE               #simulation GH
 
 ###Choice of Scenario
-  base <- FALSE            #Base-Scenario
+  # base <- FALSE            #Base-Scenario
   # autarky <- FALSE          #Autarky-Scenario
-  # mix <- FALSE              #Mix-Scenario
+  mix <- FALSE              #Mix-Scenario
 
 
 
@@ -48,12 +48,13 @@ source("src/R/functions.R")
 #Base-Scenario
   if(!base){ 
     
-    VF.i <- 800 #1009.53             #energy demand in kWh/m2/a
+    VF.i <- 1009.53             #energy demand in kWh/m2/a
     PV.i <- 1000                #investment cost in Euro/kWp
-    ES.i <- 600                 #investment cost in Euro/kWh
+    ES.i <- 600               #investment cost in Euro/kWh
     G.i <- 0.199                #grid costs in Euro/kWh
     fit.i <- 0.05               #feed-in-tariff in Euro/kWh
     co2.i <- 125.91             #co2 g/kWh
+    co2.c.i <- 15.5/10^6        #co2 price Euro/g
     land.c.i <- 6.5             #Euro/m2 greenland
    
     base <- TRUE
@@ -65,10 +66,11 @@ source("src/R/functions.R")
 
     VF.i <- 1009.53             #energy demand in kWh/m2/a
     PV.i <- 1000                #investment cost in Euro/kWp
-    ES.i <- 600*0.2                 #investment cost in Euro/kWh
+    ES.i <- 600                #investment cost in Euro/kWh
     G.i <- 0.199 *10000          #grid costs in Euro/kWh
     fit.i <- 0.05               #feed-in-tariff in Euro/kWh
     co2.i <- 125.91             #co2 g/kWh
+    co2.c.i <- 15.5/10^6        #co2 price Euro/g
     land.c.i <- 6.5             #Euro/m2 greenland
     
     autarky<-TRUE
@@ -84,6 +86,7 @@ source("src/R/functions.R")
     G.i <- 0.199*1.2            #grid costs in Euro/kWh
     fit.i <- 0.05               #feed-in-tariff in Euro/kWh
     co2.i <- 125.91             #co2 g/kWh
+    co2.c.i <- 15.5/10^6        #co2 price Euro/g
     land.c.i <- 6.5             #Euro/m2 greenland
     
     mix<-TRUE
@@ -181,7 +184,7 @@ source("src/R/functions.R")
       
       
         # Emission cost
-          co2.price <- 15.5/10^6  #co2 price Euro/g
+          co2.price <- co2.c.i  #co2 price Euro/g
           co2.kWh <- co2.i        #co2 g/kWh
           co2 <- co2.price * co2.kWh
         
@@ -267,29 +270,6 @@ source("src/R/functions.R")
               axis.text.x = element_text(size = 15),
               text = element_text(size = 20))   
       
-    # ### Daily aggregation of storage
-    #   timeseries %>%
-    #     filter(Var %in% c("SOC",
-    #                       "x_in",
-    #                       "x_out")) %>%
-    #     group_by(Var) %>%
-    #     mutate(Day = rep(1:days, each = 24)) %>%
-    #     ungroup() %>%
-    #     group_by(Day, Var) %>%
-    #     summarize(Value = sum(Value)) %>%
-    #     filter(Day<8) %>%
-    #     ggplot(aes(x = Day, y = Value)) +
-    #     geom_area(aes(fill = Var))+
-    #     scale_fill_manual(values=c('dark green','orange','dark blue')) +
-    #     labs(title = "Storage Balance", subtitle = " ", x = "day", y = "kWh")+
-    #     theme(plot.title = element_text(size = 18),
-    #           plot.subtitle=element_text(size=16),
-    #           axis.title.y = element_text(size = 17.5),
-    #           axis.text.y = element_text(size = 15),
-    #           axis.title.x = element_text(size = 17.5),
-    #           axis.text.x = element_text(size = 15),
-    #           text = element_text(size = 20))   
-      
     
     ### Figure for operation
       demand_original <- timeseries %>%
@@ -328,9 +308,12 @@ source("src/R/functions.R")
         labs(title = "Energy Supply", subtitle = "1. and 2. January", y = "kWh")
     
     ### Hourly results longest day 21. June
+    day. <- c(rep(1:24))
+      all$day <- day.
+      
       all %>%
         filter(time<4129, time>4106) %>%
-        ggplot(aes(x = time, y = Value)) +
+        ggplot(aes(x = day, y = Value)) +
         geom_area(aes(fill = Var))+
         labs(title = "Energy Supply", subtitle = "21.June", x= "hour", y = "kWh")+
         theme(plot.title = element_text(size = 18),
@@ -344,7 +327,7 @@ source("src/R/functions.R")
     ### Hourly results shortest day 22. December
       all %>%
         filter(time>8522, time<8545) %>%
-        ggplot(aes(x = time, y = Value)) +
+        ggplot(aes(x = day, y = Value)) +
         geom_area(aes(fill = Var))+
         labs(title = "Energy Supply", subtitle = "22.December", x= "hour", y = "kWh")+
         theme(plot.title = element_text(size = 18),
