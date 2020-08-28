@@ -37,9 +37,9 @@ source("src/R/functions.R")
   # GH <- FALSE               #simulation GH
 
 ###Choice of Scenario
-  # base <- FALSE            #Base-Scenario
+  base <- FALSE            #Base-Scenario
   # autarky <- FALSE          #Autarky-Scenario
-  mix <- FALSE              #Mix-Scenario
+  # mix <- FALSE              #Mix-Scenario
 
 
 
@@ -48,9 +48,9 @@ source("src/R/functions.R")
 #Base-Scenario
   if(!base){ 
     
-    VF.i <- 1009.53             #energy demand in kWh/m2/a
+    VF.i <- 1009.526            #energy demand in kWh/m2/a
     PV.i <- 1000                #investment cost in Euro/kWp
-    ES.i <- 600               #investment cost in Euro/kWh
+    ES.i <- 600                 #investment cost in Euro/kWh
     G.i <- 0.199                #grid costs in Euro/kWh
     fit.i <- 0.05               #feed-in-tariff in Euro/kWh
     co2.i <- 125.91             #co2 g/kWh
@@ -133,6 +133,7 @@ source("src/R/functions.R")
       GH_demand <- read.csv("data/input/GH-demand.csv", header=TRUE, sep=";")
 
       GH_energy_demand <- sum(GH_demand$Coldhouse)
+      # GH_energy_demand <- sum(GH_demand$Hothouse)
 
       GH_lettuce <- as.vector(GH_demand$Coldhouse)
       # GH_tomato <- as.vector(GH_demand$Hothouse)
@@ -141,7 +142,8 @@ source("src/R/functions.R")
       COP.HP <- 3.5                                                     #Coefficient of performance (COP) of the heatpump (HP)
 
       GH_d <- GH_lettuce/COP.HP
-
+      # GH_d <- GH_tomato/COP.HP
+      
       GH_demand_ <- GH_d*GH_area
       demand <- c(rep(0,24),GH_demand_) 
       
