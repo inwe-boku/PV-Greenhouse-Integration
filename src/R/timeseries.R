@@ -33,12 +33,12 @@ source("src/R/functions.R")
 
 
 ###Choice of UAS simulation   
-  VF <- FALSE               #simulation VF
+  VF <- FALSE                 #simulation VF
   # GH <- FALSE               #simulation GH
 
 ###Choice of Scenario
-  base <- FALSE            #Base-Scenario
-  # autarky <- FALSE          #Autarky-Scenario
+  # base <- FALSE               #Base-Scenario
+  autarky <- FALSE          #Autarky-Scenario
   # mix <- FALSE              #Mix-Scenario
 
 
@@ -48,13 +48,12 @@ source("src/R/functions.R")
 #Base-Scenario
   if(!base){ 
     
-    VF.i <- 1009.526            #energy demand in kWh/m2/a
+    VF.i <- 1173.5              #energy demand in kWh/m2/a
     PV.i <- 1000                #investment cost in Euro/kWp
     ES.i <- 600                 #investment cost in Euro/kWh
     G.i <- 0.199                #grid costs in Euro/kWh
     fit.i <- 0.05               #feed-in-tariff in Euro/kWh
-    co2.i <- 125.91             #co2 g/kWh
-    co2.c.i <- 15.5/10^6        #co2 price Euro/g
+    co2.i <- 136.81             #co2 g/kWh
     land.c.i <- 6.5             #Euro/m2 greenland
    
     base <- TRUE
@@ -64,13 +63,12 @@ source("src/R/functions.R")
 #Autarky-Scenario  
   if(!autarky){    
 
-    VF.i <- 1009.53             #energy demand in kWh/m2/a
+    VF.i <- 1173.5              #energy demand in kWh/m2/a
     PV.i <- 1000                #investment cost in Euro/kWp
-    ES.i <- 600                #investment cost in Euro/kWh
-    G.i <- 0.199 *10000          #grid costs in Euro/kWh
-    fit.i <- 0.05               #feed-in-tariff in Euro/kWh
-    co2.i <- 125.91             #co2 g/kWh
-    co2.c.i <- 15.5/10^6        #co2 price Euro/g
+    ES.i <- 600                 #investment cost in Euro/kWh
+    G.i <- 0.199 *10000         #grid costs in Euro/kWh
+    fit.i <- 0                  #feed-in-tariff in Euro/kWh
+    co2.i <- 136.81            #co2 g/kWh
     land.c.i <- 6.5             #Euro/m2 greenland
     
     autarky<-TRUE
@@ -80,13 +78,12 @@ source("src/R/functions.R")
 #Mix-Scenario
   if(!mix){    
     
-    VF.i <- 1009.53             #energy demand in kWh/m2/a
+    VF.i <- 1173.5             #energy demand in kWh/m2/a
     PV.i <- 1000                #investment cost in Euro/kWp
     ES.i <- 600 *0.7            #investment cost in Euro/kWh
     G.i <- 0.199*1.2            #grid costs in Euro/kWh
     fit.i <- 0.05               #feed-in-tariff in Euro/kWh
-    co2.i <- 125.91             #co2 g/kWh
-    co2.c.i <- 15.5/10^6        #co2 price Euro/g
+    co2.i <- 136.81             #co2 g/kWh
     land.c.i <- 6.5             #Euro/m2 greenland
     
     mix<-TRUE
@@ -185,14 +182,12 @@ source("src/R/functions.R")
                                                  timesteps)
       
       
-        # Emission cost
-          co2.price <- co2.c.i  #co2 price Euro/g
+        # Emission
           co2.kWh <- co2.i        #co2 g/kWh
-          co2 <- co2.price * co2.kWh
-        
+          
           
         # Grid cost
-          gridcosts <- G.i + co2 # power from grid in €/kWh
+          gridcosts <- G.i # power from grid in €/kWh
           
           feed_in_tariff <- fit.i # subsidy received for feeding power to grid, Euro/kWh
         
@@ -389,11 +384,11 @@ source("src/R/functions.R")
       
 #######RESULTS#######
   #### LAND_consumption
-    kWp_area <- 7.5                                       #m2/kWp
+    kWp_area <- 15                                        #m2/kWp
     pv_area <- installed_pv_capacity*kWp_area             #m2
     grid_area_consumption <- 0.005                        #m2/kWh
     grid_area <- sum_electricity_from_grid*grid_area_consumption #m2
-    es_cap_area <- 6/10^3                                 #m2/kWh
+    es_cap_area <- 0.006                                  #m2/kWh
     es_area <- es_cap_area*installed_storage_capacity     #m2
     
   ### CO2 emissions
