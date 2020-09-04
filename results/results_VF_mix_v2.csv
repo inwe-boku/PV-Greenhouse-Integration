@@ -1,0 +1,14 @@
+parameters;values;units
+Demand;844920;kWh
+PV_costs;77.38028219;Euro/kWp
+PV_capacity;1114.180189;kWp
+PV_energy;468721.6576;kWh
+ES_costs;48.21520382;Euro/kWh
+ES_capacity;702.0948198;kWh
+ES_out;231844.2587;kWh
+Grid_costs;0.2295;Euro/kWh
+Grid;144354.0837;kWh
+PV_sold;580194.0465;kWh
+Costs;124186.7821;Euro
+PV_area;16712.70283;m2
+Emissions;19.74908219;tons

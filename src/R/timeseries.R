@@ -38,8 +38,8 @@ source("src/R/functions.R")
 
 ###Choice of Scenario
   # base <- FALSE               #Base-Scenario
-  autarky <- FALSE          #Autarky-Scenario
-  # mix <- FALSE              #Mix-Scenario
+  # autarky <- FALSE          #Autarky-Scenario
+  mix <- FALSE              #Mix-Scenario
 
 
 
@@ -51,7 +51,7 @@ source("src/R/functions.R")
     VF.i <- 1173.5              #energy demand in kWh/m2/a
     PV.i <- 1000                #investment cost in Euro/kWp
     ES.i <- 600                 #investment cost in Euro/kWh
-    G.i <- 0.199                #grid costs in Euro/kWh
+    G.i <- 0.17                 #grid costs in Euro/kWh
     fit.i <- 0.05               #feed-in-tariff in Euro/kWh
     co2.i <- 136.81             #co2 g/kWh
     land.c.i <- 6.5             #Euro/m2 greenland
@@ -66,7 +66,7 @@ source("src/R/functions.R")
     VF.i <- 1173.5              #energy demand in kWh/m2/a
     PV.i <- 1000                #investment cost in Euro/kWp
     ES.i <- 600                 #investment cost in Euro/kWh
-    G.i <- 0.199 *10000         #grid costs in Euro/kWh
+    G.i <- 0.17 *10000         #grid costs in Euro/kWh
     fit.i <- 0                  #feed-in-tariff in Euro/kWh
     co2.i <- 136.81            #co2 g/kWh
     land.c.i <- 6.5             #Euro/m2 greenland
@@ -80,8 +80,8 @@ source("src/R/functions.R")
     
     VF.i <- 1173.5             #energy demand in kWh/m2/a
     PV.i <- 1000                #investment cost in Euro/kWp
-    ES.i <- 600 *0.7            #investment cost in Euro/kWh
-    G.i <- 0.199*1.2            #grid costs in Euro/kWh
+    ES.i <- 600 *0.65            #investment cost in Euro/kWh
+    G.i <- 0.17*1.35           #grid costs in Euro/kWh
     fit.i <- 0.05               #feed-in-tariff in Euro/kWh
     co2.i <- 136.81             #co2 g/kWh
     land.c.i <- 6.5             #Euro/m2 greenland
@@ -254,7 +254,7 @@ source("src/R/functions.R")
         filter(Var %in% c("SOC",
                           "x_in",
                           "x_out")) %>%
-        filter(time<48) %>%
+        filter(time<72) %>%
         ggplot(aes(x=time, y=Value)) +
         geom_line(aes(col=Var)) +
         scale_color_manual(values=c('dark green','orange','dark blue')) +
@@ -471,7 +471,6 @@ source("src/R/functions.R")
                            "Energy consumption",
                            "Average production costs")
     results_VF
-    results_VF_mix <- results_VF
     
     VF<-TRUE
     }
@@ -480,7 +479,7 @@ source("src/R/functions.R")
     if(!GH){
   ### Economic considerations GH
     GH_area <- 400                                        #m2 production area
-    GH_productivity <- 14.14                              #kg/m2/a
+    GH_productivity <- 4.5                                #kg/m2/a
     GH_invest <- 262.77*GH_area                           #Euro/m2
     GH_invest_annualized <- annualize(GH_invest,
                                       interest_rate,

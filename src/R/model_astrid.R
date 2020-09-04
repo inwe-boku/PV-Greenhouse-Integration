@@ -35,10 +35,10 @@ source("src/R/functions.R")
 final_results     <- NULL
 
 scenarios_pv      <- c(1) #c(0.8, 1, 1.2)
-scenarios_storage <- c(1)#seq(0.5,1.5, 0.5)
-scenarios_grid    <- c(1)#seq(0.5,1.5, 0.5)
+scenarios_storage <- seq(0.5,0.6, 0.01)
+scenarios_grid    <-  c(1)#seq(1.3,2, 0.1)
 scenarios_interest_r <- c(1)#seq(0.5,1.5,0.5)
-scenarios_fit <- seq(0.1, 0.5, 0.1)
+scenarios_fit <- c(1) #seq(0.1, 0.5, 0.1)
 
 
 for(pv_mult in scenarios_pv){
@@ -68,7 +68,7 @@ for(pv_mult in scenarios_pv){
 
       ############# average demand VF in kw.
       prod_area_VF <- 720 #*mult                                                        #m2 actual production area which has to be illuminated
-      energy_demand_VF <- 1009.53                                                #kWh/m2/a, includes illumination, irrigation, humidification, ventilation, ...
+      energy_demand_VF <- 1173.5                                                #kWh/m2/a, includes illumination, irrigation, humidification, ventilation, ...
       photo_time <- 16                                                           #hours
       dark_time <- 24-photo_time                                                 #hours, during the dark period there is no illumination
       demand_day <- prod_area_VF*energy_demand_VF/365                            #total energy demand in kW/h
@@ -114,7 +114,7 @@ for(pv_mult in scenarios_pv){
       land_cost <- 6.5                                  #Euro/m2 greenland.
       build_land_cost <- 200                            #Euro/m2
 
-      pv_land <- 7.5                                     #1 KW needs more than 1 m2!, so it has to be multiplied by land-use of PV
+      pv_land <- 15                                     #1 KW needs more than 1 m2!, so it has to be multiplied by land-use of PV
 
       pv_invest <- 1000 + land_cost*pv_land # in €/kw
       pv_invest_annualized <- annualize(pv_invest,
@@ -135,12 +135,10 @@ for(pv_mult in scenarios_pv){
      
 
       #Emission cost
-      co2.price <- 15.5/10^6  #co2 price Euro/g
-      co2.kWh <- 125.91      #co2 g/kWh
-      co2 <- co2.price * co2.kWh
+      co2.kWh <- 136.81      #co2 g/kWh
 
       #Grid cost
-      gridcosts <- 0.199 + co2 # power from grid in €/kWh
+      gridcosts <- 0.17  # power from grid in €/kWh
       gridcosts <- gridcosts*grid_mult
 
       feed_in_tariff <- 0.05*fit_mult # subsidy received for feeding power to grid, Euro/kWh
@@ -297,7 +295,7 @@ for(pv_mult in scenarios_pv){
 
 
       ####PV_area_consumption
-      kWp_area <- 7.5                                       #m2
+      kWp_area <- 15                                       #m2
       pv_area <- installed_pv_capacity*kWp_area
 
       ###co2 emissions
