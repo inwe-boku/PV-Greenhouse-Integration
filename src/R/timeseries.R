@@ -33,13 +33,13 @@ source("src/R/functions.R")
 
 
 ###Choice of UAS simulation   
-  VF <- FALSE                 #simulation VF
-  # GH <- FALSE               #simulation GH
+  # VF <- FALSE                 #simulation VF
+  GH <- FALSE               #simulation GH
 
 ###Choice of Scenario
-  # base <- FALSE               #Base-Scenario
+  base <- FALSE               #Base-Scenario
   # autarky <- FALSE          #Autarky-Scenario
-  mix <- FALSE              #Mix-Scenario
+  # mix <- FALSE              #Mix-Scenario
 
 
 
@@ -480,7 +480,9 @@ source("src/R/functions.R")
   ### Economic considerations GH
     GH_area <- 400                                        #m2 production area
     GH_productivity <- 4.5                                #kg/m2/a
-    GH_invest <- 262.77*GH_area                           #Euro/m2
+    HP_invest <- 30000                                    #in Euro 
+    GH_i <- 262.77                                        #in Euro/m2 (construction costs)
+    GH_invest <- (GH_i*GH_area)+HP_invest               #in Euro
     GH_invest_annualized <- annualize(GH_invest,
                                       interest_rate,
                                       run_time,
