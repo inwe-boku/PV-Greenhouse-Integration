@@ -30,15 +30,17 @@ output_dir <- "data/output/"
 source("src/R/functions.R")
 
 
-final_results     <- NULL
+# results_per_kg     <- NULL
 
 ###Choice of UAS simulation   
 VF <- FALSE                 #simulation VF
+VF.E <- FALSE                 #calculation VF per kg of lettuce
 # GH <- FALSE               #simulation GH
+# GH.E <- FALSE               #calculation GH per kg of lettuce
 
 ###Choice of Scenario
-base <- FALSE               #Base-Scenario
-# autarky <- FALSE          #Autarky-Scenario
+# base <- FALSE               #Base-Scenario
+autarky <- FALSE          #Autarky-Scenario
 # mix <- FALSE              #Mix-Scenario
 
 
@@ -448,11 +450,9 @@ results
 
 
 #### Economic considerations ###
-
-### Economic considerations lettuce ####
 run_time <- building_life                               #years
 
-if(!VF){
+if(!VF.E){
   ### Economic considerations VF ####
   VF_productivity <- VF_biomass.i                       #kg/m2/a
   VF_area <- VF.area                                    #in m2
@@ -474,24 +474,24 @@ if(!VF){
   VF_emission <- (emissions.t/VF_productivity_per_a)*10^6 # in g/kg
   VF_emission
 
-  results_VF <- data.frame(c("VF"),
+  results_per_kg <- data.frame(c("VF"),
                            c(VF_emission),
                            c((pv_area+es_area+grid_area+VF_area)/VF_productivity_per_a),
                            c(energy_demand_VF/VF_productivity),
                            c(VF_econ[1,1]))
-  names(results_VF) <- c("UAS",
+  names(results_per_kg) <- c("UAS",
                          "CO2",
                          "Land consumption",
                          "Energy consumption",
                          "Average production costs")
   
-  print(results_VF)
+  print(results_per_kg)
   
   VF<-TRUE
 }
 
 
-if(!GH){
+if(!GH.E){
   ### Economic considerations GH
   GH_area <- GH.area                                        #m2 production area
   GH_productivity <- GH_biomass.i                           #kg/m2/a
@@ -513,18 +513,18 @@ if(!GH){
   
   GH_emission <- (emissions.t/GH_productivity_per_a)*10^6 #in g/kg
   
-  results_GH <- data.frame(c("GH"),
+  results_per_kg <- data.frame(c("GH"),
                            c(GH_emission),
                            c((pv_area+es_area+grid_area++GH_area)/GH_productivity_per_a),
                            c(GH_energy_demand/GH_productivity),
                            c(GH_econ[1,1]))
-  names(results_GH) <- c("UAS",
+  names(results_per_kg) <- c("UAS",
                          "CO2",
                          "Land consumption",
                          "Energy consumption",
                          "Average production costs")  
 
-  final_results <- bind_rows(final_results, results_GH)
+  print(results_per_kg)
 
   GH <-TRUE
 }
@@ -541,13 +541,15 @@ if(!GH){
                           "Energy consumption",
                           "Average production costs")
 
-final_results <- bind_rows(final_results,results_OFC)
+  
+# results_per_kg <- bind_rows(results_per_kg,results_VF, results_GH, results_OFC)
 
 
 ### Results for comparison ###  
 
-final_results
-
 results
+results_per_kg
+results_OFC
+
 
 save.image(file = "Image.RData")
