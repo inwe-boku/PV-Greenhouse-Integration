@@ -33,12 +33,12 @@ source("src/R/functions.R")
 
 
 ###Choice of UAS simulation   
-  # VF <- FALSE                 #simulation VF
-  GH <- FALSE               #simulation GH
+  VF <- FALSE                 #simulation VF
+  # GH <- FALSE               #simulation GH
 
 ###Choice of Scenario
-  base <- FALSE               #Base-Scenario
-  # autarky <- FALSE          #Autarky-Scenario
+  # base <- FALSE               #Base-Scenario
+  autarky <- FALSE          #Autarky-Scenario
   # mix <- FALSE              #Mix-Scenario
 
 
@@ -66,9 +66,9 @@ source("src/R/functions.R")
     VF.i <- 1173.5              #energy demand in kWh/m2/a
     PV.i <- 1000                #investment cost in Euro/kWp
     ES.i <- 600                 #investment cost in Euro/kWh
-    G.i <- 0.17 *10000         #grid costs in Euro/kWh
+    G.i <- 0.17 *10000          #grid costs in Euro/kWh
     fit.i <- 0                  #feed-in-tariff in Euro/kWh
-    co2.i <- 136.81            #co2 g/kWh
+    co2.i <- 136.81             #co2 g/kWh
     land.c.i <- 6.5             #Euro/m2 greenland
     
     autarky<-TRUE
@@ -78,10 +78,10 @@ source("src/R/functions.R")
 #Mix-Scenario
   if(!mix){    
     
-    VF.i <- 1173.5             #energy demand in kWh/m2/a
+    VF.i <- 1173.5              #energy demand in kWh/m2/a
     PV.i <- 1000                #investment cost in Euro/kWp
-    ES.i <- 600 *0.65            #investment cost in Euro/kWh
-    G.i <- 0.17*1.35           #grid costs in Euro/kWh
+    ES.i <- 600 *0.65           #investment cost in Euro/kWh
+    G.i <- 0.17*1.35            #grid costs in Euro/kWh
     fit.i <- 0.05               #feed-in-tariff in Euro/kWh
     co2.i <- 136.81             #co2 g/kWh
     land.c.i <- 6.5             #Euro/m2 greenland
@@ -106,8 +106,8 @@ source("src/R/functions.R")
     
       if(!VF){
     ### VF: average demand VF in kw.
-      prod_area_VF <- 720 #*mult                                                        #m2 actual production area which has to be illuminated
-      energy_demand_VF <- VF.i                                              #kWh/m2/a, includes illumination, irrigation, humidification, ventilation, ...
+      prod_area_VF <- 720                                                        #m2 actual production area which has to be illuminated
+      energy_demand_VF <- VF.i                                                   #kWh/m2/a, includes illumination, irrigation, humidification, ventilation, ...
       photo_time <- 16                                                           #hours
       dark_time <- 24-photo_time                                                 #hours, during the dark period there is no illumination
       demand_day <- prod_area_VF*energy_demand_VF/365                            #total energy demand in kW/h
@@ -163,9 +163,9 @@ source("src/R/functions.R")
           
         
         # PV costs    
-          pv_land <- 7.5                                     #im m2 fpr 1 kWp
+          pv_land <- 15                                    #in m2 for 1 kWp
           
-          pv_invest <- PV.i + land_cost*pv_land # in €/kw
+          pv_invest <- PV.i + land_cost*pv_land # in Euro/kw
           pv_invest_annualized <- annualize(pv_invest,
                                             interest_rate,
                                             run_time,
@@ -175,7 +175,7 @@ source("src/R/functions.R")
         # Storage costs   
           run_time <- 10
         
-          storage_invest <- ES.i # in €/kWh
+          storage_invest <- ES.i # in Euro/kWh
           storage_invest_annualized <- annualize(storage_invest,
                                                  interest_rate,
                                                  run_time,
@@ -187,7 +187,7 @@ source("src/R/functions.R")
           
           
         # Grid cost
-          gridcosts <- G.i # power from grid in €/kWh
+          gridcosts <- G.i # power from grid in Euro/kWh
           
           feed_in_tariff <- fit.i # subsidy received for feeding power to grid, Euro/kWh
         
@@ -472,9 +472,11 @@ source("src/R/functions.R")
                            "Average production costs")
     results_VF
     
+    print(results_VF)
+    
     VF<-TRUE
     }
-  
+  results_VF
     
     if(!GH){
   ### Economic considerations GH
@@ -516,7 +518,7 @@ source("src/R/functions.R")
   ### OFC ###
     ofc_area <- 1/3.28                        #in m2/kg
     ofc_energy <- 0.2                         #in kWh/kg
-    ofc_emission <- ofc_energy*co2.kWh        #in g/kg   
+    ofc_emission <- 50                        #in g/kg   
     results_OFC <- data.frame("OFC",ofc_emission,ofc_area,ofc_energy,1.32)
     names(results_OFC) <- c("UAS",
                              "CO2",
