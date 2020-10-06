@@ -30,17 +30,18 @@ output_dir <- "data/output/"
 source("src/R/functions.R")
 
 
-# results_per_kg     <- NULL
 
 ###Choice of UAS simulation   
 VF <- FALSE                 #simulation VF
-VF.E <- FALSE                 #calculation VF per kg of lettuce
+VF.E <- FALSE               #calculation VF per kg of lettuce
+VF.R <- FALSE               #remove variable VF after run to prepare for next run
 # GH <- FALSE               #simulation GH
-# GH.E <- FALSE               #calculation GH per kg of lettuce
+# GH.E <- FALSE             #calculation GH per kg of lettuce
+# GH.R <- FALSE             #remove variable GH after run to prepare for next run
 
 ###Choice of Scenario
-# base <- FALSE               #Base-Scenario
-autarky <- FALSE          #Autarky-Scenario
+base <- FALSE               #Base-Scenario
+# autarky <- FALSE          #Autarky-Scenario
 # mix <- FALSE              #Mix-Scenario
 
 
@@ -212,7 +213,7 @@ feed_in_tariff <- fit.i                                # subsidy received for fe
 
 # Technical parameters
 efficiency_storage <- 0.95
-maximum_power_controllable_demand <- 500               # how much power the controllable demand can  
+maximum_power_controllable_demand <- 0               # how much power the controllable demand can  
 # use at most in one instant of time. In kW
 
 
@@ -402,51 +403,51 @@ all %>%
 
 #######RESULTS#######
 #### LAND_consumption
-kWp_area <- kWp_area.i                                #m2/kWp
-pv_area <- installed_pv_capacity*kWp_area             #m2
-grid_area_consumption <- grid_area.i                  #m2/kWh
-grid_area <- sum_electricity_from_grid*grid_area_consumption #m2
-es_cap_area <- es_area.i                              #m2/kWh
-es_area <- es_cap_area*installed_storage_capacity     #m2
+  kWp_area <- kWp_area.i                                #m2/kWp
+  pv_area <- installed_pv_capacity*kWp_area             #m2
+  grid_area_consumption <- grid_area.i                  #m2/kWh
+  grid_area <- sum_electricity_from_grid*grid_area_consumption #m2
+  es_cap_area <- es_area.i                              #m2/kWh
+  es_area <- es_cap_area*installed_storage_capacity     #m2
 
 ### CO2 emissions
-emissions.t <- (sum_electricity_from_grid*co2.kWh)/10^6 #tons
+  emissions.t <- (sum_electricity_from_grid*co2.kWh)/10^6 #tons
 
 
 ### Results data.frame
-results <- data.frame(c("Demand",
-                        "PV_costs",
-                        "PV_capacity",
-                        "PV_energy",
-                        "ES_costs",
-                        "ES_capacity",
-                        "ES_out",
-                        "Grid_costs",
-                        "Grid",
-                        "PV_sold",
-                        "Costs",
-                        "PV_area",
-                        "Emissions"),
-                      c(s_demand,
-                        pv_invest_annualized,
-                        installed_pv_capacity$value,
-                        sum_pv_use,
-                        storage_invest_annualized,
-                        installed_storage_capacity$value,
-                        sum_storage,
-                        gridcosts,
-                        sum_electricity_from_grid,
-                        sum_pv_sold,
-                        costs$value,
-                        pv_area$value,
-                        emissions.t),
-                      c("kWh","Euro/kWp","kWp", "kWh", "Euro/kWh", "kWh","kWh", "Euro/kWh", "kWh","kWh", "Euro", "m2", "tons"))
-
-
-names(results) <- c("parameters",
-                    "values",
-                    "units")
-results
+  results <- data.frame(c("Demand",
+                          "PV_costs",
+                          "PV_capacity",
+                          "PV_energy",
+                          "ES_costs",
+                          "ES_capacity",
+                          "ES_out",
+                          "Grid_costs",
+                          "Grid",
+                          "PV_sold",
+                          "Costs",
+                          "PV_area",
+                          "Emissions"),
+                        c(s_demand,
+                          pv_invest_annualized,
+                          installed_pv_capacity$value,
+                          sum_pv_use,
+                          storage_invest_annualized,
+                          installed_storage_capacity$value,
+                          sum_storage,
+                          gridcosts,
+                          sum_electricity_from_grid,
+                          sum_pv_sold,
+                          costs$value,
+                          pv_area$value,
+                          emissions.t),
+                        c("kWh","Euro/kWp","kWp", "kWh", "Euro/kWh", "kWh","kWh", "Euro/kWh", "kWh","kWh", "Euro", "m2", "tons"))
+  
+  
+  names(results) <- c("parameters",
+                      "values",
+                      "units")
+  results
 
 
 #### Economic considerations ###
@@ -544,12 +545,27 @@ if(!GH.E){
   
 # results_per_kg <- bind_rows(results_per_kg,results_VF, results_GH, results_OFC)
 
+#Remove Variables to prepare for the next run 
+   if(!VF.R){
+    
+    rm(VF,VF.E)
+    
+    VF.R <- TRUE
+  }
+  
+  if(!GH.R){
+
+    rm(GH,GH.E)
+
+  GH.R <- TRUE
+  }
 
 ### Results for comparison ###  
 
 results
 results_per_kg
 results_OFC
+
 
 
 save.image(file = "Image.RData")
