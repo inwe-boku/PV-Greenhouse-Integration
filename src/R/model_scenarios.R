@@ -140,6 +140,8 @@ if(!VF){
   demand <- c(rep(0,24),demand)
   
   VF<-TRUE
+} else{
+  print("0")
 }
 
 
@@ -163,6 +165,8 @@ if(!GH){
   demand <- c(rep(0,24),GH_demand_) 
   
   GH<-TRUE
+}else{
+  print("0")
 }
 
 
@@ -489,6 +493,8 @@ if(!VF.E){
   print(results_per_kg)
   
   VF<-TRUE
+}else{
+  print("0")
 }
 
 
@@ -528,6 +534,8 @@ if(!GH.E){
   print(results_per_kg)
 
   GH <-TRUE
+}else{
+  print("0")
 }
 
 
@@ -546,18 +554,22 @@ if(!GH.E){
 # results_per_kg <- bind_rows(results_per_kg,results_VF, results_GH, results_OFC)
 
 #Remove Variables to prepare for the next run 
-   if(!VF.R){
+  if(!VF.R){
     
     rm(VF,VF.E)
     
     VF.R <- TRUE
-  }
+   }else{
+     print("0")
+   }
   
   if(!GH.R){
 
     rm(GH,GH.E)
 
   GH.R <- TRUE
+  }else{
+    print("0")
   }
 
 ### Results for comparison ###  

@@ -34,10 +34,10 @@ source("src/R/functions.R")
 
 final_results     <- NULL
 
-scenarios_pv      <- c(1) #c(0.8, 1, 1.2)
-scenarios_storage <- seq(0.5,0.6, 0.01)
-scenarios_grid    <-  c(1)#seq(1.3,2, 0.1)
-scenarios_interest_r <- c(1)#seq(0.5,1.5,0.5)
+scenarios_pv      <- c(0.8, 1, 1.2)
+scenarios_storage <- c(1) #seq(0.25,1.25, 0.5)
+scenarios_grid    <-  c(1) #seq(0.8,2.4, 0.5)
+scenarios_interest_r <- c(1) #seq(0.5,1.5,0.5)
 scenarios_fit <- c(1) #seq(0.1, 0.5, 0.1)
 
 
@@ -145,7 +145,7 @@ for(pv_mult in scenarios_pv){
 
       #technical parameters
       efficiency_storage <- 0.95
-      maximum_power_controllable_demand <- 500 # how much power the controllable demand can use at most in one instant of time. In kW
+      maximum_power_controllable_demand <- 0 # how much power the controllable demand can use at most in one instant of time. In kW
 
 
       #### this function writes the gdx file to disk for GAMS to use
@@ -195,118 +195,7 @@ for(pv_mult in scenarios_pv){
 
       timeseries <- read_timeseries_from_results(mygdx)
 
-      ###### figure for storage operation
-      timeseries %>%
-        filter(Var %in% c("SOC",
-                          "x_in",
-                          "x_out")) %>%
-        filter(time<48) %>%
-        ggplot(aes(x=time, y=Value)) +
-        geom_line(aes(col=Var)) +
-        scale_color_manual(values=c('dark green','orange','dark blue')) +
-        labs(title = "Storage Balance", subtitle = " ", x = "hour", y = "kWh")
-
-      ###daily aggregation of storage
-      timeseries %>%
-        filter(Var %in% c("SOC",
-                          "x_in",
-                          "x_out")) %>%
-        group_by(Var) %>%
-        mutate(Day = rep(1:days, each = 24)) %>%
-        ungroup() %>%
-        group_by(Day, Var) %>%
-        summarize(Value = sum(Value)) %>%
-        filter(Day<8) %>%
-        ggplot(aes(x = Day, y = Value)) +
-        geom_area(aes(fill = Var))+
-        scale_fill_manual(values=c('dark green','orange','dark blue')) +
-        labs(title = "Storage Balance", subtitle = " ", x = "day", y = "kWh")   
-      
-      
-       ###### figure for operation
-      demand_original <- timeseries %>%
-        filter(Var %in% c("demand"
-        ))
-
-      controllable_original_demand <- timeseries %>%
-        filter(Var %in% c("demand",
-                          "control_demand"
-        )) %>%
-        dplyr::select(time, Var, Value) %>%
-        spread(Var, Value) %>%
-        mutate(total_demand = control_demand + demand) %>%
-        gather(Var, Value, -time) %>%
-        filter(Var %in% c("total_demand", "demand"))
-
-
-      gens_positive <- timeseries %>%
-        filter(Var %in% c("direct_use",
-                          "grid_power",
-                          "x_out"
-        ))
-
-      gens_negative <- timeseries %>%
-        filter(Var %in% c("curtailment",
-                          "power_fed_in"))
-
-      all <- bind_rows(
-        gens_positive,
-        gens_negative)
-
-      ###hourly results
-      all %>%
-        ggplot(aes(x = time, y = Value)) +
-        geom_area(aes(fill = Var))+
-        labs(title = "Energy Supply", subtitle = "hourly", y = "kWh")
-
-
-      ###daily aggregation of results
-      all %>%
-        group_by(Var) %>%
-        mutate(Day = rep(1:days, each = 24)) %>%
-        ungroup() %>%
-        group_by(Day, Var) %>%
-        summarize(Value = sum(Value)) %>%
-        ggplot(aes(x = Day, y = Value)) +
-        geom_area(aes(fill = Var))+
-        labs(title = "Energy Balance", subtitle = "daily", y = "kWh")
-
-
-      
-      #figure for energy balancing amounts
-      all %>%
-        group_by(Var)   %>%
-        summarize(Value_Sum = sum(Value)) %>%
-        ggplot(aes(x = Var, y = Value_Sum)) +
-        geom_bar(stat = "Identity", aes (fill = Var)) +
-        labs(title = "Energy balancing amounts", subtitle = "daily", x = "Energy 'sources'", y = "kWh")
-
-
-
-      ##results in percentage
-      s_demand <- sum(demand)
-
-      all %>%
-        group_by(Var)   %>%
-        summarize(Value_Sum = sum(Value)) %>%
-        ggplot(aes(x = Var, y = 100 * Value_Sum/s_demand)) +
-        geom_bar(stat = "Identity", aes (fill = Var)) +
-        labs(title = "Energy balancing amounts", subtitle = "daily", x = "Energy 'sources'", y = "% of Demand")
-
-
-      ####PV_area_consumption
-      kWp_area <- 15                                       #m2
-      pv_area <- installed_pv_capacity*kWp_area
-
-      ###co2 emissions
-      emissions.t <- (sum_electricity_from_grid*co2.kWh)/10^6 #tons
-
-      ground_area <- 100   #m2
-
-
-      save.image(file = "Image.RData")
-
-
+##RESULTS##
       results <- data.frame(c("Demand",
                               "PV_costs",
                               "PV_capacity",
@@ -358,127 +247,127 @@ for(pv_mult in scenarios_pv){
 
 
 
+##FIGURES########################################################################
+  ####pv scenarios absolute values
+  final_results %>%
+    filter(parameters %in% c("PV_energy",
+                             "ES_out",
+                             "Grid",
+                             "PV_sold")) %>%
+    filter(storage_cost_scenario == 1) %>%
+    filter(grid_cost_scenario == 1) %>%
+    filter(interest_rate_scenario==1)%>%
+    group_by(parameters) %>%
+    ggplot(aes(x=pv_cost_scenario, y=values)) +
+    geom_line(stat="identity", aes(color=parameters), position="dodge", size=1) +
+    geom_point(aes(x = pv_cost_scenario, y=values))+
+    scale_y_continuous(labels = scales::comma)+
+    labs(title = "Sensitivity analyses", x = "Change in PV Costs", y = "Energy used in kWh")+
+    theme(plot.title = element_text(size = 18),
+          plot.subtitle=element_text(size=16),
+          axis.title.y = element_text(size = 15),
+          axis.text.y = element_text(size = 15),
+          axis.title.x = element_text(size = 17.5),
+          axis.text.x = element_text(size = 15),
+          text = element_text(size = 20)) 
+  
+  
+  ####es scenarios absolute values
+  final_results %>%
+    filter(parameters %in% c("PV_energy",
+                             "ES_out",
+                             "Grid",
+                             "PV_sold")) %>%
+    filter(pv_cost_scenario == 1) %>%
+    filter(grid_cost_scenario == 1) %>%
+    filter(interest_rate_scenario==1)%>%
+    group_by(parameters) %>%
+    ggplot(aes(x=storage_cost_scenario, y=values)) +
+    geom_line(stat="identity", aes(color=parameters), position="dodge", size=1) +
+    geom_point(aes(x = storage_cost_scenario, y=values))+
+    scale_y_continuous(labels = scales::comma)+
+    labs(title = "Sensitivity analyses", x = "Change in ES Costs", y = "Energy used in kWh")+
+    theme(plot.title = element_text(size = 18),
+          plot.subtitle=element_text(size=16),
+          axis.title.y = element_text(size = 15),
+          axis.text.y = element_text(size = 15),
+          axis.title.x = element_text(size = 17.5),
+          axis.text.x = element_text(size = 15),
+          text = element_text(size = 20)) 
+  
+  
+  ####grid scenarios absolute values
+  final_results %>%
+    filter(parameters %in% c("PV_energy",
+                             "ES_out",
+                             "Grid",
+                             "PV_sold")) %>%
+    filter(pv_cost_scenario == 1) %>%
+    filter(storage_cost_scenario == 1) %>%
+    filter(interest_rate_scenario==1)%>%
+    group_by(parameters) %>%
+    ggplot(aes(x=grid_cost_scenario, y=values)) +
+    geom_line(stat="identity", aes(color=parameters), position="dodge", size=1) +
+    geom_point(aes(x = grid_cost_scenario, y=values))+
+    scale_y_continuous(labels = scales::comma)+
+    labs(title = "Sensitivity analyses", x = "Change in Grid Costs", y = "Energy used in kWh")+
+    theme(plot.title = element_text(size = 18),
+          plot.subtitle=element_text(size=16),
+          axis.title.y = element_text(size = 15),
+          axis.text.y = element_text(size = 15),
+          axis.title.x = element_text(size = 17.5),
+          axis.text.x = element_text(size = 15),
+          text = element_text(size = 20)) 
+  
+  
+  ####interest rate scenarios absolute values
+  final_results %>%
+    filter(parameters %in% c("PV_energy",
+                             "ES_out",
+                             "Grid",
+                             "PV_sold")) %>%
+    filter(pv_cost_scenario == 1) %>%
+    filter(storage_cost_scenario == 1) %>%
+    filter(grid_cost_scenario==1)%>%
+    group_by(parameters) %>%
+    ggplot(aes(x=interest_rate_scenario, y=values)) +
+    geom_line(stat="identity", aes(color=parameters), position="dodge", size=1) +
+    geom_point(aes(x = interest_rate_scenario, y=values))+
+    scale_y_continuous(labels = scales::comma)+
+    labs(title = "Sensitivity analyses", x = "Change in interest rate", y = "Energy used in kWh")+
+    theme(plot.title = element_text(size = 18),
+          plot.subtitle=element_text(size=16),
+          axis.title.y = element_text(size = 15),
+          axis.text.y = element_text(size = 15),
+          axis.title.x = element_text(size = 17.5),
+          axis.text.x = element_text(size = 15),
+          text = element_text(size = 20)) 
+  
+  
+  ####fit scenarios absolute values
+  final_results %>%
+    filter(parameters %in% c("PV_energy",
+                             "ES_out",
+                             "Grid",
+                             "PV_sold")) %>%
+    group_by(parameters) %>%
+    ggplot(aes(x=feed_in_scenario, y=values)) +
+    geom_line(stat="identity", aes(color=parameters), position="dodge", size=1) +
+    geom_point(aes(x = feed_in_scenario, y=values))+
+    scale_y_continuous(labels = scales::comma)+
+    labs(title = "Sensitivity analyses", x = "Change in feed-in-tariff", y = "Energy used in kWh")+
+    theme(plot.title = element_text(size = 18),
+          plot.subtitle=element_text(size=16),
+          axis.title.y = element_text(size = 15),
+          axis.text.y = element_text(size = 15),
+          axis.title.x = element_text(size = 17.5),
+          axis.text.x = element_text(size = 15),
+          text = element_text(size = 20)) 
 
-##########################################################################
-####pv scenarios absolute values
-final_results %>%
-  filter(parameters %in% c("PV_energy",
-                           "ES_out",
-                           "Grid",
-                           "PV_sold")) %>%
-  filter(storage_cost_scenario == 1) %>%
-  filter(grid_cost_scenario == 1) %>%
-  filter(interest_rate_scenario==1)%>%
-  group_by(parameters) %>%
-  ggplot(aes(x=pv_cost_scenario, y=values)) +
-  geom_line(stat="identity", aes(color=parameters), position="dodge", size=1) +
-  geom_point(aes(x = pv_cost_scenario, y=values))+
-  scale_y_continuous(labels = scales::comma)+
-  labs(title = "Sensitivity analyses", x = "Change in PV Costs", y = "Energy used in kWh")+
-  theme(plot.title = element_text(size = 18),
-        plot.subtitle=element_text(size=16),
-        axis.title.y = element_text(size = 15),
-        axis.text.y = element_text(size = 15),
-        axis.title.x = element_text(size = 17.5),
-        axis.text.x = element_text(size = 15),
-        text = element_text(size = 20)) 
-
-
-####es scenarios absolute values
-final_results %>%
-  filter(parameters %in% c("PV_energy",
-                           "ES_out",
-                           "Grid",
-                           "PV_sold")) %>%
-  filter(pv_cost_scenario == 1) %>%
-  filter(grid_cost_scenario == 1) %>%
-  filter(interest_rate_scenario==1)%>%
-  group_by(parameters) %>%
-  ggplot(aes(x=storage_cost_scenario, y=values)) +
-  geom_line(stat="identity", aes(color=parameters), position="dodge", size=1) +
-  geom_point(aes(x = storage_cost_scenario, y=values))+
-  scale_y_continuous(labels = scales::comma)+
-  labs(title = "Sensitivity analyses", x = "Change in ES Costs", y = "Energy used in kWh")+
-  theme(plot.title = element_text(size = 18),
-        plot.subtitle=element_text(size=16),
-        axis.title.y = element_text(size = 15),
-        axis.text.y = element_text(size = 15),
-        axis.title.x = element_text(size = 17.5),
-        axis.text.x = element_text(size = 15),
-        text = element_text(size = 20)) 
-
-
-####grid scenarios absolute values
-final_results %>%
-  filter(parameters %in% c("PV_energy",
-                           "ES_out",
-                           "Grid",
-                           "PV_sold")) %>%
-  filter(pv_cost_scenario == 1) %>%
-  filter(storage_cost_scenario == 1) %>%
-  filter(interest_rate_scenario==1)%>%
-  group_by(parameters) %>%
-  ggplot(aes(x=grid_cost_scenario, y=values)) +
-  geom_line(stat="identity", aes(color=parameters), position="dodge", size=1) +
-  geom_point(aes(x = grid_cost_scenario, y=values))+
-  scale_y_continuous(labels = scales::comma)+
-  labs(title = "Sensitivity analyses", x = "Change in Grid Costs", y = "Energy used in kWh")+
-  theme(plot.title = element_text(size = 18),
-        plot.subtitle=element_text(size=16),
-        axis.title.y = element_text(size = 15),
-        axis.text.y = element_text(size = 15),
-        axis.title.x = element_text(size = 17.5),
-        axis.text.x = element_text(size = 15),
-        text = element_text(size = 20)) 
-
-
-####interest rate scenarios absolute values
-final_results %>%
-  filter(parameters %in% c("PV_energy",
-                           "ES_out",
-                           "Grid",
-                           "PV_sold")) %>%
-  filter(pv_cost_scenario == 1) %>%
-  filter(storage_cost_scenario == 1) %>%
-  filter(grid_cost_scenario==1)%>%
-  group_by(parameters) %>%
-  ggplot(aes(x=interest_rate_scenario, y=values)) +
-  geom_line(stat="identity", aes(color=parameters), position="dodge", size=1) +
-  geom_point(aes(x = interest_rate_scenario, y=values))+
-  scale_y_continuous(labels = scales::comma)+
-  labs(title = "Sensitivity analyses", x = "Change in interest rate", y = "Energy used in kWh")+
-  theme(plot.title = element_text(size = 18),
-        plot.subtitle=element_text(size=16),
-        axis.title.y = element_text(size = 15),
-        axis.text.y = element_text(size = 15),
-        axis.title.x = element_text(size = 17.5),
-        axis.text.x = element_text(size = 15),
-        text = element_text(size = 20)) 
-
-
-####fit scenarios absolute values
-final_results %>%
-  filter(parameters %in% c("PV_energy",
-                           "ES_out",
-                           "Grid",
-                           "PV_sold")) %>%
-  group_by(parameters) %>%
-  ggplot(aes(x=feed_in_scenario, y=values)) +
-  geom_line(stat="identity", aes(color=parameters), position="dodge", size=1) +
-  geom_point(aes(x = feed_in_scenario, y=values))+
-  scale_y_continuous(labels = scales::comma)+
-  labs(title = "Sensitivity analyses", x = "Change in feed-in-tariff", y = "Energy used in kWh")+
-  theme(plot.title = element_text(size = 18),
-        plot.subtitle=element_text(size=16),
-        axis.title.y = element_text(size = 15),
-        axis.text.y = element_text(size = 15),
-        axis.title.x = element_text(size = 17.5),
-        axis.text.x = element_text(size = 15),
-        text = element_text(size = 20)) 
-
-final_results
-
-write.csv(final_results,paste0(results_dir,'results.csv'), row.names = FALSE)
+##RESULTS## 
+    final_results
+    
+    write.csv(final_results,paste0(results_dir,'results.csv'), row.names = FALSE)
 
 
 
