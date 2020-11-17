@@ -8,23 +8,30 @@ set d/
 $include data/input/d.txt
 /;
 
-set tech_param;
+set dt/
+p1*p34
+/
+type of demand
+;
 
+set tech_param;
 
 parameter demand(t);
 
-parameter controllable_demand(d);
+parameter controllable_demand(d, dt);
 
 parameter pv_production(t);
 
 parameter costs;
 
-parameter t_in_d(t, d);
+parameter t_in_d(t, d, dt);
 
-parameter  technical_parameters(tech_param)
+parameter max_power_controllable_load(dt);
+
+parameter  technical_parameters(tech_param);
 
 $gdxin data/input/input.gdx
-$load c tech_param demand pv_production costs controllable_demand t_in_d technical_parameters
+$load c tech_param demand pv_production costs controllable_demand t_in_d technical_parameters max_power_controllable_load
 $gdxin
 
 positive variable
@@ -69,9 +76,9 @@ stor_max(t).. x_soc(t) =L= x_storage;
 
 stor_balance(t)..x_soc(t) =E= x_soc(t-1) + technical_parameters("efficiency_storage")*x_in(t) - x_out(t);
 
-control_dem(d)..controllable_demand(d) =E= SUM(t$t_in_d(t,d), x_control_demand(t));
+control_dem(d,dt)..controllable_demand(d,dt) =E= SUM(t$t_in_d(t,d,dt), x_control_demand(t,dt));
 
-control_dem_max(t)..x_control_demand(t) =L= technical_parameters("max_power_controllable_load");
+control_dem_max(t,dt)..x_control_demand(t,dt) =L= max_power_controllable_load(dt);
 
 max_cap_pv..x_pv =L= 1000000;
 
