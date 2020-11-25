@@ -196,7 +196,7 @@ pv_invest_annualized <- annualize(pv_invest,
 
 
 # Storage costs   
-run_time <- 10
+run_time <- ES_life
 
 storage_invest <- ES.i                                 # in Euro/kWh
 storage_invest_annualized <- annualize(storage_invest,
